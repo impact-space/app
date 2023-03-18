@@ -15,9 +15,9 @@ const ENV = {
     },
   },
   prod: {
-    apiUrl: 'http://localhost:44392',
+    apiUrl: 'http://localhost:44327',
     oAuthConfig: {
-      issuer: 'http://localhost:44392',
+      issuer: 'http://localhost:44327',
       clientId: 'Core_App',
       scope: 'offline_access Core',
     },
