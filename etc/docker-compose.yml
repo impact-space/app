@@ -3,13 +3,13 @@ version: '3.8'
 services:
   postgres:
     image: postgres:latest
-    container_name: projectgallery_postgres
+    container_name: impactspace_postgres
     restart: always
     environment:
       POSTGRES_DB: ImpactSpaceDb
       POSTGRES_USER: root
       POSTGRES_PASSWORD: myPassword
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
