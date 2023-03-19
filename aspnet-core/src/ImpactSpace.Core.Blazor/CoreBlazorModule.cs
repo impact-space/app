@@ -81,7 +81,11 @@ public class CoreBlazorModule : AbpModule
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
+            
+            
         });
+        
+
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
