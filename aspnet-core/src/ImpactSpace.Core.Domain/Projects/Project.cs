@@ -110,31 +110,16 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// The required skills for the project.
     /// </summary>
     public virtual ICollection<ProjectSkill> RequiredSkills { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the ID of the tenant that owns this project.
-    /// </summary>
-    public virtual Guid? TenantId { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the ID of the parent project, if this is a sub-project.
-    /// </summary>
-    public virtual Guid? ParentProjectId { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the parent project, if this is a sub-project.
-    /// </summary>
-    public virtual Project ParentProject { get; private set; }
-
+    
     /// <summary>
     /// Gets or sets the organization that owns this project.
     /// </summary>
     public virtual Organization Organization { get; private set; }
 
     /// <summary>
-    /// Gets or sets the list of sub-projects under this project.
+    /// Gets or sets the ID of the tenant that owns this project.
     /// </summary>
-    public virtual ICollection<Project> SubProjects { get; private set; }
+    public virtual Guid? TenantId { get; private set; }
 
     #endregion
 
@@ -169,12 +154,10 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         ChangeProjectImageUrl(projectImageUrl);
         ChangeProgress(progress);
         ChangeTenantId(tenantId);
-        ChangeParentProjectId(parentProjectId);
 
         Milestones = new HashSet<Milestone>();
         TeamMembers = new HashSet<OrganizationMember>();
         RequiredSkills = new HashSet<ProjectSkill>();
-        SubProjects = new HashSet<Project>();
     }
 
     #endregion
@@ -325,17 +308,6 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     }
 
     /// <summary>
-    /// Changes the parent project ID of the project.
-    /// </summary>
-    /// <param name="parentProjectId">The new parent project ID of the project.</param>
-    /// <returns>The updated project instance.</returns>
-    public virtual Project ChangeParentProjectId(Guid? parentProjectId)
-    {
-        SetParentProjectId(parentProjectId);
-        return this;
-    }
-    
-    /// <summary>
     /// Sets the name of the project.
     /// </summary>
     /// <param name="name">The name of the project.</param>
@@ -458,29 +430,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         Check.NotNull(requiredSkill, nameof(requiredSkill));
         RequiredSkills.Remove(requiredSkill);
     }
-
-    /// <summary>
-    /// Adds a sub-project to the project.
-    /// </summary>
-    /// <param name="subProject">The sub-project to be added.</param>
-    public virtual void AddSubProject(Project subProject)
-    {
-        Check.NotNull(subProject, nameof(subProject));
-        SubProjects.Add(subProject);
-        subProject.SetParentProject(this);
-    }
-
-    /// <summary>
-    /// Removes a sub-project from the project.
-    /// </summary>
-    /// <param name="subProject">The sub-project to be removed.</param>
-    public virtual void RemoveSubProject(Project subProject)
-    {
-        Check.NotNull(subProject, nameof(subProject));
-        SubProjects.Remove(subProject);
-        subProject.SetParentProject(null);
-    }
-
+    
     /// <summary>
     /// Updates the total budget of the project.
     /// </summary>
@@ -509,16 +459,6 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         }
 
         RemainingBudget = remainingBudget;
-    }
-
-    /// <summary>
-    /// Sets the parent project of this project.
-    /// </summary>
-    /// <param name="parentProject">The parent project to be set. Pass null to unset the parent project.</param>
-    public virtual void SetParentProject(Project parentProject)
-    {
-        ParentProject = parentProject;
-        ParentProjectId = parentProject?.Id;
     }
 
     /// <summary>
@@ -593,14 +533,5 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         TenantId = tenantId;
     }
 
-    /// <summary>
-    /// Sets the ID of the parent project.
-    /// </summary>
-    /// <param name="parentProjectId">The new ID of the parent project.</param>
-    private void SetParentProjectId(Guid? parentProjectId)
-    {
-        ParentProjectId = parentProjectId;
-    }
-    
     #endregion
 }
