@@ -15,12 +15,12 @@ namespace ImpactSpace.Core.Projects;
 public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 {
     #region Properties
-    
+
     /// <summary>
     /// Gets or sets the name of the project.
     /// </summary>
     public virtual string Name { get; private set; }
-    
+
     /// <summary>
     /// Gets or sets the description of the project.
     /// </summary>
@@ -45,7 +45,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Gets or sets the amount of funding allocated to the project.
     /// </summary>
     public virtual decimal? FundingAllocated { get; private set; }
-    
+
     /// <summary>
     /// Gets or sets the target fundraising amount of the project.
     /// </summary>
@@ -105,12 +105,12 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Gets or sets the list of team members of the project.
     /// </summary>
     public virtual ICollection<OrganizationMember> TeamMembers { get; private set; }
-    
+
     /// <summary>
     /// The required skills for the project.
     /// </summary>
     public virtual ICollection<ProjectSkill> RequiredSkills { get; private set; }
-    
+
     /// <summary>
     /// Gets or sets the ID of the tenant that owns this project.
     /// </summary>
@@ -135,38 +135,42 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Gets or sets the list of sub-projects under this project.
     /// </summary>
     public virtual ICollection<Project> SubProjects { get; private set; }
-    
+
     #endregion
 
     #region Constructors
 
+    /// <summary>
+    /// This constructor is for deserialization / ORM purposes
+    /// </summary>
     private Project()
     {
     }
 
     internal Project(Guid id, [NotNull] string name, [CanBeNull] string description, DateTime? startDate,
         DateTime? actualEndDate, [CanBeNull] string purpose, decimal? fundingAllocated, decimal? fundraisingTarget,
-        decimal totalBudget, decimal remainingBudget, bool isFeatured, StatusType statusType, ProjectType projectType, [CanBeNull] string projectImageUrl,
+        decimal totalBudget, decimal remainingBudget, bool isFeatured, StatusType statusType, ProjectType projectType,
+        [CanBeNull] string projectImageUrl,
         int progress, Guid tenantId, Guid? parentProjectId)
         : base(id)
     {
-        SetName(name);
-        SetDescription(description);
-        StartDate = startDate;
-        ActualEndDate = actualEndDate;
-        SetPurpose(purpose);
-        FundingAllocated = fundingAllocated;
-        FundraisingTarget = fundraisingTarget;
-        TotalBudget = totalBudget;
-        RemainingBudget = remainingBudget;
-        IsFeatured = isFeatured;
-        StatusType = statusType;
-        ProjectType = projectType;
-        SetProjectImageUrl(projectImageUrl);
-        SetProgress(progress);
-        TenantId = tenantId;
-        ParentProjectId = parentProjectId;
-        
+        ChangeName(name);
+        ChangeDescription(description);
+        ChangeStartDate(startDate);
+        ChangeActualEndDate(actualEndDate);
+        ChangePurpose(purpose);
+        ChangeFundingAllocated(fundingAllocated);
+        ChangeFundraisingTarget(fundraisingTarget);
+        UpdateTotalBudget(totalBudget);
+        UpdateRemainingBudget(remainingBudget);
+        ChangeIsFeatured(isFeatured);
+        ChangeStatusType(statusType);
+        ChangeProjectType(projectType);
+        ChangeProjectImageUrl(projectImageUrl);
+        ChangeProgress(progress);
+        ChangeTenantId(tenantId);
+        ChangeParentProjectId(parentProjectId);
+
         Milestones = new HashSet<Milestone>();
         TeamMembers = new HashSet<OrganizationMember>();
         RequiredSkills = new HashSet<ProjectSkill>();
@@ -175,13 +179,169 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 
     #endregion
     
+    #region Methods
+    
+    /// <summary>
+    /// Changes the project name. The name cannot be null or white space and must be at most <see cref="ProjectConsts.MaxNameLength"/> characters long.
+    /// </summary>
+    /// <param name="name">The name of the project.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangeName([NotNull] string name)
+    {
+        SetName(name);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the project description. The description must be at most <see cref="ProjectConsts.MaxDescriptionLength"/> characters long.
+    /// </summary>
+    /// <param name="description">The description of the project.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangeDescription([CanBeNull] string description)
+    {
+        SetDescription(description);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the project purpose. The purpose must be at most <see cref="ProjectConsts.MaxPurposeLength"/> characters long.
+    /// </summary>
+    /// <param name="purpose">The purpose of the project.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangePurpose([CanBeNull] string purpose)
+    {
+        SetPurpose(purpose);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the URL of the project image.
+    /// </summary>
+    /// <param name="projectImageUrl">The URL of the project image.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangeProjectImageUrl([CanBeNull] string projectImageUrl)
+    {
+        SetProjectImageUrl(projectImageUrl);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the progress of the project. The progress must be between 0 and 100 (inclusive).
+    /// </summary>
+    /// <param name="progress">The progress of the project.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangeProgress(int progress)
+    {
+        SetProgress(progress);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the start date of the project.
+    /// </summary>
+    /// <param name="startDate">The start date of the project.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangeStartDate(DateTime? startDate)
+    {
+        SetStartDate(startDate);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the actual end date of the project.
+    /// </summary>
+    /// <param name="actualEndDate">The actual end date of the project.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangeActualEndDate(DateTime? actualEndDate)
+    {
+        SetActualEndDate(actualEndDate);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the amount of funding allocated to the project.
+    /// </summary>
+    /// <param name="fundingAllocated">The amount of funding allocated to the project.</param>
+    /// <returns>The modified <see cref="Project"/> entity.</returns>
+    public virtual Project ChangeFundingAllocated(decimal? fundingAllocated)
+    {
+        SetFundingAllocated(fundingAllocated);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the fundraising target for the project.
+    /// </summary>
+    /// <param name="fundraisingTarget">The new fundraising target for the project.</param>
+    /// <returns>The updated project instance.</returns>
+    public virtual Project ChangeFundraisingTarget(decimal? fundraisingTarget)
+    {
+        SetFundraisingTarget(fundraisingTarget);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes whether or not the project is featured.
+    /// </summary>
+    /// <param name="isFeatured">Whether or not the project is featured.</param>
+    /// <returns>The updated project instance.</returns>
+    public virtual Project ChangeIsFeatured(bool isFeatured)
+    {
+        SetIsFeatured(isFeatured);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the status type of the project.
+    /// </summary>
+    /// <param name="statusType">The new status type of the project.</param>
+    /// <returns>The updated project instance.</returns>
+    public virtual Project ChangeStatusType(StatusType statusType)
+    {
+        SetStatusType(statusType);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the project type of the project.
+    /// </summary>
+    /// <param name="projectType">The new project type of the project.</param>
+    /// <returns>The updated project instance.</returns>
+    public virtual Project ChangeProjectType(ProjectType projectType)
+    {
+        SetProjectType(projectType);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the tenant ID of the project.
+    /// </summary>
+    /// <param name="tenantId">The new tenant ID of the project.</param>
+    /// <returns>The updated project instance.</returns>
+    public virtual Project ChangeTenantId(Guid tenantId)
+    {
+        SetTenantId(tenantId);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the parent project ID of the project.
+    /// </summary>
+    /// <param name="parentProjectId">The new parent project ID of the project.</param>
+    /// <returns>The updated project instance.</returns>
+    public virtual Project ChangeParentProjectId(Guid? parentProjectId)
+    {
+        SetParentProjectId(parentProjectId);
+        return this;
+    }
+    
     /// <summary>
     /// Sets the name of the project.
     /// </summary>
     /// <param name="name">The name of the project.</param>
     /// <exception cref="ArgumentNullException">Thrown when the <paramref name="name"/> is null.</exception>
     /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is empty or whitespace.</exception>
-    public virtual void SetName([NotNull] string name)
+    private void SetName([NotNull] string name)
     {
         Name = Check.NotNullOrWhiteSpace(
             name,
@@ -189,12 +349,12 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
             maxLength: ProjectConsts.MaxNameLength
         );
     }
-    
+
     /// <summary>
     /// Sets the description of the project.
     /// </summary>
     /// <param name="description">The description of the project.</param>
-    public virtual void SetDescription([CanBeNull] string description)
+    private void SetDescription([CanBeNull] string description)
     {
         Description = Check.Length(
             description,
@@ -207,7 +367,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Sets the purpose of the project.
     /// </summary>
     /// <param name="purpose">The purpose of the project.</param>
-    public virtual void SetPurpose([CanBeNull] string purpose)
+    private void SetPurpose([CanBeNull] string purpose)
     {
         Purpose = Check.Length(
             purpose,
@@ -220,7 +380,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Sets the project image URL.
     /// </summary>
     /// <param name="projectImageUrl">The project image URL to be set.</param>
-    public virtual void SetProjectImageUrl([CanBeNull] string projectImageUrl)
+    private void SetProjectImageUrl([CanBeNull] string projectImageUrl)
     {
         ProjectImageUrl = projectImageUrl;
     }
@@ -229,7 +389,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Sets the progress of the project.
     /// </summary>
     /// <param name="progress">The progress of the project.</param>
-    public virtual void SetProgress(int progress)
+    private void SetProgress(int progress)
     {
         Progress = Check.Range(
             progress,
@@ -320,7 +480,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         SubProjects.Remove(subProject);
         subProject.SetParentProject(null);
     }
-    
+
     /// <summary>
     /// Updates the total budget of the project.
     /// </summary>
@@ -350,7 +510,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 
         RemainingBudget = remainingBudget;
     }
-    
+
     /// <summary>
     /// Sets the parent project of this project.
     /// </summary>
@@ -360,4 +520,87 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         ParentProject = parentProject;
         ParentProjectId = parentProject?.Id;
     }
+
+    /// <summary>
+    /// Sets the start date of the project.
+    /// </summary>
+    /// <param name="startDate">The new start date.</param>
+    private void SetStartDate(DateTime? startDate)
+    {
+        StartDate = startDate;
+    }
+
+    /// <summary>
+    /// Sets the actual end date of the project.
+    /// </summary>
+    /// <param name="actualEndDate">The new actual end date.</param>
+    private void SetActualEndDate(DateTime? actualEndDate)
+    {
+        ActualEndDate = actualEndDate;
+    }
+
+    /// <summary>
+    /// Sets the amount of funding allocated to the project.
+    /// </summary>
+    /// <param name="fundingAllocated">The new amount of funding allocated.</param>
+    private void SetFundingAllocated(decimal? fundingAllocated)
+    {
+        FundingAllocated = fundingAllocated;
+    }
+
+    /// <summary>
+    /// Sets the target amount of fundraising for the project.
+    /// </summary>
+    /// <param name="fundraisingTarget">The new target amount of fundraising.</param>
+    private void SetFundraisingTarget(decimal? fundraisingTarget)
+    {
+        FundraisingTarget = fundraisingTarget;
+    }
+
+    /// <summary>
+    /// Sets whether the project is featured or not.
+    /// </summary>
+    /// <param name="isFeatured">True if the project is featured, false otherwise.</param>
+    private void SetIsFeatured(bool isFeatured)
+    {
+        IsFeatured = isFeatured;
+    }
+
+    /// <summary>
+    /// Sets the status type of the project.
+    /// </summary>
+    /// <param name="statusType">The new status type.</param>
+    private void SetStatusType(StatusType statusType)
+    {
+        StatusType = statusType;
+    }
+
+    /// <summary>
+    /// Sets the type of the project.
+    /// </summary>
+    /// <param name="projectType">The new project type.</param>
+    private void SetProjectType(ProjectType projectType)
+    {
+        ProjectType = projectType;
+    }
+
+    /// <summary>
+    /// Sets the tenant ID of the project.
+    /// </summary>
+    /// <param name="tenantId">The new tenant ID.</param>
+    private void SetTenantId(Guid tenantId)
+    {
+        TenantId = tenantId;
+    }
+
+    /// <summary>
+    /// Sets the ID of the parent project.
+    /// </summary>
+    /// <param name="parentProjectId">The new ID of the parent project.</param>
+    private void SetParentProjectId(Guid? parentProjectId)
+    {
+        ParentProjectId = parentProjectId;
+    }
+    
+    #endregion
 }
