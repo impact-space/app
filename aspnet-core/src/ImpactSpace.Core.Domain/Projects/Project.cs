@@ -468,6 +468,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     private void SetStartDate(DateTime? startDate)
     {
         StartDate = startDate;
+        ValidateStartAndEndDate();
     }
 
     /// <summary>
@@ -477,6 +478,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     private void SetActualEndDate(DateTime? actualEndDate)
     {
         ActualEndDate = actualEndDate;
+        ValidateStartAndEndDate();
     }
 
     /// <summary>
@@ -531,6 +533,25 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     private void SetTenantId(Guid tenantId)
     {
         TenantId = tenantId;
+    }
+    
+    public virtual TimeSpan CalculateDuration()
+    {
+        DateTime endDate = ActualEndDate ?? DateTime.UtcNow; // Use the current date if the project is ongoing
+        return endDate - StartDate.Value;
+    }
+    
+    public virtual decimal CalculateBudgetUsedPercentage()
+    {
+        return ((TotalBudget - RemainingBudget) / TotalBudget) * 100;
+    }
+    
+    private void ValidateStartAndEndDate()
+    {
+        if (StartDate.HasValue && ActualEndDate.HasValue && ActualEndDate.Value < StartDate.Value)
+        {
+            throw new ArgumentException("ActualEndDate cannot be earlier than StartDate.");
+        }
     }
 
     #endregion
