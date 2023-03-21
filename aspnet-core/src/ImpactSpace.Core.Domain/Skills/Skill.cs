@@ -11,32 +11,12 @@ namespace ImpactSpace.Core.Skills;
 /// <summary>
 /// Represents a skill that can be associated with members of an organization and/or required by a project.
 /// </summary>
-public class Skill : Entity<Guid>
+public class Skill : AggregateRoot<Guid>
     {
         /// <summary>
         /// Gets the name of the skill.
         /// </summary>
         public string Name { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the ID of the parent skill, if any.
-        /// </summary>
-        public Guid? ParentSkillId { get; private set; }
-        
-        /// <summary>
-        /// Gets or sets the parent skill.
-        /// </summary>
-        public Skill ParentSkill { get; private set; }
-        
-        /// <summary>
-        /// Gets the child skills of this skill.
-        /// </summary>
-        public List<Skill> ChildSkills { get; private set; } = new();
-        
-        /// <summary>
-        /// Gets or sets the ID of the skill group to which this skill belongs.
-        /// </summary>
-        public Guid SkillGroupId { get; private set; }
         
         /// <summary>
         /// Gets or sets the skill group to which this skill belongs.
@@ -46,34 +26,33 @@ public class Skill : Entity<Guid>
         /// <summary>
         /// Gets the organization member skills associated with this skill.
         /// </summary>
-        public List<OrganizationMemberSkill> MemberSkills { get; private set; } = new();
+        public ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; private set; }
         
         /// <summary>
         /// Gets the project skills associated with this skill.
         /// </summary>
-        public List<ProjectSkill> ProjectSkills { get; private set; } = new();
-
+        public ICollection<ProjectSkill> ProjectSkills { get; private set; }
 
         /// <summary>
-        /// This constructor is for deserialization / ORM purposes.
+        /// Initializes a new instance of the <see cref="Skill"/> class for deserialization / ORM purposes.
         /// </summary>
         private Skill()
         {
+            
         }
 
         /// <summary>
-        /// Creates a new instance of the Skill class with the specified ID, name, parent skill ID (if any), and skill group ID.
+        /// Initializes a new instance of the <see cref="Skill"/> class.
         /// </summary>
-        /// <param name="id">The ID of the skill.</param>
+        /// <param name="id">The identifier of the skill.</param>
         /// <param name="name">The name of the skill.</param>
-        /// <param name="parentSkillId">The ID of the parent skill, if any.</param>
-        /// <param name="skillGroupId">The ID of the skill group to which this skill belongs.</param>
-        internal Skill(Guid id, [NotNull] string name, Guid? parentSkillId, Guid skillGroupId)
+        internal Skill(Guid id, [NotNull] string name)
             : base(id)
         {
             SetName(name);
-            ParentSkillId = parentSkillId;
-            SkillGroupId = skillGroupId;
+            
+            OrganizationMemberSkills = new List<OrganizationMemberSkill>();
+            ProjectSkills = new List<ProjectSkill>();
         }
 
         /// <summary>
@@ -88,29 +67,6 @@ public class Skill : Entity<Guid>
         }
 
         /// <summary>
-        /// Changes the parent skill of the skill.
-        /// </summary>
-        /// <param name="parentSkillId">The ID of the new parent skill, or null if there is no parent skill.</param>
-        /// <returns>The skill object.</returns>
-        internal Skill ChangeParentSkill(Guid? parentSkillId)
-        {
-            ParentSkillId = parentSkillId;
-            return this;
-        }
-
-
-        /// <summary>
-        /// Changes the Skill's SkillGroup by assigning a new SkillGroupId.
-        /// </summary>
-        /// <param name="skillGroupId">The new SkillGroup Id</param>
-        /// <returns>The Skill with the updated SkillGroup.</returns>
-        internal Skill ChangeSkillGroup(Guid skillGroupId)
-        {
-            SkillGroupId = skillGroupId;
-            return this;
-        }
-
-        /// <summary>
         /// Sets the Skill's name to the specified value.
         /// </summary>
         /// <param name="name">The new name for the Skill</param>
@@ -120,7 +76,25 @@ public class Skill : Entity<Guid>
             Name = Check.NotNullOrWhiteSpace(
                 name,
                 nameof(name),
-                maxLength: SkillConsts.MaxNameLength
+                maxLength: SkillConstants.MaxNameLength
             );
+        }
+        
+        /// <summary>
+        /// Adds an organization member skill to the list of organization member skills for the skill.
+        /// </summary>
+        /// <param name="organizationMemberSkill">The organization member skill to be added.</param>
+        internal void AddOrganizationMemberSkill(OrganizationMemberSkill organizationMemberSkill)
+        {
+            OrganizationMemberSkills.Add(Check.NotNull(organizationMemberSkill, nameof(organizationMemberSkill)));
+        }
+
+        /// <summary>
+        /// Removes an organization member skill from the list of organization member skills for the skill.
+        /// </summary>
+        /// <param name="organizationMemberSkill">The organization member skill to be removed.</param>
+        internal void RemoveOrganizationMemberSkill(OrganizationMemberSkill organizationMemberSkill)
+        {
+            OrganizationMemberSkills.Remove(Check.NotNull(organizationMemberSkill, nameof(organizationMemberSkill)));
         }
     }

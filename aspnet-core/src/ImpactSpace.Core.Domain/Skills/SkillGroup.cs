@@ -9,7 +9,7 @@ namespace ImpactSpace.Core.Skills;
 /// <summary>
 /// Represents a group of skills.
 /// </summary>
-public class SkillGroup : Entity<Guid>
+public class SkillGroup : AggregateRoot<Guid>
 {
     /// <summary>
     /// Gets or sets the name of the skill group.
@@ -19,18 +19,27 @@ public class SkillGroup : Entity<Guid>
     /// <summary>
     /// Gets or sets the description of the skill group.
     /// </summary>
-    public string Description { get; set; }
+    public string Description { get; private set; }
     
     /// <summary>
-    /// Gets the skills in the skill group.
+    /// Gets or sets the skills in the skill group.
     /// </summary>
-    public List<Skill> Skills { get; private set; } = new();
+    public ICollection<Skill> Skills { get; private set; }
 
+    /// <summary>
+    /// This constructor is for deserialization / ORM purposes
+    /// </summary>
     private SkillGroup()
     {
-        /* This constructor is for deserialization / ORM purpose */
+        
     }
     
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SkillGroup"/> class.
+    /// </summary>
+    /// <param name="id">The identifier of the skill group.</param>
+    /// <param name="name">The name of the skill group.</param>
+    /// <param name="description">The description of the skill group.</param>
     internal SkillGroup(
         Guid id,
         [NotNull] string name,
@@ -39,6 +48,8 @@ public class SkillGroup : Entity<Guid>
     {
         SetName(name);
         Description = description;
+
+        Skills = new List<Skill>();
     }
 
     /// <summary>
@@ -51,17 +62,26 @@ public class SkillGroup : Entity<Guid>
         SetName(name);
         return this;
     }
+    
+    /// <summary>
+    /// Changes the description of the skill group.
+    /// </summary>
+    /// <param name="description">The new description of the skill group.</param>
+    /// <returns>The updated skill group.</returns>
+    internal SkillGroup ChangeDescription(string description)
+    {
+        Description = description;
+        return this;
+    }
 
     /// <summary>
     /// Adds a new skill to the skill group.
     /// </summary>
     /// <param name="skill">The skill to be added.</param>
-    /// <returns>The added skill.</returns>
-    internal Skill AddSkill([NotNull] Skill skill)
+    internal void AddSkill([NotNull] Skill skill)
     {
         Check.NotNull(skill, nameof(skill));
         Skills.Add(skill);
-        return skill;
     }
     
     /// <summary>
@@ -74,12 +94,25 @@ public class SkillGroup : Entity<Guid>
         Skills.Remove(skill);
     }
 
+    /// <summary>
+    /// Sets the name for the skill group.
+    /// </summary>
+    /// <param name="name">The name of the skill group.</param>
     private void SetName([NotNull] string name)
     {
         Name = Check.NotNullOrWhiteSpace(
             name, 
             nameof(name), 
-            maxLength: SkillGroupConsts.MaxNameLength
+            maxLength: SkillGroupConstants.MaxNameLength
         );
+    }
+    
+    /// <summary>
+    /// Sets the description for the skill group.
+    /// </summary>
+    /// <param name="description">The description of the skill group.</param>
+    private void SetDescription([CanBeNull] string description)
+    {
+        Description = description;
     }
 }

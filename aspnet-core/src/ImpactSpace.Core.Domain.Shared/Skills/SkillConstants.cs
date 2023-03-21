@@ -1,6 +1,6 @@
 namespace ImpactSpace.Core.Skills;
 
-public static class SkillConsts
+public static class SkillConstants
 {
     public const int MaxNameLength = 128;
 }

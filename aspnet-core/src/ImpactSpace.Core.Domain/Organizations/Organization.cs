@@ -26,10 +26,15 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// The list of projects owned by the organization.
     /// </summary>
-    public List<Project> Projects { get; private set; } = new();
+    public ICollection<Project> Projects { get; private set; }
     
     /// <summary>
-    /// The ID of the tenant to which the organization belongs.
+    /// A list of the members of the organization
+    /// </summary>
+    public ICollection<OrganizationMember> OrganizationMembers { get; private set; }
+
+    /// <summary>
+    /// Gets or sets the ID of the tenant to which the organization belongs.
     /// </summary>
     public Guid? TenantId { get; set; }
 
@@ -47,11 +52,14 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <param name="id">The ID of the organization.</param>
     /// <param name="name">The name of the organization.</param>
     /// <param name="description">The description of the organization.</param>
-    internal Organization(Guid id, [NotNull] string name, string description)
+    internal Organization(Guid id, [NotNull] string name, [CanBeNull] string description)
         : base(id)
     {
         SetName(name);
         SetDescription(description);
+
+        Projects = new List<Project>();
+        OrganizationMembers = new List<OrganizationMember>();
     }
 
     /// <summary>
@@ -70,7 +78,7 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// </summary>
     /// <param name="description">The new description of the organization.</param>
     /// <returns>The updated <see cref="Organization"/> instance.</returns>
-    internal Organization ChangeDescription(string description)
+    internal Organization ChangeDescription([CanBeNull] string description)
     {
         SetDescription(description);
         return this;
@@ -91,7 +99,7 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
         Name = Check.NotNullOrWhiteSpace(
             name,
             nameof(name),
-            maxLength: OrganizationConsts.MaxNameLength
+            maxLength: OrganizationConstants.MaxNameLength
         );
     }
 
@@ -107,7 +115,45 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
         Description = Check.Length(
             description,
             nameof(description),
-            maxLength: OrganizationConsts.MaxDescriptionLength
+            maxLength: OrganizationConstants.MaxDescriptionLength
         );
     }
+    
+    /// <summary>
+    /// Adds a project to the list of projects owned by the organization.
+    /// </summary>
+    /// <param name="project">The project to be added.</param>
+    internal void AddProject(Project project)
+    {
+        Projects.Add(Check.NotNull(project, nameof(project)));
+    }
+
+    /// <summary>
+    /// Removes a project from the list of projects owned by the organization.
+    /// </summary>
+    /// <param name="project">The project to be removed.</param>
+    internal void RemoveProject(Project project)
+    {
+        Projects.Remove(Check.NotNull(project, nameof(project)));
+    }
+
+    /// <summary>
+    /// Adds an organization member to the list of members of the organization.
+    /// </summary>
+    /// <param name="organizationMember">The organization member to be added.</param>
+    internal void AddOrganizationMember(OrganizationMember organizationMember)
+    {
+        OrganizationMembers.Add(Check.NotNull(organizationMember, nameof(organizationMember)));
+    }
+
+    /// <summary>
+    /// Removes an organization member from the list of members of the organization.
+    /// </summary>
+    /// <param name="organizationMember">The organization member to be removed.</param>
+    internal void RemoveOrganizationMember(OrganizationMember organizationMember)
+    {
+        OrganizationMembers.Remove(Check.NotNull(organizationMember, nameof(organizationMember)));
+    }
+
+
 }

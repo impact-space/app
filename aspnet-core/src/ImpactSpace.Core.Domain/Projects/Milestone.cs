@@ -29,11 +29,6 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     public DateTime? StartDate { get; private set; }
 
     /// <summary>
-    /// Gets the end date of the milestone.
-    /// </summary>
-    public DateTime? EndDate { get; private set; }
-
-    /// <summary>
     /// Gets the completed date of the milestone.
     /// </summary>
     public DateTime? CompletedDate { get; private set; }
@@ -54,11 +49,6 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     public int TotalVotes { get; private set; }
 
     /// <summary>
-    /// Gets the project ID the milestone belongs to.
-    /// </summary>
-    public Guid ProjectId { get; private set; }
-
-    /// <summary>
     /// Gets the project the milestone belongs to.
     /// </summary>
     public Project Project { get; private set; }
@@ -66,7 +56,7 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets the quests associated with the milestone.
     /// </summary>
-    public List<Quest> Quests { get; private set; } = new();
+    public ICollection<Quest> Quests { get; private set; }
 
     /// <summary>
     /// Gets the priority level of the milestone.
@@ -96,19 +86,147 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <param name="id">The ID of the milestone.</param>
     /// <param name="name">The name of the milestone.</param>
     /// <param name="description">The description of the milestone.</param>
-    /// <param name="projectId">The ID of the project the milestone belongs to.</param>
     /// <param name="priorityLevel">The priority level of the milestone.</param>
     /// <param name="statusType">The status type of the milestone.</param>
     /// <param name="tenantId">The tenant ID associated with the milestone.</param>
-    public Milestone(Guid id, [NotNull] string name, string description,Guid projectId, PriorityLevel priorityLevel, StatusType statusType, Guid? tenantId)
+    public Milestone(Guid id, [NotNull] string name, string description, PriorityLevel priorityLevel, StatusType statusType, Guid? tenantId)
         : base(id)
     {
         SetName(name);
         SetDescription(description);
-        ProjectId = projectId;
         PriorityLevel = priorityLevel;
         StatusType = statusType;
         TenantId = tenantId;
+
+        Quests = new List<Quest>();
+    }
+    
+    /// <summary>
+    /// Changes the milestone's name.
+    /// </summary>
+    /// <param name="name">The new name of the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    public Milestone ChangeName(string name)
+    {
+        SetName(name);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the milestone's description.
+    /// </summary>
+    /// <param name="description">The new description of the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    public Milestone ChangeDescription(string description)
+    {
+        SetDescription(description);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the milestone's priority level.
+    /// </summary>
+    /// <param name="priorityLevel">The new priority level of the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    public Milestone ChangePriorityLevel(PriorityLevel priorityLevel)
+    {
+        PriorityLevel = priorityLevel;
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the milestone's status type.
+    /// </summary>
+    /// <param name="statusType">The new status type of the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    public Milestone ChangeStatusType(StatusType statusType)
+    {
+        StatusType = statusType;
+        return this;
+    }
+    
+    /// <summary>
+    /// Changes the milestone's start date.
+    /// </summary>
+    /// <param name="startDate">The new start date of the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    /// <exception cref="BusinessException">Thrown when the specified start date is later than the deadline or completed date.</exception>
+    public Milestone ChangeStartDate(DateTime? startDate)
+    {
+        if (startDate.HasValue && Deadline.HasValue && startDate.Value > Deadline.Value)
+        {
+            throw new BusinessException("Start date cannot be later than the deadline.");
+        }
+
+        if (startDate.HasValue && CompletedDate.HasValue && startDate.Value > CompletedDate.Value)
+        {
+            throw new BusinessException("Start date cannot be later than the completed date.");
+        }
+
+        StartDate = startDate;
+        return this;
+    }
+    
+    /// <summary>
+    /// Changes the milestone's budget.
+    /// </summary>
+    /// <param name="budget">The new budget for the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    /// <exception cref="BusinessException">Thrown when the specified budget is negative.</exception>
+    public Milestone ChangeBudget(decimal budget)
+    {
+        if (budget < 0)
+        {
+            throw new BusinessException("Budget cannot be negative.");
+        }
+
+        Budget = budget;
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the milestone's completed date.
+    /// </summary>
+    /// <param name="completedDate">The new completed date of the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    public Milestone ChangeCompletedDate(DateTime? completedDate)
+    {
+        SetCompletedDate(completedDate);
+        return this;
+    }
+
+    /// <summary>
+    /// Changes the milestone's deadline.
+    /// </summary>
+    /// <param name="deadline">The new deadline of the milestone.</param>
+    /// <returns>The updated milestone.</returns>
+    public Milestone ChangeDeadline(DateTime? deadline)
+    {
+        SetDeadline(deadline);
+        return this;
+    }
+    
+    public Milestone ChangeTotalVotes(int totalVotes)
+    {
+        SetTotalVotes(totalVotes);
+        return this;
+    }
+
+    public Milestone UpVote()
+    {
+        TotalVotes++;
+        return this;
+    }
+
+    public Milestone DownVote()
+    {
+        if (TotalVotes == 0)
+        {
+            throw new BusinessException("Total votes cannot be negative.");
+        }
+
+        TotalVotes--;
+        return this;
     }
 
     /// <summary>
@@ -121,7 +239,7 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
         Name = Check.NotNullOrWhiteSpace(
             name,
             nameof(name),
-            maxLength: MilestoneConsts.MaxNameLength
+            maxLength: MilestoneConstants.MaxNameLength
         );
     }
 
@@ -137,9 +255,39 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
             Description = Check.Length(
                 description,
                 nameof(description),
-                maxLength: MilestoneConsts.MaxDescriptionLength
+                maxLength: MilestoneConstants.MaxDescriptionLength
             );
         }
+    }
+    
+    private void SetTotalVotes(int totalVotes)
+    {
+        if (totalVotes < 0)
+        {
+            throw new BusinessException("Total votes cannot be negative.");
+        }
+
+        TotalVotes = totalVotes;
+    }
+    
+    private void SetCompletedDate(DateTime? completedDate)
+    {
+        if (completedDate.HasValue && StartDate.HasValue && completedDate.Value < StartDate.Value)
+        {
+            throw new BusinessException("Completed date cannot be earlier than the start date.");
+        }
+
+        CompletedDate = completedDate;
+    }
+
+    private void SetDeadline(DateTime? deadline)
+    {
+        if (deadline.HasValue && StartDate.HasValue && deadline.Value < StartDate.Value)
+        {
+            throw new BusinessException("Deadline cannot be earlier than the start date.");
+        }
+
+        Deadline = deadline;
     }
 
     /// <summary>

@@ -33,12 +33,12 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets or sets the list of project actions associated with the organization member.
     /// </summary>
-    public List<ProjectAction> ProjectActions { get; private set; } = new();
+    public ICollection<ProjectAction> ProjectActions { get; private set; }
 
     /// <summary>
     /// Gets or sets the list of projects associated with the organization member.
     /// </summary>
-    public List<Project> Projects { get; private set; } = new();
+    public ICollection<Project> Projects { get; private set; }
 
     /// <summary>
     /// Gets or sets the Guid of the user account associated with the organization member.
@@ -48,7 +48,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets or sets the list of skills associated with the organization member.
     /// </summary>
-    public List<OrganizationMemberSkill> Skills { get; private set; } = new();
+    public ICollection<OrganizationMemberSkill> Skills { get; private set; }
 
     /// <summary>
     /// Gets or sets the Guid of the organization associated with the organization member.
@@ -91,6 +91,10 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         SetPhone(phone);
         OrganizationId = organizationId;
         TenantId = tenantId;
+
+        ProjectActions = new List<ProjectAction>();
+        Projects = new List<Project>();
+        Skills = new List<OrganizationMemberSkill>();
     }
 
 

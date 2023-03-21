@@ -311,15 +311,18 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Sets the name of the project.
     /// </summary>
     /// <param name="name">The name of the project.</param>
-    /// <exception cref="ArgumentNullException">Thrown when the <paramref name="name"/> is null.</exception>
-    /// <exception cref="ArgumentException">Thrown when the <paramref name="name"/> is empty or whitespace.</exception>
+    /// <exception cref="BusinessException">Thrown when the <paramref name="name"/> is null, empty, or exceeds the maximum allowed length.</exception>
     private void SetName([NotNull] string name)
     {
-        Name = Check.NotNullOrWhiteSpace(
-            name,
-            nameof(name),
-            maxLength: ProjectConsts.MaxNameLength
-        );
+        if (string.IsNullOrWhiteSpace(name) || name.Length > ProjectConsts.MaxNameLength)
+        {
+            throw new BusinessException(
+                code: "Project.Name.Invalid",
+                message: $"The name must be between 1 and {ProjectConsts.MaxNameLength} characters long."
+            );
+        }
+
+        Name = name;
     }
 
     /// <summary>
@@ -535,17 +538,29 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         TenantId = tenantId;
     }
     
+    /// <summary>
+    /// Calculates the duration of the project based on the start date and actual end date (or the current date if the project is ongoing).
+    /// </summary>
+    /// <returns>The duration of the project as a <see cref="TimeSpan"/>.</returns>
     public virtual TimeSpan CalculateDuration()
     {
         DateTime endDate = ActualEndDate ?? DateTime.UtcNow; // Use the current date if the project is ongoing
         return endDate - StartDate.Value;
     }
-    
+
+    /// <summary>
+    /// Calculates the percentage of the budget that has been used so far.
+    /// </summary>
+    /// <returns>The percentage of the budget used as a decimal.</returns>
     public virtual decimal CalculateBudgetUsedPercentage()
     {
         return ((TotalBudget - RemainingBudget) / TotalBudget) * 100;
     }
-    
+
+    /// <summary>
+    /// Validates the start and end dates of the project to ensure that the actual end date is not earlier than the start date.
+    /// </summary>
+    /// <exception cref="ArgumentException">Thrown when the actual end date is earlier than the start date.</exception>
     private void ValidateStartAndEndDate()
     {
         if (StartDate.HasValue && ActualEndDate.HasValue && ActualEndDate.Value < StartDate.Value)
