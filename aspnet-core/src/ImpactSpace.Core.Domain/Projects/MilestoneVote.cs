@@ -9,7 +9,7 @@ namespace ImpactSpace.Core.Projects;
 /// <summary>
 /// Represents a vote on a milestone by an organization member.
 /// </summary>
-public class MilestoneVote : AuditedEntity<Guid>, IMultiTenant
+public class MilestoneVote : AuditedEntity, IMultiTenant
 {
     /// <summary>
     /// The ID of the milestone this vote belongs to.
@@ -49,21 +49,19 @@ public class MilestoneVote : AuditedEntity<Guid>, IMultiTenant
     /// <summary>
     /// Private constructor for deserialization / ORM purposes.
     /// </summary>
-    private MilestoneVote()
+    protected MilestoneVote()
     {
     }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MilestoneVote"/> class.
     /// </summary>
-    /// <param name="id">The unique identifier for the MilestoneVote.</param>
     /// <param name="milestoneId">The ID of the milestone this vote belongs to.</param>
     /// <param name="organizationMemberId">The ID of the organization member who cast the vote.</param>
     /// <param name="milestoneVoteAggregateId">The ID of the MilestoneVoteAggregate this vote belongs to.</param>
     /// <param name="voteType">The type of vote (UpVote or DownVote).</param>
     /// <param name="tenantId">The Tenant ID for multi-tenancy support.</param>
-    public MilestoneVote(Guid id, Guid milestoneId, Guid organizationMemberId, Guid milestoneVoteAggregateId, VoteType voteType, Guid? tenantId)
-        : base(id)
+    public MilestoneVote(Guid milestoneId, Guid organizationMemberId, Guid milestoneVoteAggregateId, VoteType voteType, Guid? tenantId)
     {
         MilestoneId = milestoneId;
         OrganizationMemberId = organizationMemberId;
@@ -81,5 +79,10 @@ public class MilestoneVote : AuditedEntity<Guid>, IMultiTenant
     {
         VoteType = voteType;
         return this;
+    }
+
+    public override object[] GetKeys()
+    {
+        return new object[] { MilestoneId, OrganizationMemberId };
     }
 }

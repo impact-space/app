@@ -128,7 +128,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// This constructor is for deserialization / ORM purposes
     /// </summary>
-    private Project()
+    protected Project()
     {
     }
 

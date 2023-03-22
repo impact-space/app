@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using ImpactSpace.Core.Organizations;
-using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities;
@@ -19,24 +16,14 @@ public class Skill : AggregateRoot<Guid>
         public string Name { get; private set; }
         
         /// <summary>
-        /// Gets or sets the skill group to which this skill belongs.
+        /// Gets or sets the skill group ID to which this skill belongs.
         /// </summary>
-        public SkillGroup SkillGroup { get; private set; }
+        public Guid SkillGroupId { get; private set; }
         
-        /// <summary>
-        /// Gets the organization member skills associated with this skill.
-        /// </summary>
-        public ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; private set; }
-        
-        /// <summary>
-        /// Gets the project skills associated with this skill.
-        /// </summary>
-        public ICollection<ProjectSkill> ProjectSkills { get; private set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Skill"/> class for deserialization / ORM purposes.
         /// </summary>
-        private Skill()
+        protected Skill()
         {
             
         }
@@ -46,13 +33,12 @@ public class Skill : AggregateRoot<Guid>
         /// </summary>
         /// <param name="id">The identifier of the skill.</param>
         /// <param name="name">The name of the skill.</param>
-        internal Skill(Guid id, [NotNull] string name)
+        /// <param name="skillGroupId">The identifier of the skill group</param>
+        internal Skill(Guid id, [NotNull] string name, Guid skillGroupId)
             : base(id)
         {
             SetName(name);
-            
-            OrganizationMemberSkills = new List<OrganizationMemberSkill>();
-            ProjectSkills = new List<ProjectSkill>();
+            SetSkillGroup(skillGroupId);
         }
 
         /// <summary>
@@ -63,6 +49,12 @@ public class Skill : AggregateRoot<Guid>
         internal Skill ChangeName([NotNull] string name)
         {
             SetName(name);
+            return this;
+        }
+
+        internal Skill ChangeSkillGroup(Guid skillGroupId)
+        {
+            SetSkillGroup(skillGroupId);
             return this;
         }
 
@@ -80,21 +72,8 @@ public class Skill : AggregateRoot<Guid>
             );
         }
         
-        /// <summary>
-        /// Adds an organization member skill to the list of organization member skills for the skill.
-        /// </summary>
-        /// <param name="organizationMemberSkill">The organization member skill to be added.</param>
-        internal void AddOrganizationMemberSkill(OrganizationMemberSkill organizationMemberSkill)
+        private void SetSkillGroup(Guid skillGroupId)
         {
-            OrganizationMemberSkills.Add(Check.NotNull(organizationMemberSkill, nameof(organizationMemberSkill)));
-        }
-
-        /// <summary>
-        /// Removes an organization member skill from the list of organization member skills for the skill.
-        /// </summary>
-        /// <param name="organizationMemberSkill">The organization member skill to be removed.</param>
-        internal void RemoveOrganizationMemberSkill(OrganizationMemberSkill organizationMemberSkill)
-        {
-            OrganizationMemberSkills.Remove(Check.NotNull(organizationMemberSkill, nameof(organizationMemberSkill)));
+            SkillGroupId = skillGroupId;
         }
     }

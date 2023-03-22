@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ImpactSpace.Core.Skills;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
 using Volo.Abp.DependencyInjection;
 using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore.Modeling;
 using Volo.Abp.FeatureManagement.EntityFrameworkCore;
 using Volo.Abp.Identity;
 using Volo.Abp.Identity.EntityFrameworkCore;
@@ -24,6 +26,8 @@ public class CoreDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<Skill> Skills { get; set; }
+    public DbSet<SkillGroup> SkillGroups { get; set; }
 
     #region Entities from the modules
 
@@ -74,6 +78,25 @@ public class CoreDbContext :
         builder.ConfigureTenantManagement();
 
         /* Configure your own tables/entities inside here */
+        builder.Entity<Skill>(b =>
+        {
+            b.ToTable(CoreConsts.DbTablePrefix + "Skills", CoreConsts.DbSchema);
+            b.ConfigureByConvention();
+            // You can add more configurations if needed.
+        });
+        
+        builder.Entity<SkillGroup>(b =>
+        {
+            b.ToTable(CoreConsts.DbTablePrefix + "SkillGroups", CoreConsts.DbSchema);
+            b.ConfigureByConvention();
+    
+            // Configure one-to-many relationship between SkillGroup and Skill
+            b.HasMany(sg => sg.Skills)
+                .WithOne()
+                .HasForeignKey(s => s.SkillGroupId)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Cascade);
+        });
 
         //builder.Entity<YourEntity>(b =>
         //{

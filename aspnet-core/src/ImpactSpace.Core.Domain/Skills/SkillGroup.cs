@@ -29,7 +29,7 @@ public class SkillGroup : AggregateRoot<Guid>
     /// <summary>
     /// This constructor is for deserialization / ORM purposes
     /// </summary>
-    private SkillGroup()
+    protected SkillGroup()
     {
         
     }

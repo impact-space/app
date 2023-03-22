@@ -41,7 +41,7 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Default constructor used for deserialization and ORM purposes.
     /// </summary>
-    private Organization()
+    protected Organization()
     {
         
     }

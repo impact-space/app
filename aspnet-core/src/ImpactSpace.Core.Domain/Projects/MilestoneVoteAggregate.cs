@@ -36,7 +36,7 @@ namespace ImpactSpace.Core.Projects
         /// <summary>
         /// Private constructor for deserialization / ORM purposes.
         /// </summary>
-        private MilestoneVoteAggregate()
+        protected MilestoneVoteAggregate()
         {
         }
 

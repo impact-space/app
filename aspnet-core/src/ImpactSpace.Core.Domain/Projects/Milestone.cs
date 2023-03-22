@@ -76,7 +76,7 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// This constructor is for deserialization / ORM purposes.
     /// </summary>
-    private Milestone()
+    protected Milestone()
     {
     }
 

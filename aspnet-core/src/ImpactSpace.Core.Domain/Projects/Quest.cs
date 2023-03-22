@@ -66,7 +66,7 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// This constructor is for deserialization / ORM purposes.
     /// </summary>
-    private Quest()
+    protected Quest()
     {
     }
 

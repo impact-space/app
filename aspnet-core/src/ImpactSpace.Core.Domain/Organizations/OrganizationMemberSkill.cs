@@ -9,7 +9,7 @@ namespace ImpactSpace.Core.Organizations;
 /// <summary>
 /// Represents a skill possessed by a member of an organization.
 /// </summary>
-public class OrganizationMemberSkill : Entity<Guid>, IMultiTenant
+public class OrganizationMemberSkill : Entity, IMultiTenant
 {
     /// <summary>
     /// The ID of the organization member who possesses the skill.
@@ -44,21 +44,19 @@ public class OrganizationMemberSkill : Entity<Guid>, IMultiTenant
     /// <summary>
     /// Private constructor for deserialization / ORM purposes.
     /// </summary>
-    private OrganizationMemberSkill()
+    protected OrganizationMemberSkill()
     {
     }
 
     /// <summary>
     /// Creates a new instance of the <see cref="OrganizationMemberSkill"/> class with the specified values.
     /// </summary>
-    /// <param name="id">The ID of the organization member skill.</param>
     /// <param name="organizationMemberId">The ID of the organization member who possesses the skill.</param>
     /// <param name="skillId">The ID of the skill possessed by the organization member.</param>
     /// <param name="proficiencyLevel">The proficiency level of the organization member in the skill.</param>
     /// <param name="tenantId">The ID of the tenant to which this organization member skill belongs.</param>
-    internal OrganizationMemberSkill(Guid id, Guid organizationMemberId, Guid skillId,
+    internal OrganizationMemberSkill(Guid organizationMemberId, Guid skillId,
         ProficiencyLevel proficiencyLevel, Guid? tenantId)
-        : base(id)
     {
         OrganizationMemberId = organizationMemberId;
         SkillId = skillId;
@@ -84,5 +82,10 @@ public class OrganizationMemberSkill : Entity<Guid>, IMultiTenant
     private void SetProficiencyLevel(ProficiencyLevel proficiencyLevel)
     {
         ProficiencyLevel = proficiencyLevel;
+    }
+
+    public override object[] GetKeys()
+    {
+        return new object[] { OrganizationMemberId, SkillId };
     }
 }

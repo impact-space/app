@@ -68,7 +68,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Creates a new instance of the <see cref="OrganizationMember"/> class.
     /// </summary>
-    private OrganizationMember()
+    protected OrganizationMember()
     {
         // This constructor is for deserialization / ORM purposes
     }

@@ -2,18 +2,19 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Volo.Abp;
+using Volo.Abp.Domain.Entities;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Projects
 {
-    public class ProjectCategory : AuditedAggregateRoot<Guid>, IMultiTenant
+    public class ProjectCategory : Entity<Guid>, IMultiTenant
     {
         public string Name { get; private set; }
         public List<Project> Projects { get; private set; } = new();
         public Guid? TenantId { get; set; }
 
-        private ProjectCategory()
+        protected ProjectCategory()
         {
             // This constructor is for deserialization / ORM purposes
         }

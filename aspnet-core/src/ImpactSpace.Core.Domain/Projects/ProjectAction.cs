@@ -41,7 +41,7 @@ namespace ImpactSpace.Core.Projects
         public Guid? TenantId { get; private set; }
 
         // Constructors
-        private ProjectAction()
+        protected ProjectAction()
         {
             // This constructor is for deserialization / ORM purposes
         }
