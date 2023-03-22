@@ -9,7 +9,7 @@ namespace ImpactSpace.Core.Projects;
 /// <summary>
     /// Represents a ProjectSkill entity that associates a Skill with a Project and its proficiency level.
     /// </summary>
-    public class ProjectSkill : Entity<Guid>, IMultiTenant
+    public class ProjectSkill : Entity, IMultiTenant
     {
         /// <summary>
         /// Gets the associated Project's Id.
@@ -51,13 +51,11 @@ namespace ImpactSpace.Core.Projects;
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectSkill"/> class.
         /// </summary>
-        /// <param name="id">The unique identifier for the ProjectSkill.</param>
         /// <param name="projectId">The associated Project's Id.</param>
         /// <param name="skillId">The associated Skill's Id.</param>
         /// <param name="proficiencyLevel">The proficiency level for the skill in the project.</param>
         /// <param name="tenantId">The Tenant Id for multi-tenancy support.</param>
-        public ProjectSkill(Guid id, Guid projectId, Guid skillId, ProficiencyLevel proficiencyLevel, Guid? tenantId = null)
-            : base(id)
+        public ProjectSkill(Guid projectId, Guid skillId, ProficiencyLevel proficiencyLevel, Guid? tenantId = null)
         {
             ProjectId = projectId;
             SkillId = skillId;
@@ -74,5 +72,10 @@ namespace ImpactSpace.Core.Projects;
         {
             ProficiencyLevel = proficiencyLevel;
             return this;
+        }
+
+        public override object[] GetKeys()
+        {
+            return new object[] { ProjectId, SkillId };
         }
     }

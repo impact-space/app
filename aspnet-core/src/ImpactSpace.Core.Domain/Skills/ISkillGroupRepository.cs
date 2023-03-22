@@ -13,15 +13,9 @@ public interface ISkillGroupRepository : IRepository<SkillGroup, Guid>
         int skipCount,
         int maxResultCount,
         string sorting,
-        string filter = null
+        string filter = null,
+        bool includeSkills = false
     );
-    
-    Task<List<SkillGroup>> GetListWithSkillsAsync(
-        int skipCount,
-        int maxResultCount,
-        string sorting,
-        string filter = null
-    );
-    
+
     Task<SkillGroup> GetSkillGroupBySkillAsync(Guid skillId);
 }

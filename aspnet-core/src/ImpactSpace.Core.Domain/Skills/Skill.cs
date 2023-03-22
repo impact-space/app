@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using ImpactSpace.Core.Organizations;
+using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities;
@@ -20,6 +23,10 @@ public class Skill : AggregateRoot<Guid>
         /// </summary>
         public Guid SkillGroupId { get; private set; }
         
+        public virtual ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; private set; }
+        
+        public virtual ICollection<ProjectSkill> ProjectSkills { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Skill"/> class for deserialization / ORM purposes.
         /// </summary>
@@ -39,6 +46,9 @@ public class Skill : AggregateRoot<Guid>
         {
             SetName(name);
             SetSkillGroup(skillGroupId);
+
+            OrganizationMemberSkills = new List<OrganizationMemberSkill>();
+            ProjectSkills = new List<ProjectSkill>();
         }
 
         /// <summary>

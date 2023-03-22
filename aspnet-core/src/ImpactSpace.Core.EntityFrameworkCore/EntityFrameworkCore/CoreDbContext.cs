@@ -81,15 +81,29 @@ public class CoreDbContext :
         builder.Entity<Skill>(b =>
         {
             b.ToTable(CoreConsts.DbTablePrefix + "Skills", CoreConsts.DbSchema);
+            
             b.ConfigureByConvention();
-            // You can add more configurations if needed.
+            
+            b.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(SkillConstants.MaxNameLength);
+
+            b.HasIndex(x => x.Name);
         });
         
         builder.Entity<SkillGroup>(b =>
         {
             b.ToTable(CoreConsts.DbTablePrefix + "SkillGroups", CoreConsts.DbSchema);
+            
             b.ConfigureByConvention();
     
+            b.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(SkillGroupConstants.MaxNameLength);
+
+            b.Property(x => x.Description)
+                .HasMaxLength(SkillGroupConstants.MaxDescriptionLength);
+            
             // Configure one-to-many relationship between SkillGroup and Skill
             b.HasMany(sg => sg.Skills)
                 .WithOne()
@@ -97,12 +111,5 @@ public class CoreDbContext :
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
         });
-
-        //builder.Entity<YourEntity>(b =>
-        //{
-        //    b.ToTable(CoreConsts.DbTablePrefix + "YourEntities", CoreConsts.DbSchema);
-        //    b.ConfigureByConvention(); //auto configure for the base class props
-        //    //...
-        //});
     }
 }

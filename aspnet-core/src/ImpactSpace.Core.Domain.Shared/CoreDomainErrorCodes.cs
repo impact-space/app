@@ -2,5 +2,7 @@
 
 public static class CoreDomainErrorCodes
 {
-    /* You can add your business exception error codes here, as constants */
+    public const string SkillAlreadyExists = "Core:00001";
+    public const string SkillGroupAlreadyExists = "Core:00002";
+    public const string SkillGroupNotFound = "Core:00003";
 }

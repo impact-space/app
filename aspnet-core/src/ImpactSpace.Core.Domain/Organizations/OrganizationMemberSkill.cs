@@ -19,7 +19,7 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// <summary>
     /// The organization member who possesses the skill.
     /// </summary>
-    public OrganizationMember OrganizationMember { get; private set; }
+    public virtual OrganizationMember OrganizationMember { get; private set; }
 
     /// <summary>
     /// The ID of the skill possessed by the organization member.
@@ -29,7 +29,7 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// <summary>
     /// The skill possessed by the organization member.
     /// </summary>
-    public Skill Skill { get; private set; }
+    public virtual Skill Skill { get; private set; }
 
     /// <summary>
     /// The proficiency level of the organization member in the skill.
