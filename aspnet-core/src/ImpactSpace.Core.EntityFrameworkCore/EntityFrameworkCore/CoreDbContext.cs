@@ -159,12 +159,11 @@ public class CoreDbContext :
             b.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(ProjectCategoryConsts.MaxNameLength);
-            
+
             b.HasMany(x => x.Projects)
                 .WithOne(x => x.ProjectCategory)
                 .HasForeignKey(x => x.ProjectCategoryId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .IsRequired();
         });
 
         builder.Entity<ProjectSkill>(b =>
@@ -317,12 +316,11 @@ public class CoreDbContext :
                 .IsRequired()
                 .HasMaxLength(SkillConstants.MaxNameLength);
             b.HasIndex(x => x.Name).IsUnique();
-            
+
             b.HasMany(x => x.OrganizationMemberSkills)
                 .WithOne()
                 .HasForeignKey(x => x.SkillId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .IsRequired();
 
             b.HasMany(x => x.ProjectSkills)
                 .WithOne()
@@ -349,8 +347,7 @@ public class CoreDbContext :
             b.HasMany(sg => sg.Skills)
                 .WithOne()
                 .HasForeignKey(s => s.SkillGroupId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade);
+                .IsRequired();
         });
     }
 }

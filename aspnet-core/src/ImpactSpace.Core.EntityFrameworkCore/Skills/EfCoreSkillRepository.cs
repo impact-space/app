@@ -30,7 +30,8 @@ public class EfCoreSkillRepository
         int skipCount,
         int maxResultCount,
         string sorting,
-        string filter = null)
+        string filter = null,
+        Guid? skillGroupId = null)
     {
         var dbSet = await GetDbSetAsync();
         
@@ -38,6 +39,10 @@ public class EfCoreSkillRepository
             .WhereIf(
                 !filter.IsNullOrWhiteSpace(),
                 skill => skill.Name.Contains(filter)
+            )
+            .WhereIf(
+                skillGroupId.HasValue,
+                skill => skill.SkillGroupId == skillGroupId.Value
             )
             .OrderBy(sorting)
             .Skip(skipCount)

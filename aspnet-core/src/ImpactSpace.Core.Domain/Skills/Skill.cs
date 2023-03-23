@@ -24,8 +24,14 @@ public class Skill : AggregateRoot<Guid>
         /// </summary>
         public Guid SkillGroupId { get; private set; }
 
+        /// <summary>
+        /// Gets the skills associated with members of an organization.
+        /// </summary>
         public virtual ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; private set; }
         
+        /// <summary>
+        /// Gets the skills associated with a project.
+        /// </summary>
         public virtual ICollection<ProjectSkill> ProjectSkills { get; private set; }
 
         /// <summary>
@@ -62,7 +68,12 @@ public class Skill : AggregateRoot<Guid>
             SetName(name);
             return this;
         }
-
+        
+        /// <summary>
+        /// Changes the skill group of the skill.
+        /// </summary>
+        /// <param name="skillGroupId">The new skill group's identifier.</param>
+        /// <returns>The skill object.</returns>
         internal Skill ChangeSkillGroup(Guid skillGroupId)
         {
             SetSkillGroup(skillGroupId);
@@ -83,6 +94,10 @@ public class Skill : AggregateRoot<Guid>
             );
         }
         
+        /// <summary>
+        /// Sets the Skill's skill group ID to the specified value.
+        /// </summary>
+        /// <param name="skillGroupId"></param>
         private void SetSkillGroup(Guid skillGroupId)
         {
             SkillGroupId = skillGroupId;

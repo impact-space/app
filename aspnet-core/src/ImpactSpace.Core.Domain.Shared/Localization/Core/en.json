@@ -3,6 +3,15 @@
   "texts": {
     "Menu:Home": "Home",
     "Welcome": "Welcome",
-    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io."
+    "LongWelcomeMessage": "Welcome to the Impact Space application.  It is currently a prototype, and is subject to major changes.  Please report any bugs or issues to the Impact Space team.",
+    "Menu:Administration": "Administration",
+    "Permission:Skills": "Skill Management",
+    "Permission:Skills.Create": "Creating new skills",
+    "Permission:Skills.Edit": "Editing the skills",
+    "Permission:Skills.Delete": "Deleting the skills",
+    "Permission:SkillGroups": "Skill Group Management",
+    "Permission:SkillGroups.Create": "Creating new skill groups",
+    "Permission:SkillGroups.Edit": "Editing the skill groups",
+    "Permission:SkillGroups.Delete": "Deleting the skill groups"
   }
 }
