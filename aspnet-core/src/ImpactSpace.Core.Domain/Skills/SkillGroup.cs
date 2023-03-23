@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities;
@@ -49,7 +50,7 @@ public class SkillGroup : AggregateRoot<Guid>
         SetName(name);
         Description = description;
 
-        Skills = new List<Skill>();
+        Skills = new Collection<Skill>();
     }
 
     /// <summary>

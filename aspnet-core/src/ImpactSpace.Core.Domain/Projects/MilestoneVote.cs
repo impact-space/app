@@ -15,6 +15,11 @@ public class MilestoneVote : AuditedEntity, IMultiTenant
     /// The ID of the milestone this vote belongs to.
     /// </summary>
     public Guid MilestoneId { get; private set; }
+    
+    /// <summary>
+    /// The milestone of the vote
+    /// </summary>
+    public virtual Milestone Milestone { get; private set; }
 
     /// <summary>
     /// The ID of the organization member who cast the vote.
@@ -24,7 +29,7 @@ public class MilestoneVote : AuditedEntity, IMultiTenant
     /// <summary>
     /// The organization member who cast the vote.
     /// </summary>
-    public OrganizationMember OrganizationMember { get; private set; }
+    public virtual OrganizationMember OrganizationMember { get; private set; }
 
     /// <summary>
     /// The ID of the MilestoneVoteAggregate this vote belongs to.
@@ -34,7 +39,7 @@ public class MilestoneVote : AuditedEntity, IMultiTenant
     /// <summary>
     /// The MilestoneVoteAggregate this vote belongs to.
     /// </summary>
-    public MilestoneVoteAggregate MilestoneVoteAggregate { get; private set; }
+    public virtual MilestoneVoteAggregate MilestoneVoteAggregate { get; private set; }
 
     /// <summary>
     /// The type of vote (UpVote or DownVote).

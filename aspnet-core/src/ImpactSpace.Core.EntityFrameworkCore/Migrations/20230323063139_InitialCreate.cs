@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ImpactSpace.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class CreatedSkillsEntities : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -346,6 +346,39 @@ namespace ImpactSpace.Core.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AbpUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppOrganizations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppOrganizations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppProjectCategories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppProjectCategories", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -772,6 +805,303 @@ namespace ImpactSpace.Core.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AppActivities",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    StatusType = table.Column<int>(type: "integer", nullable: false),
+                    DueDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    PriorityLevel = table.Column<int>(type: "integer", nullable: false),
+                    QuestId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Budget = table.Column<decimal>(type: "numeric", nullable: false),
+                    CompletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    EstimatedEffort = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppActivities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppMilestones",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CompletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Deadline = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Budget = table.Column<decimal>(type: "numeric", nullable: false),
+                    TotalVotes = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    PriorityLevel = table.Column<int>(type: "integer", nullable: false),
+                    StatusType = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppMilestones", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppMilestoneVoteAggregates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    MilestoneId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VoteScore = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppMilestoneVoteAggregates", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppMilestoneVoteAggregates_AppMilestones_MilestoneId",
+                        column: x => x.MilestoneId,
+                        principalTable: "AppMilestones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppQuests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    DueDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    CompletedDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Budget = table.Column<decimal>(type: "numeric", nullable: false),
+                    MilestoneId = table.Column<Guid>(type: "uuid", nullable: false),
+                    StatusType = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppQuests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppQuests_AppMilestones_MilestoneId",
+                        column: x => x.MilestoneId,
+                        principalTable: "AppMilestones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppMilestoneVotes",
+                columns: table => new
+                {
+                    MilestoneId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrganizationMemberId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MilestoneVoteAggregateId = table.Column<Guid>(type: "uuid", nullable: false),
+                    VoteType = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppMilestoneVotes", x => new { x.MilestoneId, x.OrganizationMemberId });
+                    table.ForeignKey(
+                        name: "FK_AppMilestoneVotes_AppMilestoneVoteAggregates_MilestoneVoteA~",
+                        column: x => x.MilestoneVoteAggregateId,
+                        principalTable: "AppMilestoneVoteAggregates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppMilestoneVotes_AppMilestones_MilestoneId",
+                        column: x => x.MilestoneId,
+                        principalTable: "AppMilestones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppOrganizationMemberActivities",
+                columns: table => new
+                {
+                    OrganizationMemberId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ActivityId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppOrganizationMemberActivities", x => new { x.OrganizationMemberId, x.ActivityId });
+                    table.ForeignKey(
+                        name: "FK_AppOrganizationMemberActivities_AppActivities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "AppActivities",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppOrganizationMembers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
+                    Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: true),
+                    OrganizationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppOrganizationMembers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppOrganizationMembers_AppOrganizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "AppOrganizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppOrganizationMemberSkills",
+                columns: table => new
+                {
+                    OrganizationMemberId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SkillId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProficiencyLevel = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppOrganizationMemberSkills", x => new { x.OrganizationMemberId, x.SkillId });
+                    table.ForeignKey(
+                        name: "FK_AppOrganizationMemberSkills_AppOrganizationMembers_Organiza~",
+                        column: x => x.OrganizationMemberId,
+                        principalTable: "AppOrganizationMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppOrganizationMemberSkills_AppSkills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "AppSkills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppProjects",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
+                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    ActualEndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    Purpose = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    FundingAllocated = table.Column<decimal>(type: "numeric", nullable: true),
+                    FundraisingTarget = table.Column<decimal>(type: "numeric", nullable: true),
+                    TotalBudget = table.Column<decimal>(type: "numeric", nullable: false),
+                    RemainingBudget = table.Column<decimal>(type: "numeric", nullable: false),
+                    IsFeatured = table.Column<bool>(type: "boolean", nullable: false),
+                    StatusType = table.Column<int>(type: "integer", nullable: false),
+                    ProjectCategoryId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProjectOwnerId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProjectType = table.Column<int>(type: "integer", nullable: false),
+                    ProjectImageUrl = table.Column<string>(type: "text", nullable: true),
+                    Progress = table.Column<int>(type: "integer", nullable: false),
+                    OrganizationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ExtraProperties = table.Column<string>(type: "text", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppProjects", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AppProjects_AppOrganizationMembers_ProjectOwnerId",
+                        column: x => x.ProjectOwnerId,
+                        principalTable: "AppOrganizationMembers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppProjects_AppOrganizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "AppOrganizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppProjects_AppProjectCategories_ProjectCategoryId",
+                        column: x => x.ProjectCategoryId,
+                        principalTable: "AppProjectCategories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AppProjectSkills",
+                columns: table => new
+                {
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SkillId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProficiencyLevel = table.Column<int>(type: "integer", nullable: false),
+                    TenantId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AppProjectSkills", x => new { x.ProjectId, x.SkillId });
+                    table.ForeignKey(
+                        name: "FK_AppProjectSkills_AppProjects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "AppProjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AppProjectSkills_AppSkills_SkillId",
+                        column: x => x.SkillId,
+                        principalTable: "AppSkills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AbpAuditLogActions_AuditLogId",
                 table: "AbpAuditLogActions",
@@ -961,9 +1291,86 @@ namespace ImpactSpace.Core.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AppActivities_QuestId",
+                table: "AppActivities",
+                column: "QuestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppMilestones_ProjectId",
+                table: "AppMilestones",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppMilestoneVoteAggregates_MilestoneId",
+                table: "AppMilestoneVoteAggregates",
+                column: "MilestoneId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppMilestoneVotes_MilestoneVoteAggregateId",
+                table: "AppMilestoneVotes",
+                column: "MilestoneVoteAggregateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppMilestoneVotes_OrganizationMemberId",
+                table: "AppMilestoneVotes",
+                column: "OrganizationMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppOrganizationMemberActivities_ActivityId",
+                table: "AppOrganizationMemberActivities",
+                column: "ActivityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppOrganizationMembers_OrganizationId",
+                table: "AppOrganizationMembers",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppOrganizationMembers_ProjectId",
+                table: "AppOrganizationMembers",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppOrganizationMemberSkills_SkillId",
+                table: "AppOrganizationMemberSkills",
+                column: "SkillId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppProjects_OrganizationId",
+                table: "AppProjects",
+                column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppProjects_ProjectCategoryId",
+                table: "AppProjects",
+                column: "ProjectCategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppProjects_ProjectOwnerId",
+                table: "AppProjects",
+                column: "ProjectOwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppProjectSkills_SkillId",
+                table: "AppProjectSkills",
+                column: "SkillId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppQuests_MilestoneId",
+                table: "AppQuests",
+                column: "MilestoneId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AppSkillGroups_Name",
+                table: "AppSkillGroups",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AppSkills_Name",
                 table: "AppSkills",
-                column: "Name");
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AppSkills_SkillGroupId",
@@ -999,11 +1406,54 @@ namespace ImpactSpace.Core.Migrations
                 name: "IX_OpenIddictTokens_ReferenceId",
                 table: "OpenIddictTokens",
                 column: "ReferenceId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AppActivities_AppQuests_QuestId",
+                table: "AppActivities",
+                column: "QuestId",
+                principalTable: "AppQuests",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AppMilestones_AppProjects_ProjectId",
+                table: "AppMilestones",
+                column: "ProjectId",
+                principalTable: "AppProjects",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AppMilestoneVotes_AppOrganizationMembers_OrganizationMember~",
+                table: "AppMilestoneVotes",
+                column: "OrganizationMemberId",
+                principalTable: "AppOrganizationMembers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AppOrganizationMemberActivities_AppOrganizationMembers_Orga~",
+                table: "AppOrganizationMemberActivities",
+                column: "OrganizationMemberId",
+                principalTable: "AppOrganizationMembers",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_AppOrganizationMembers_AppProjects_ProjectId",
+                table: "AppOrganizationMembers",
+                column: "ProjectId",
+                principalTable: "AppProjects",
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_AppOrganizationMembers_AppProjects_ProjectId",
+                table: "AppOrganizationMembers");
+
             migrationBuilder.DropTable(
                 name: "AbpAuditLogActions");
 
@@ -1068,7 +1518,16 @@ namespace ImpactSpace.Core.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "AppSkills");
+                name: "AppMilestoneVotes");
+
+            migrationBuilder.DropTable(
+                name: "AppOrganizationMemberActivities");
+
+            migrationBuilder.DropTable(
+                name: "AppOrganizationMemberSkills");
+
+            migrationBuilder.DropTable(
+                name: "AppProjectSkills");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictScopes");
@@ -1092,7 +1551,13 @@ namespace ImpactSpace.Core.Migrations
                 name: "AbpUsers");
 
             migrationBuilder.DropTable(
-                name: "AppSkillGroups");
+                name: "AppMilestoneVoteAggregates");
+
+            migrationBuilder.DropTable(
+                name: "AppActivities");
+
+            migrationBuilder.DropTable(
+                name: "AppSkills");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");
@@ -1101,7 +1566,28 @@ namespace ImpactSpace.Core.Migrations
                 name: "AbpAuditLogs");
 
             migrationBuilder.DropTable(
+                name: "AppQuests");
+
+            migrationBuilder.DropTable(
+                name: "AppSkillGroups");
+
+            migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
+
+            migrationBuilder.DropTable(
+                name: "AppMilestones");
+
+            migrationBuilder.DropTable(
+                name: "AppProjects");
+
+            migrationBuilder.DropTable(
+                name: "AppOrganizationMembers");
+
+            migrationBuilder.DropTable(
+                name: "AppProjectCategories");
+
+            migrationBuilder.DropTable(
+                name: "AppOrganizations");
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ImpactSpace.Core.Organizations;
 using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
@@ -22,7 +23,7 @@ public class Skill : AggregateRoot<Guid>
         /// Gets or sets the skill group ID to which this skill belongs.
         /// </summary>
         public Guid SkillGroupId { get; private set; }
-        
+
         public virtual ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; private set; }
         
         public virtual ICollection<ProjectSkill> ProjectSkills { get; private set; }
@@ -47,8 +48,8 @@ public class Skill : AggregateRoot<Guid>
             SetName(name);
             SetSkillGroup(skillGroupId);
 
-            OrganizationMemberSkills = new List<OrganizationMemberSkill>();
-            ProjectSkills = new List<ProjectSkill>();
+            OrganizationMemberSkills = new Collection<OrganizationMemberSkill>();
+            ProjectSkills = new Collection<ProjectSkill>();
         }
 
         /// <summary>

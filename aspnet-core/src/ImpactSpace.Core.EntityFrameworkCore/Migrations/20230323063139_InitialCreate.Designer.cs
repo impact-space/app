@@ -13,8 +13,8 @@ using Volo.Abp.EntityFrameworkCore;
 namespace ImpactSpace.Core.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20230322061614_Created_Skills_Entities")]
-    partial class CreatedSkillsEntities
+    [Migration("20230323063139_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,609 @@ namespace ImpactSpace.Core.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.Organization", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppOrganizations", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.OrganizationMember", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<Guid?>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("AppOrganizationMembers", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.OrganizationMemberActivity", b =>
+                {
+                    b.Property<Guid>("OrganizationMemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ActivityId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("OrganizationMemberId", "ActivityId");
+
+                    b.HasIndex("ActivityId");
+
+                    b.ToTable("AppOrganizationMemberActivities", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.OrganizationMemberSkill", b =>
+                {
+                    b.Property<Guid>("OrganizationMemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SkillId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ProficiencyLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("OrganizationMemberId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("AppOrganizationMemberSkills", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Activity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Budget")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("EstimatedEffort")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<int>("PriorityLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("QuestId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("StatusType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestId");
+
+                    b.ToTable("AppActivities", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Milestone", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Budget")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTime?>("Deadline")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<int>("PriorityLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("StatusType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.Property<int>("TotalVotes")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("AppMilestones", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.MilestoneVote", b =>
+                {
+                    b.Property<Guid>("MilestoneId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("OrganizationMemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MilestoneVoteAggregateId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.Property<int>("VoteType")
+                        .HasColumnType("integer");
+
+                    b.HasKey("MilestoneId", "OrganizationMemberId");
+
+                    b.HasIndex("MilestoneVoteAggregateId");
+
+                    b.HasIndex("OrganizationMemberId");
+
+                    b.ToTable("AppMilestoneVotes", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.MilestoneVoteAggregate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MilestoneId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.Property<int>("VoteScore")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilestoneId");
+
+                    b.ToTable("AppMilestoneVoteAggregates", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Project", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ActualEndDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<decimal?>("FundingAllocated")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal?>("FundraisingTarget")
+                        .HasColumnType("numeric");
+
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid>("OrganizationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Progress")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ProjectCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProjectImageUrl")
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("ProjectOwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ProjectType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Purpose")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<decimal>("RemainingBudget")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("StatusType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.Property<decimal>("TotalBudget")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("ProjectCategoryId");
+
+                    b.HasIndex("ProjectOwnerId");
+
+                    b.ToTable("AppProjects", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.ProjectCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AppProjectCategories", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.ProjectSkill", b =>
+                {
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SkillId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ProficiencyLevel")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("ProjectId", "SkillId");
+
+                    b.HasIndex("SkillId");
+
+                    b.ToTable("AppProjectSkills", (string)null);
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Quest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Budget")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)")
+                        .HasColumnName("ConcurrencyStamp");
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("CreationTime");
+
+                    b.Property<Guid?>("CreatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("CreatorId");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<DateTime?>("DueDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("ExtraProperties")
+                        .HasColumnType("text")
+                        .HasColumnName("ExtraProperties");
+
+                    b.Property<DateTime?>("LastModificationTime")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("LastModificationTime");
+
+                    b.Property<Guid?>("LastModifierId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("LastModifierId");
+
+                    b.Property<Guid>("MilestoneId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<int>("StatusType")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilestoneId");
+
+                    b.ToTable("AppQuests", (string)null);
+                });
 
             modelBuilder.Entity("ImpactSpace.Core.Skills.Skill", b =>
                 {
@@ -52,7 +655,8 @@ namespace ImpactSpace.Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Name");
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.HasIndex("SkillGroupId");
 
@@ -84,6 +688,9 @@ namespace ImpactSpace.Core.Migrations
                         .HasColumnType("character varying(128)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("AppSkillGroups", (string)null);
                 });
@@ -1696,6 +2303,176 @@ namespace ImpactSpace.Core.Migrations
                     b.ToTable("AbpTenantConnectionStrings", (string)null);
                 });
 
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.OrganizationMember", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Organizations.Organization", "Organization")
+                        .WithMany("OrganizationMembers")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Projects.Project", null)
+                        .WithMany("TeamMembers")
+                        .HasForeignKey("ProjectId");
+
+                    b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.OrganizationMemberActivity", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Projects.Activity", "Activity")
+                        .WithMany("OrganizationMemberActivities")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Organizations.OrganizationMember", "OrganizationMember")
+                        .WithMany("OrganizationMemberActivities")
+                        .HasForeignKey("OrganizationMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("OrganizationMember");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.OrganizationMemberSkill", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Organizations.OrganizationMember", "OrganizationMember")
+                        .WithMany("Skills")
+                        .HasForeignKey("OrganizationMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Skills.Skill", "Skill")
+                        .WithMany("OrganizationMemberSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrganizationMember");
+
+                    b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Activity", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Projects.Quest", "Quest")
+                        .WithMany("Activities")
+                        .HasForeignKey("QuestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quest");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Milestone", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Projects.Project", "Project")
+                        .WithMany("Milestones")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.MilestoneVote", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Projects.Milestone", "Milestone")
+                        .WithMany()
+                        .HasForeignKey("MilestoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Projects.MilestoneVoteAggregate", "MilestoneVoteAggregate")
+                        .WithMany("Votes")
+                        .HasForeignKey("MilestoneVoteAggregateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Organizations.OrganizationMember", "OrganizationMember")
+                        .WithMany()
+                        .HasForeignKey("OrganizationMemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milestone");
+
+                    b.Navigation("MilestoneVoteAggregate");
+
+                    b.Navigation("OrganizationMember");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.MilestoneVoteAggregate", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Projects.Milestone", "Milestone")
+                        .WithMany()
+                        .HasForeignKey("MilestoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milestone");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Project", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Organizations.Organization", "Organization")
+                        .WithMany("Projects")
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Projects.ProjectCategory", "ProjectCategory")
+                        .WithMany("Projects")
+                        .HasForeignKey("ProjectCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Organizations.OrganizationMember", "ProjectOwner")
+                        .WithMany("Projects")
+                        .HasForeignKey("ProjectOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("ProjectCategory");
+
+                    b.Navigation("ProjectOwner");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.ProjectSkill", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Projects.Project", "Project")
+                        .WithMany("RequiredSkills")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ImpactSpace.Core.Skills.Skill", "Skill")
+                        .WithMany("ProjectSkills")
+                        .HasForeignKey("SkillId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+
+                    b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Quest", b =>
+                {
+                    b.HasOne("ImpactSpace.Core.Projects.Milestone", "Milestone")
+                        .WithMany("Quests")
+                        .HasForeignKey("MilestoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milestone");
+                });
+
             modelBuilder.Entity("ImpactSpace.Core.Skills.Skill", b =>
                 {
                     b.HasOne("ImpactSpace.Core.Skills.SkillGroup", null)
@@ -1845,6 +2622,63 @@ namespace ImpactSpace.Core.Migrations
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.Organization", b =>
+                {
+                    b.Navigation("OrganizationMembers");
+
+                    b.Navigation("Projects");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Organizations.OrganizationMember", b =>
+                {
+                    b.Navigation("OrganizationMemberActivities");
+
+                    b.Navigation("Projects");
+
+                    b.Navigation("Skills");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Activity", b =>
+                {
+                    b.Navigation("OrganizationMemberActivities");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Milestone", b =>
+                {
+                    b.Navigation("Quests");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.MilestoneVoteAggregate", b =>
+                {
+                    b.Navigation("Votes");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Project", b =>
+                {
+                    b.Navigation("Milestones");
+
+                    b.Navigation("RequiredSkills");
+
+                    b.Navigation("TeamMembers");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.ProjectCategory", b =>
+                {
+                    b.Navigation("Projects");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Projects.Quest", b =>
+                {
+                    b.Navigation("Activities");
+                });
+
+            modelBuilder.Entity("ImpactSpace.Core.Skills.Skill", b =>
+                {
+                    b.Navigation("OrganizationMemberSkills");
+
+                    b.Navigation("ProjectSkills");
                 });
 
             modelBuilder.Entity("ImpactSpace.Core.Skills.SkillGroup", b =>

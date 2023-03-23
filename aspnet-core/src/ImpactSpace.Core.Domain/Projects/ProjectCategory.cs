@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Projects
@@ -11,7 +11,9 @@ namespace ImpactSpace.Core.Projects
     public class ProjectCategory : Entity<Guid>, IMultiTenant
     {
         public string Name { get; private set; }
-        public List<Project> Projects { get; private set; } = new();
+        
+        public virtual ICollection<Project> Projects { get; private set; }
+        
         public Guid? TenantId { get; set; }
 
         protected ProjectCategory()
@@ -23,6 +25,8 @@ namespace ImpactSpace.Core.Projects
             : base(id)
         {
             SetName(name);
+
+            Projects = new Collection<Project>();
         }
 
         internal ProjectCategory ChangeName([NotNull] string name)

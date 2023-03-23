@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
 using Volo.Abp;
@@ -26,12 +27,12 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// The list of projects owned by the organization.
     /// </summary>
-    public ICollection<Project> Projects { get; private set; }
+    public virtual ICollection<Project> Projects { get; private set; }
     
     /// <summary>
     /// A list of the members of the organization
     /// </summary>
-    public ICollection<OrganizationMember> OrganizationMembers { get; private set; }
+    public virtual ICollection<OrganizationMember> OrganizationMembers { get; private set; }
 
     /// <summary>
     /// Gets or sets the ID of the tenant to which the organization belongs.
@@ -58,8 +59,8 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
         SetName(name);
         SetDescription(description);
 
-        Projects = new List<Project>();
-        OrganizationMembers = new List<OrganizationMember>();
+        Projects = new Collection<Project>();
+        OrganizationMembers = new Collection<OrganizationMember>();
     }
 
     /// <summary>
@@ -125,7 +126,11 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <param name="project">The project to be added.</param>
     internal void AddProject(Project project)
     {
-        Projects.Add(Check.NotNull(project, nameof(project)));
+        Check.NotNull(project, nameof(project));
+        if (!Projects.Contains(project))
+        {
+            Projects.Add(project);
+        }
     }
 
     /// <summary>
@@ -143,7 +148,11 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <param name="organizationMember">The organization member to be added.</param>
     internal void AddOrganizationMember(OrganizationMember organizationMember)
     {
-        OrganizationMembers.Add(Check.NotNull(organizationMember, nameof(organizationMember)));
+        Check.NotNull(organizationMember, nameof(organizationMember));
+        if (!OrganizationMembers.Contains(organizationMember))
+        {
+            OrganizationMembers.Add(organizationMember);
+        }
     }
 
     /// <summary>

@@ -19,7 +19,7 @@ namespace ImpactSpace.Core.Projects;
         /// <summary>
         /// Gets the associated Project.
         /// </summary>
-        public Project Project { get; private set; }
+        public virtual Project Project { get; private set; }
 
         /// <summary>
         /// Gets the associated Skill's Id.
@@ -29,7 +29,7 @@ namespace ImpactSpace.Core.Projects;
         /// <summary>
         /// Gets the associated Skill.
         /// </summary>
-        public Skill Skill { get; private set; }
+        public virtual Skill Skill { get; private set; }
 
         /// <summary>
         /// Gets the proficiency level for the skill in the project.

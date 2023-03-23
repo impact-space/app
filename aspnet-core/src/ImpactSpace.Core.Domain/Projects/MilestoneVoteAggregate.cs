@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
@@ -16,7 +17,10 @@ namespace ImpactSpace.Core.Projects
         /// </summary>
         public Guid MilestoneId { get; private set; }
         
-        public Milestone Milestone { get; private set; }
+        /// <summary>
+        /// Gets or sets the milestone of the vote aggregate
+        /// </summary>
+        public virtual Milestone Milestone { get; private set; }
 
         /// <summary>
         /// Gets the total vote score.
@@ -26,7 +30,7 @@ namespace ImpactSpace.Core.Projects
         /// <summary>
         /// Gets the list of individual milestone votes.
         /// </summary>
-        public List<MilestoneVote> Votes { get; private set; } = new();
+        public virtual ICollection<MilestoneVote> Votes { get; private set; }
 
         /// <summary>
         /// Gets the Tenant ID for multi-tenancy support.
@@ -52,6 +56,8 @@ namespace ImpactSpace.Core.Projects
             MilestoneId = milestoneId;
             TenantId = tenantId;
             VoteScore = 0;
+
+            Votes = new Collection<MilestoneVote>();
         }
 
         /// <summary>

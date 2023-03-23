@@ -46,6 +46,7 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// </summary>
     protected OrganizationMemberSkill()
     {
+        
     }
 
     /// <summary>

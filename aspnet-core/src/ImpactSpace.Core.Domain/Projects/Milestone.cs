@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ImpactSpace.Core.Common;
 using JetBrains.Annotations;
 using Volo.Abp;
@@ -47,16 +48,21 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Gets the total votes for the milestone.
     /// </summary>
     public int TotalVotes { get; private set; }
+    
+    /// <summary>
+    /// Gets the identifier for the milestone's project
+    /// </summary>
+    public Guid ProjectId { get; private set; }
 
     /// <summary>
     /// Gets the project the milestone belongs to.
     /// </summary>
-    public Project Project { get; private set; }
+    public virtual Project Project { get; private set; }
 
     /// <summary>
     /// Gets the quests associated with the milestone.
     /// </summary>
-    public ICollection<Quest> Quests { get; private set; }
+    public virtual ICollection<Quest> Quests { get; private set; }
 
     /// <summary>
     /// Gets the priority level of the milestone.
@@ -98,7 +104,7 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
         StatusType = statusType;
         TenantId = tenantId;
 
-        Quests = new List<Quest>();
+        Quests = new Collection<Quest>();
     }
     
     /// <summary>

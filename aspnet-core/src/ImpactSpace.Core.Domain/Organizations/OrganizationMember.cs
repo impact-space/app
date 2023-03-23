@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
@@ -33,12 +34,12 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets or sets the list of project actions associated with the organization member.
     /// </summary>
-    public ICollection<ProjectAction> ProjectActions { get; private set; }
+    public virtual ICollection<OrganizationMemberActivity> OrganizationMemberActivities { get; private set; }
 
     /// <summary>
     /// Gets or sets the list of projects associated with the organization member.
     /// </summary>
-    public ICollection<Project> Projects { get; private set; }
+    public virtual ICollection<Project> Projects { get; private set; }
 
     /// <summary>
     /// Gets or sets the Guid of the user account associated with the organization member.
@@ -48,7 +49,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets or sets the list of skills associated with the organization member.
     /// </summary>
-    public ICollection<OrganizationMemberSkill> Skills { get; private set; }
+    public virtual ICollection<OrganizationMemberSkill> Skills { get; private set; }
 
     /// <summary>
     /// Gets or sets the Guid of the organization associated with the organization member.
@@ -58,7 +59,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets or sets the organization associated with the organization member.
     /// </summary>
-    public Organization Organization { get; private set; }
+    public virtual Organization Organization { get; private set; }
 
     /// <summary>
     /// Gets or sets the Guid of the tenant associated with the organization member.
@@ -66,11 +67,11 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     public Guid? TenantId { get; private set; }
 
     /// <summary>
-    /// Creates a new instance of the <see cref="OrganizationMember"/> class.
+    /// This constructor is for deserialization / ORM purposes
     /// </summary>
     protected OrganizationMember()
     {
-        // This constructor is for deserialization / ORM purposes
+
     }
 
     /// <summary>
@@ -92,9 +93,9 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         OrganizationId = organizationId;
         TenantId = tenantId;
 
-        ProjectActions = new List<ProjectAction>();
-        Projects = new List<Project>();
-        Skills = new List<OrganizationMemberSkill>();
+        OrganizationMemberActivities = new Collection<OrganizationMemberActivity>();
+        Projects = new Collection<Project>();
+        Skills = new Collection<OrganizationMemberSkill>();
     }
 
 
@@ -141,23 +142,15 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         OrganizationId = organizationId;
         return this;
     }
-
+    
     /// <summary>
-    /// Adds a project action to the list of project actions associated with the organization member.
+    /// Changes the user ID associated with the organization member.
     /// </summary>
-    /// <param name="projectAction">The project action to be added.</param>
-    internal void AddProjectAction(ProjectAction projectAction)
+    /// <param name="userId">The new user ID for the organization member.</param>
+    /// <returns>The updated organization member.</returns>
+    internal OrganizationMember ChangeUserId(Guid? userId)
     {
-        ProjectActions.Add(Check.NotNull(projectAction, nameof(projectAction)));
-    }
-
-    /// <summary>
-    /// Removes a project action from the list of project actions associated with the organization member.
-    /// </summary>
-    /// <param name="projectAction">The project action to be removed.</param>
-    internal void RemoveProjectAction(ProjectAction projectAction)
-    {
-        ProjectActions.Remove(Check.NotNull(projectAction, nameof(projectAction)));
+        return SetUserId(userId);
     }
 
     /// <summary>

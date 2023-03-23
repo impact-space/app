@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using ImpactSpace.Core.Common;
 using JetBrains.Annotations;
 using Volo.Abp;
@@ -46,12 +47,12 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets or sets the milestone to which the quest belongs.
     /// </summary>
-    public Milestone Milestone { get; private set; }
+    public virtual Milestone Milestone { get; private set; }
 
     /// <summary>
     /// Gets the project actions associated with this quest.
     /// </summary>
-    public List<ProjectAction> ProjectActions { get; private set; } = new();
+    public virtual ICollection<Activity> Activities { get; private set; }
 
     /// <summary>
     /// Gets or sets the status type of the quest.
@@ -83,6 +84,8 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
         SetName(name);
         MilestoneId = milestoneId;
         TenantId = tenantId;
+
+        Activities = new Collection<Activity>();
     }
     
     /// <summary>
@@ -95,7 +98,7 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
         Name = Check.NotNullOrWhiteSpace(
             name,
             nameof(name),
-            maxLength: QuestConsts.MaxNameLength);
+            maxLength: QuestConstants.MaxNameLength);
         return this;
     }
     
@@ -109,7 +112,7 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
         Description = Check.Length(
             description,
             nameof(description),
-            maxLength: QuestConsts.MaxDescriptionLength
+            maxLength: QuestConstants.MaxDescriptionLength
         );
         return this;
     }
@@ -161,28 +164,28 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Adds a project action to the quest.
     /// </summary>
-    /// <param name="projectAction">The project action to be added.</param>
-    public void AddProjectAction(ProjectAction projectAction)
+    /// <param name="activity">The project action to be added.</param>
+    public void AddProjectAction(Activity activity)
     {
-        if (projectAction == null)
+        if (activity == null)
         {
-            throw new ArgumentNullException(nameof(projectAction));
+            throw new ArgumentNullException(nameof(activity));
         }
 
-        ProjectActions.Add(projectAction);
+        Activities.Add(activity);
     }
 
     /// <summary>
     /// Removes a project action from the quest.
     /// </summary>
-    /// <param name="projectAction">The project action to be removed.</param>
-    public void RemoveProjectAction(ProjectAction projectAction)
+    /// <param name="activity">The project action to be removed.</param>
+    public void RemoveProjectAction(Activity activity)
     {
-        if (projectAction == null)
+        if (activity == null)
         {
-            throw new ArgumentNullException(nameof(projectAction));
+            throw new ArgumentNullException(nameof(activity));
         }
 
-        ProjectActions.Remove(projectAction);
+        Activities.Remove(activity);
     }
 }
