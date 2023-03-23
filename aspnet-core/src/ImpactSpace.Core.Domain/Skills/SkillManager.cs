@@ -30,12 +30,7 @@ public class SkillManager : DomainService
             throw new SkillAlreadyExistsException(name);
         }
 
-        var existingSkillGroup = await _skillGroupRepository.GetAsync(skillGroupId);
-
-        if (existingSkillGroup == null)
-        {
-            throw new SkillGroupNotFoundException(skillGroupId);
-        }
+        await _skillGroupRepository.GetAsync(skillGroupId);
 
         return new Skill(
             GuidGenerator.Create(),

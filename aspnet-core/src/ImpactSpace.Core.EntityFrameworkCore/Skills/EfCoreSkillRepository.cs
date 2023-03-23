@@ -37,12 +37,12 @@ public class EfCoreSkillRepository
         
         return await dbSet
             .WhereIf(
-                !filter.IsNullOrWhiteSpace(),
-                skill => skill.Name.Contains(filter)
-            )
-            .WhereIf(
                 skillGroupId.HasValue,
                 skill => skill.SkillGroupId == skillGroupId.Value
+            )
+            .WhereIf(
+                !filter.IsNullOrWhiteSpace(),
+                skill => skill.Name.Contains(filter)
             )
             .OrderBy(sorting)
             .Skip(skipCount)
