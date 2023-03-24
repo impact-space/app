@@ -47,12 +47,41 @@ steps:
     projects: '$(testProjectPath)'
     arguments: '--configuration $(buildConfiguration)'
 
+- task: PowerShell@2
+  displayName: 'Update appsettings.json for Blazor app'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.production.json"
+      $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.json"
+      $content = Get-Content -Path $sourceFilePath -Raw
+      $updatedContent = $content `
+        -replace "#{AuthorityUrl}#", "$(AuthorityUrl)" `
+        -replace "#{BlazorSelfUrl}#", "$(BlazorSelfUrl)" `
+        -replace "#{DbConnectionString}#", "$(DbConnectionString)" `
+        -replace "#{DefaultPassPhrase}#", "$(DefaultPassPhrase)" `
+        -replace "#{IsSelfRegistrationEnabled}#", "$(IsSelfRegistrationEnabled)" `
+        -replace "#{RedirectAllowedUrls}#", "$(RedirectAllowedUrls)" `
+        -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)"
+      Set-Content -Path $destinationFilePath -Value $updatedContent
+
 - task: DotNetCoreCLI@2
   displayName: 'Publish Blazor app'
   inputs:
     command: 'publish'
     projects: '$(blazorProjectPath)'
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
+
+- task: PowerShell@2
+  displayName: 'Update appsettings.json for DbMigrator'
+  inputs:
+    targetType: 'inline'
+    script: |
+      $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.DbMigrator/appsettings.production.json"
+      $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.DbMigrator/appsettings.json"
+      $content = Get-Content -Path $sourceFilePath -Raw
+      $updatedContent = $content.Replace("#{DbConnectionString}#", "$(DbConnectionString)")
+      Set-Content -Path $destinationFilePath -Value $updatedContent
 
 - task: DotNetCoreCLI@2
   displayName: 'Publish DbMigrator'
