@@ -34,6 +34,20 @@ public class CoreMenuContributor : IMenuContributor
             )
         );
 
+        context.Menu.AddItem(
+            new ApplicationMenuItem(
+                "SkillManagement",
+                l["Menu:SkillManagement"],
+                icon: "fas fa-book"
+            ).AddItem(
+                new ApplicationMenuItem(
+                    "SkillGroups",
+                    l["Menu:SkillGroups"],
+                    url: "/skill-groups"
+                )
+            )
+        );
+
         if (MultiTenancyConsts.IsEnabled)
         {
             administration.SetSubItemOrder(TenantManagementMenuNames.GroupName, 1);
@@ -41,6 +55,8 @@ public class CoreMenuContributor : IMenuContributor
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
         administration.SetSubItemOrder(SettingManagementMenus.GroupName, 3);
+        
+        
 
         return Task.CompletedTask;
     }
