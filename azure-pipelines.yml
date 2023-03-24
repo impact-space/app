@@ -111,17 +111,9 @@ stages:
     displayName: 'Run DbMigrator'
     pool:
       vmImage: 'ubuntu-latest'
-    environment:
-      name: 'Production'
-      resourceType: 'VirtualMachine'
+    environment: 'Production'
     strategy:
       runOnce:
-        preDeploy:
-          steps:
-          - task: ManualIntervention@8
-            inputs:
-              emailRecipients: 'beriniwlew@protonmail.com'
-              instructions: 'Please review and approve the DbMigrator deployment.'
         deploy:
           steps:
           - task: DownloadBuildArtifacts@0
@@ -151,17 +143,9 @@ stages:
     displayName: 'Deploy Blazor App'
     pool:
       vmImage: 'ubuntu-latest'
-    environment:
-      name: 'Production'
-      resourceType: 'VirtualMachine'
+    environment: 'Production'
     strategy:
       runOnce:
-        preDeploy:
-          steps:
-          - task: ManualIntervention@8
-            inputs:
-              emailRecipients: 'beriniwlew@protonmail.com'
-              instructions: 'Please review the build and ensure everything is fine before deploying the Blazor App.'
         deploy:
           steps:
           - task: DownloadBuildArtifacts@0
