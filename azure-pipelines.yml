@@ -131,7 +131,7 @@ stages:
             displayName: 'Deploy Blazor App to Azure App Service'
             inputs:
               appType: webAppLinux
-              azureSubscription: 22692305-fe59-4072-a42e-003edf710ab0
+              azureSubscription: 'Impact Space'
               appName: 'impactspace'
               package: '$(System.ArtifactsDirectory)/drop/blazor_app'
               customWebConfig: '-transform **\web.Release.config'
@@ -155,7 +155,7 @@ stages:
           - task: AzureCLI@2
             displayName: 'Run DbMigrator'
             inputs:
-              azureSubscription: 22692305-fe59-4072-a42e-003edf710ab0
+              azureSubscription: 'Impact Space'
               scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
