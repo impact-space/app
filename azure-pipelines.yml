@@ -11,8 +11,8 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  blazorProjectPath: '**/ImpactSpace.Core.Blazor.csproj'
-  dbMigratorProjectPath: '**/ImpactSpace.Core.DbMigrator.csproj'
+  blazorProjectPath: 'aspnet-core/src/ImpactSpace.Core.Blazor/ImpactSpace.Core.Blazor.csproj'
+  dbMigratorProjectPath: 'aspnet-core/src/ImpactSpace.Core.DbMigrator/ImpactSpace.Core.DbMigrator.csproj'
   testProjectPath: '**/ImpactSpace.Core.Application.Tests.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
@@ -70,7 +70,7 @@ steps:
   inputs:
     command: 'publish'
     projects: '$(blazorProjectPath)'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app/ImpactSpace.Core.Blazor'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
 
 - task: PowerShell@2
   displayName: 'Update appsettings.json for DbMigrator'
@@ -88,7 +88,7 @@ steps:
   inputs:
     command: 'publish'
     projects: '$(dbMigratorProjectPath)'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator/ImpactSpace.Core.DbMigrator'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish build artifacts'
