@@ -11,8 +11,8 @@ pool:
 
 variables:
   solution: '**/*.sln'
-  blazorProjectPath: 'aspnet-core/src/ImpactSpace.Core.Blazor/ImpactSpace.Core.Blazor.csproj'
-  dbMigratorProjectPath: 'aspnet-core/src/ImpactSpace.Core.DbMigrator/ImpactSpace.Core.DbMigrator.csproj'
+  blazorProjectPath: '$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/ImpactSpace.Core.Blazor.csproj'
+  dbMigratorProjectPath: '$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.DbMigrator/ImpactSpace.Core.DbMigrator.csproj'
   testProjectPath: '**/ImpactSpace.Core.Application.Tests.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
