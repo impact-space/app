@@ -75,7 +75,8 @@ stages:
       inputs:
         command: 'publish'
         projects: '$(blazorProjectPath)'
-        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app --no-zip'
+
 
     - task: PowerShell@2
       displayName: 'Update appsettings.json for DbMigrator'
@@ -94,7 +95,7 @@ stages:
         command: 'publish'
         publishWebProjects: false
         projects: '$(dbMigratorProjectPath)'
-        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator --no-zip'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish build artifacts'
@@ -122,12 +123,6 @@ stages:
               downloadType: 'single'
               artifactName: 'drop'
               downloadPath: '$(System.ArtifactsDirectory)'
-
-          - task: ExtractFiles@1
-            displayName: 'Extract ImpactSpace.Core.DbMigrator.zip archive'
-            inputs:
-              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
-              destinationFolder: '$(System.ArtifactsDirectory)/drop/db_migrator'
 
           - task: AzureCLI@2
             displayName: 'Run DbMigrator'
