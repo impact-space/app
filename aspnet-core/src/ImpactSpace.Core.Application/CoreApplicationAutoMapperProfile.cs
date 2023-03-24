@@ -14,5 +14,6 @@ public class CoreApplicationAutoMapperProfile : Profile
         CreateMap<Skill, SkillDto>();
         CreateMap<SkillGroup, SkillGroupDto>();
         CreateMap<SkillGroupDto, UpdateSkillGroupDto>();
+        CreateMap<SkillDto, UpdateSkillDto>();
     }
 }

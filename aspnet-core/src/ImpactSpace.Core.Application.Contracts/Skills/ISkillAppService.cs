@@ -9,7 +9,7 @@ public interface ISkillAppService : IApplicationService
 {
     Task<SkillDto> GetAsync(Guid id);
     
-    Task<ListResultDto<SkillDto>> GetListAsync(GetSkillListDto input);
+    Task<PagedResultDto<SkillDto>> GetListAsync(GetSkillListDto input);
     
     Task<SkillDto> CreateAsync(CreateSkillDto input);
     

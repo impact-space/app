@@ -26,7 +26,7 @@ public class SkillAppService : CoreAppService, ISkillAppService
         return ObjectMapper.Map<Skill, SkillDto>(skill);
     }
 
-    public async Task<ListResultDto<SkillDto>> GetListAsync(GetSkillListDto input)
+    public async Task<PagedResultDto<SkillDto>> GetListAsync(GetSkillListDto input)
     {
         if (input.Sorting.IsNullOrWhiteSpace())
         {
@@ -41,9 +41,11 @@ public class SkillAppService : CoreAppService, ISkillAppService
             input.SkillGroupId
         );
         
-        var totalCount = input.Filter == null
+        var totalCount = input.Filter == null && input.SkillGroupId == null
             ? await _skillRepository.CountAsync()
-            : await _skillRepository.CountAsync(skill => skill.Name.Contains(input.Filter));
+            : await _skillRepository.CountAsync(skill => 
+                (input.Filter == null || skill.Name.Contains(input.Filter)) && 
+                (input.SkillGroupId == null || skill.SkillGroupId == input.SkillGroupId));
         
         return new PagedResultDto<SkillDto>( 
             totalCount,

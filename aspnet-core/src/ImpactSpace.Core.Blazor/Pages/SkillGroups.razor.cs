@@ -1,17 +1,16 @@
-using Volo.Abp;
-
-namespace ImpactSpace.Core.Blazor.Pages;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Skills;
-using Permissions;
+using ImpactSpace.Core.Skills;
+using ImpactSpace.Core.Permissions;
 using Blazorise;
 using Blazorise.DataGrid;
 using Microsoft.AspNetCore.Authorization;
 using Volo.Abp.Application.Dtos;
+
+namespace ImpactSpace.Core.Blazor.Pages;
+
 public partial class SkillGroups
 {
     private IReadOnlyList<SkillGroupDto> SkillGroupList { get; set; }

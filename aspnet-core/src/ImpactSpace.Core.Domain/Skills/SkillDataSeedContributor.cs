@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Volo.Abp.Data;
@@ -30,13 +31,6 @@ public class SkillDataSeedContributor : IDataSeedContributor, ITransientDependen
 
     public async Task SeedAsync(DataSeedContext context)
     {
-        // skip data seeding if there are already skill groups
-        if (await _skillGroupRepository.GetCountAsync() > 0)
-        {
-            _logger.LogInformation("Database has already been seeded with skills");
-            return;
-        }
-        
         _logger.LogInformation("Seeding database with default skills");
         
         // Define the Skill Groups and their Skills
@@ -104,25 +98,33 @@ public class SkillDataSeedContributor : IDataSeedContributor, ITransientDependen
             ["Technical Writing and Documentation"] = new[] {"Technical Writing", "User Documentation", "API Documentation", "Technical Editing", "Writing Style Guides"}
         };
 
-
+        // Retrieve all existing skill groups and skills
+        var existingSkillGroups = await _skillGroupRepository.GetListAsync();
+        var existingSkills = await _skillRepository.GetListAsync();
+        
+        // Map the existing skill groups and skills to dictionaries for easy lookup
+        var existingSkillGroupNames = existingSkillGroups.ToDictionary(sg => sg.Name, sg => sg);
+        var existingSkillNames = existingSkills.ToDictionary(s => s.Name, s => s);
+        
+        // Add any missing skill groups and skills according to the skillGroupData dictionary
         foreach (var (skillGroupName, skills) in skillGroupData)
         {
             // Check if the Skill Group already exists, otherwise create it
-            var existingSkillGroup = await _skillGroupRepository.FirstOrDefaultAsync(sg => sg.Name == skillGroupName);
-            if (existingSkillGroup == null)
+            if (!existingSkillGroupNames.TryGetValue(skillGroupName, out var existingSkillGroup))
             {
                 existingSkillGroup = new SkillGroup(_guidGenerator.Create(), skillGroupName);
                 await _skillGroupRepository.InsertAsync(existingSkillGroup, autoSave: true);
+                existingSkillGroupNames.Add(skillGroupName, existingSkillGroup);
             }
 
             // Check if the Skills already exist, otherwise create them
             foreach (var skillName in skills)
             {
-                var existingSkill = await _skillRepository.FirstOrDefaultAsync(s => s.Name == skillName);
-                if (existingSkill == null)
+                if (!existingSkillNames.ContainsKey(skillName))
                 {
                     var newSkill = new Skill(_guidGenerator.Create(), skillName, existingSkillGroup.Id);
                     await _skillRepository.InsertAsync(newSkill, autoSave: true);
+                    existingSkillNames.Add(skillName, newSkill);
                 }
             }
         }

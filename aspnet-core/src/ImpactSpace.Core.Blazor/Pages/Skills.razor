@@ -1,8 +1,9 @@
-@page "/skill-groups"
+@page "/skills"
 @using ImpactSpace.Core.Skills
 @using ImpactSpace.Core.Localization
 @using Volo.Abp.AspNetCore.Components.Web
 @inherits CoreComponentBase
+@inject ISkillAppService SkillAppService
 @inject ISkillGroupAppService SkillGroupAppService
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
 
@@ -10,35 +11,44 @@
     <CardHeader>
         <Row Class="justify-content-between">
             <Column ColumnSize="ColumnSize.IsAuto">
-                <h2>@L["SkillGroups"]</h2>
+                <h2>@L["Skills"]</h2>
             </Column>
             <Column ColumnSize="ColumnSize.IsAuto">
-                @if (CanCreateSkillGroup)
+                @if (CanCreateSkill)
                 {
                     <Button Color="Color.Primary"
-                            Clicked="OpenCreateSkillGroupModal">
-                        @L["NewSkillGroup"]
+                            Clicked="OpenCreateSkillModal">
+                        @L["NewSkill"]
                     </Button>
                 }
             </Column>
         </Row>
         <Row>
-            <Column ColumnSize="ColumnSize.IsFull">
-                <TextEdit Text="@FilterText" TextChanged="@OnFilterTextChanged" Placeholder="@L["Search"]" />
+            <Column ColumnSize="ColumnSize.IsHalf">
+                <TextEdit Text="@FilterText" TextChanged="@OnFilterTextChanged" Placeholder="@L["Search"]"/>
+            </Column>
+            <Column ColumnSize="ColumnSize.IsHalf">
+                <Select TValue="Guid?" SelectedValue="@SelectedSkillGroupId" SelectedValueChanged="@OnSkillGroupFilterChanged">
+                    <SelectItem TValue="Guid?" Value="null"></SelectItem>
+                    @foreach (var skillGroup in SkillGroupList)
+                    {
+                        <SelectItem TValue="Guid?" Value="@skillGroup.Id">@skillGroup.Name</SelectItem>
+                    }
+                </Select>
             </Column>
         </Row>
     </CardHeader>
     <CardBody>
-        <DataGrid TItem="SkillGroupDto"
-                  Data="SkillGroupList"
+        <DataGrid TItem="SkillDto"
+                  Data="SkillList"
                   ReadData="OnDataGridReadAsync"
                   TotalItems="TotalCount"
                   ShowPager="true"
                   PageSize="PageSize">
             <DataGridColumns>
                 <DataGridColumn Width="150px"
-                                TItem="SkillGroupDto"
-                                Field="@nameof(SkillGroupDto.Id)"
+                                TItem="SkillDto"
+                                Field="@nameof(SkillDto.Id)"
                                 Sortable="false"
                                 Caption="@L["Actions"]">
                     <DisplayTemplate>
@@ -47,15 +57,15 @@
                                 @L["Actions"]
                             </DropdownToggle>
                             <DropdownMenu>
-                                @if (CanEditSkillGroup)
+                                @if (CanEditSkill)
                                 {
-                                    <DropdownItem Clicked="() => OpenEditSkillGroupModal(context)">
+                                    <DropdownItem Clicked="() => OpenEditSkillModal(context)">
                                         @L["Edit"]
                                     </DropdownItem>
                                 }
-                                @if (CanDeleteSkillGroup)
+                                @if (CanDeleteSkill)
                                 {
-                                    <DropdownItem Clicked="() => DeleteSkillGroupAsync(context)">
+                                    <DropdownItem Clicked="() => DeleteSkillAsync(context)">
                                         @L["Delete"]
                                     </DropdownItem>
                                 }
@@ -63,15 +73,15 @@
                         </Dropdown>
                     </DisplayTemplate>
                 </DataGridColumn>
-                <DataGridColumn TItem="SkillGroupDto"
-                                Field="@nameof(SkillGroupDto.Name)"
+                <DataGridColumn TItem="SkillDto"
+                                Field="@nameof(SkillDto.Name)"
                                 Caption="@L["Name"]">
                 </DataGridColumn>
-                <DataGridColumn TItem="SkillGroupDto"
-                                Field="@nameof(SkillGroupDto.Description)"
-                                Caption="@L["Description"]">
+                <DataGridColumn TItem="SkillDto"
+                                Field="@nameof(SkillDto.SkillGroupId)"
+                                Caption="@L["SkillGroup"]">
                     <DisplayTemplate>
-                        @context.Description
+                        @SkillGroupList.FirstOrDefault(sg => sg.Id == context.SkillGroupId)?.Name
                     </DisplayTemplate>
                 </DataGridColumn>
             </DataGridColumns>
@@ -79,47 +89,48 @@
     </CardBody>
 </Card>
 
-<Modal @ref="CreateSkillGroupModal">
+<Modal @ref="CreateSkillModal">
     <ModalBackdrop/>
     <ModalContent IsCentered="true">
         <Form>
             <ModalHeader>
                 <ModalTitle>@L["NewSkillGroup"]</ModalTitle>
-                <CloseButton Clicked="CloseCreateSkillGroupModal"/>
+                <CloseButton Clicked="CloseCreateSkillModal"/>
             </ModalHeader>
             <ModalBody>
-                <Validations @ref="@CreateValidationsRef" Model="@NewSkillGroup" ValidateOnLoad="false">
+                <Validations @ref="@CreateValidationsRef" Model="@NewSkill" ValidateOnLoad="false">
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewSkillGroup.Name">
+                            <TextEdit @bind-Text="@NewSkill.Name">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>
                             </TextEdit>
                         </Field>
                     </Validation>
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit Rows="5" @bind-Text="@NewSkillGroup.Description">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </MemoEdit>
-                        </Field>
-                    </Validation>
+                    <Field>
+                        <FieldLabel>@L["SkillGroup"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@NewSkill.SkillGroupId">
+                            @foreach (var skillGroup in SkillGroupList)
+                            {
+                                <SelectItem TValue="Guid" Value="@skillGroup.Id">
+                                    @skillGroup.Name
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
                 </Validations>
             </ModalBody>
             <ModalFooter>
                 <Button Color="Color.Secondary"
-                        Clicked="CloseCreateSkillGroupModal">
+                        Clicked="CloseCreateSkillModal">
                     @L["Cancel"]
                 </Button>
                 <Button Color="Color.Primary"
                         Type="@ButtonType.Submit"
                         PreventDefaultOnSubmit="true"
-                        Clicked="CreateSkillGroupAsync">
+                        Clicked="CreateSkillAsync">
                     @L["Save"]
                 </Button>
             </ModalFooter>
@@ -127,47 +138,48 @@
     </ModalContent>
 </Modal>
 
-<Modal @ref="EditSkillGroupModal">
-    <ModalBackdrop />
+<Modal @ref="EditSkillModal">
+    <ModalBackdrop/>
     <ModalContent IsCentered="true">
         <Form>
             <ModalHeader>
-                <ModalTitle>@EditingSkillGroup.Name</ModalTitle>
-                <CloseButton Clicked="CloseEditSkillGroupModal" />
+                <ModalTitle>@EditingSkill.Name</ModalTitle>
+                <CloseButton Clicked="CloseEditSkillModal"/>
             </ModalHeader>
             <ModalBody>
-                <Validations @ref="@EditValidationsRef" Model="@EditingSkillGroup" ValidateOnLoad="false">
+                <Validations @ref="@EditValidationsRef" Model="@EditingSkill" ValidateOnLoad="false">
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingSkillGroup.Name">
+                            <TextEdit @bind-Text="@EditingSkill.Name">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>
                             </TextEdit>
                         </Field>
                     </Validation>
-                    <Validation>
-                        <Field>
-                            <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit Rows="5" @bind-Text="@EditingSkillGroup.Description">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </MemoEdit>
-                        </Field>
-                    </Validation>
+                    <Field>
+                        <FieldLabel>@L["SkillGroup"]</FieldLabel>
+                        <Select TValue="Guid" @bind-SelectedValue="@EditingSkill.SkillGroupId">
+                            @foreach (var skillGroup in SkillGroupList)
+                            {
+                                <SelectItem TValue="Guid" Value="@skillGroup.Id">
+                                    @skillGroup.Name
+                                </SelectItem>
+                            }
+                        </Select>
+                    </Field>
                 </Validations>
             </ModalBody>
             <ModalFooter>
                 <Button Color="Color.Secondary"
-                        Clicked="CloseEditSkillGroupModal">
+                        Clicked="CloseEditSkillModal">
                     @L["Cancel"]
                 </Button>
                 <Button Color="Color.Primary"
                         Type="@ButtonType.Submit"
                         PreventDefaultOnSubmit="true"
-                        Clicked="UpdateSkillGroupAsync">
+                        Clicked="UpdateSkillAsync">
                     @L["Save"]
                 </Button>
             </ModalFooter>

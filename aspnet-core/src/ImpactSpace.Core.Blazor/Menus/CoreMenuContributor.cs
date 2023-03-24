@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Blazorise.Icons.FontAwesome;
 using ImpactSpace.Core.Localization;
 using ImpactSpace.Core.MultiTenancy;
 using Volo.Abp.Identity.Blazor;
@@ -38,12 +39,20 @@ public class CoreMenuContributor : IMenuContributor
             new ApplicationMenuItem(
                 "SkillManagement",
                 l["Menu:SkillManagement"],
-                icon: "fas fa-book"
+                icon: "fas fa-bogs"
             ).AddItem(
                 new ApplicationMenuItem(
                     "SkillGroups",
                     l["Menu:SkillGroups"],
-                    url: "/skill-groups"
+                    url: "/skill-groups",
+                    icon: "fas fa-layer-group"
+                )
+            ).AddItem(
+                new ApplicationMenuItem(
+                    "Skills",
+                    l["Menu:Skills"],
+                    url: "/skills",
+                    icon: "fas fa-tasks"
                 )
             )
         );
