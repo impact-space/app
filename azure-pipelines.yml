@@ -145,13 +145,6 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadBuildArtifacts@0
-            inputs:
-              buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'drop'
-              downloadPath: '$(System.ArtifactsDirectory)'
-
           - task: AzureCLI@2
             displayName: 'Run DbMigrator'
             inputs:
@@ -160,4 +153,11 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: |
                 cd $(System.ArtifactsDirectory)/drop/db_migrator
-                dotnet ImpactSpace.Core.DbMigrator.dll
+                dotnet ./ImpactSpace.Core.DbMigrator.dll
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'drop'
+              downloadPath: '$(System.ArtifactsDirectory)'
+
