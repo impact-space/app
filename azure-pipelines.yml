@@ -124,9 +124,9 @@ stages:
               downloadPath: '$(System.ArtifactsDirectory)'
 
           - task: ExtractFiles@1
-            displayName: 'Extract db_migrator zip archive'
+            displayName: 'Extract ImpactSpace.Core.DbMigrator.zip archive'
             inputs:
-              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/ImpactSpace.Core.DbMigrator.zip'
+              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
               destinationFolder: '$(System.ArtifactsDirectory)/drop/db_migrator'
 
           - task: AzureCLI@2
