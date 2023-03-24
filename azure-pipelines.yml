@@ -13,6 +13,7 @@ variables:
   solution: '**/*.sln'
   blazorProjectPath: '**/ImpactSpace.Core.Blazor.csproj'
   dbMigratorProjectPath: '**/ImpactSpace.Core.DbMigrator.csproj'
+  testProjectPath: '**/ImpactSpace.Core.Application.Tests.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
@@ -34,6 +35,12 @@ steps:
     command: 'build'
     projects: '$(solution)'
     arguments: '--configuration Release'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'test'
+    projects: '$(testProjectPath)'
+    arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
   inputs:
