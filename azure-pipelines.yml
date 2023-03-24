@@ -87,6 +87,7 @@ steps:
   displayName: 'Publish DbMigrator'
   inputs:
     command: 'publish'
+    publishWebProjects: false
     projects: '$(dbMigratorProjectPath)'
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
 
@@ -94,4 +95,6 @@ steps:
   displayName: 'Publish build artifacts'
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'drop'
+    artifactName: 'drop' 
+- task: DotNetCoreCLI@2
+    
