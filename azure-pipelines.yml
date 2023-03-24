@@ -19,42 +19,50 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
+  displayName: 'Install NuGet'
 
 - task: UseDotNet@2
+  displayName: 'Install .NET 7 SDK'
   inputs:
     packageType: 'sdk'
     version: '7.x'
     installationPath: $(Agent.ToolsDirectory)/dotnet
 
 - task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
   inputs:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Build solution'
   inputs:
     command: 'build'
     projects: '$(solution)'
     arguments: '--configuration Release'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Run integration tests'
   inputs:
     command: 'test'
     projects: '$(testProjectPath)'
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Publish Blazor app'
   inputs:
     command: 'publish'
     projects: '$(blazorProjectPath)'
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Publish DbMigrator'
   inputs:
     command: 'publish'
     projects: '$(dbMigratorProjectPath)'
     arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
 
 - task: PublishBuildArtifacts@1
+  displayName: 'Publish build artifacts'
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop'
