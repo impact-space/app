@@ -1,8 +1,3 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
   branches:
     include:
@@ -18,6 +13,7 @@ variables:
   testProjectPath: '**/ImpactSpace.Core.Application.Tests.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+
 stages:
 - stage: CI
   displayName: 'Continuous Integration'
@@ -111,13 +107,59 @@ stages:
   dependsOn: CI
   condition: succeeded('CI')
   jobs:
+  - deployment: RunDbMigrator
+    displayName: 'Run DbMigrator'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment:
+      name: 'Production'
+      resourceType: 'VirtualMachine'
+    strategy:
+      runOnce:
+        preDeploy:
+          steps:
+          - task: ManualIntervention@8
+            inputs:
+              instructions: 'Please review the build and ensure everything is fine before running the DbMigrator.'
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@0
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'drop'
+              downloadPath: '$(System.ArtifactsDirectory)'
+
+          - task: ExtractFiles@1
+            displayName: 'Extract db_migrator zip archive'
+            inputs:
+              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/db_migrator.zip'
+              destinationFolder: '$(System.ArtifactsDirectory)/drop/db_migrator'
+
+          - task: AzureCLI@2
+            displayName: 'Run DbMigrator'
+            inputs:
+              azureSubscription: 'Impact Space'
+              scriptType: 'pscore'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                cd $(System.ArtifactsDirectory)/drop/db_migrator
+                dotnet ./ImpactSpace.Core.DbMigrator.dll
+
   - deployment: DeployBlazorApp
     displayName: 'Deploy Blazor App'
     pool:
       vmImage: 'ubuntu-latest'
-    environment: 'Production'
+    environment:
+      name: 'Production'
+      resourceType: 'VirtualMachine'
     strategy:
       runOnce:
+        preDeploy:
+          steps:
+          - task: ManualIntervention@8
+            inputs:
+              instructions: 'Please review the build and ensure everything is fine before deploying the Blazor App.'
         deploy:
           steps:
           - task: DownloadBuildArtifacts@0
@@ -134,30 +176,3 @@ stages:
               azureSubscription: 'Impact Space'
               appName: 'impactspace'
               package: '$(System.ArtifactsDirectory)/drop/blazor_app'
-              customWebConfig: '-transform **\web.Release.config'
-
-  - deployment: RunDbMigrator
-    displayName: 'Run DbMigrator'
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'Production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: AzureCLI@2
-            displayName: 'Run DbMigrator'
-            inputs:
-              azureSubscription: 'Impact Space'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                cd $(System.ArtifactsDirectory)/drop/db_migrator
-                dotnet ./ImpactSpace.Core.DbMigrator.dll
-          - task: DownloadBuildArtifacts@0
-            inputs:
-              buildType: 'current'
-              downloadType: 'single'
-              artifactName: 'drop'
-              downloadPath: '$(System.ArtifactsDirectory)'
-
