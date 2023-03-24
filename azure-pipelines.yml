@@ -70,7 +70,7 @@ steps:
   inputs:
     command: 'publish'
     projects: '$(blazorProjectPath)'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app/ImpactSpace.Core.Blazor'
 
 - task: PowerShell@2
   displayName: 'Update appsettings.json for DbMigrator'
@@ -88,7 +88,7 @@ steps:
   inputs:
     command: 'publish'
     projects: '$(dbMigratorProjectPath)'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
+    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator/ImpactSpace.Core.DbMigrator'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish build artifacts'
