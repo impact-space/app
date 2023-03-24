@@ -120,7 +120,8 @@ stages:
           steps:
           - task: ManualIntervention@8
             inputs:
-              instructions: 'Please review the build and ensure everything is fine before running the DbMigrator.'
+              emailRecipients: 'beriniwlew@protonmail.com'
+              instructions: 'Please review and approve the DbMigrator deployment.'
         deploy:
           steps:
           - task: DownloadBuildArtifacts@0
@@ -159,6 +160,7 @@ stages:
           steps:
           - task: ManualIntervention@8
             inputs:
+              emailRecipients: 'beriniwlew@protonmail.com'
               instructions: 'Please review the build and ensure everything is fine before deploying the Blazor App.'
         deploy:
           steps:
