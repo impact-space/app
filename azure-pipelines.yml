@@ -96,5 +96,4 @@ steps:
   inputs:
     pathToPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'drop' 
-- task: DotNetCoreCLI@2
     
