@@ -123,6 +123,12 @@ stages:
               artifactName: 'drop'
               targetPath: '$(System.ArtifactsDirectory)'
 
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
+              destinationFolder: '$(System.ArtifactsDirectory)/extracted/db_migrator'
+              cleanDestinationFolder: true
+
           - task: AzureCLI@2
             displayName: 'Run DbMigrator'
             inputs:
@@ -130,9 +136,8 @@ stages:
               scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                cd $(System.ArtifactsDirectory)/drop/db_migrator
+                cd $(System.ArtifactsDirectory)/extracted/db_migrator
                 dotnet ./ImpactSpace.Core.DbMigrator.dll
-
   - deployment: DeployBlazorApp
     displayName: 'Deploy Blazor App'
     pool:
@@ -148,10 +153,16 @@ stages:
               artifactName: 'drop'
               targetPath: '$(System.ArtifactsDirectory)'
 
+          - task: ExtractFiles@1
+            inputs:
+              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/blazor_app/ImpactSpace.Core.Blazor.zip'
+              destinationFolder: '$(System.ArtifactsDirectory)/extracted/blazor_app'
+              cleanDestinationFolder: true
+
           - task: AzureWebApp@1
             displayName: 'Deploy Blazor App to Azure App Service'
             inputs:
               appType: webAppLinux
               azureSubscription: 'Impact Space'
               appName: 'impactspace'
-              package: '$(System.ArtifactsDirectory)/drop/blazor_app'
+              package: '$(System.ArtifactsDirectory)/extracted/blazor_app'
