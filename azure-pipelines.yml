@@ -162,4 +162,4 @@ stages:
               appType: webAppLinux
               azureSubscription: 'Impact Space'
               appName: 'impactspace'
-              package: '$(Pipeline.Workspace)/**/ImpactSpace.Core.Blazor.zip'
+              package: '$(Pipeline.Workspace)/blazor_app/ImpactSpace.Core.Blazor.zip'
