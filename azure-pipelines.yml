@@ -121,12 +121,12 @@ stages:
             inputs:
               buildType: 'current'
               artifactName: 'drop'
-              targetPath: '$(System.ArtifactsDirectory)'
+              targetPath: '$(System.ArtifactStagingDirectory)'
 
           - task: ExtractFiles@1
             inputs:
-              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
-              destinationFolder: '$(System.ArtifactsDirectory)/extracted/db_migrator'
+              archiveFilePatterns: '$(System.ArtifactStagingDirectory)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
+              destinationFolder: '$(System.ArtifactStagingDirectory)/extracted/db_migrator'
               cleanDestinationFolder: true
 
           - task: AzureCLI@2
@@ -136,7 +136,7 @@ stages:
               scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                cd $(System.ArtifactsDirectory)/extracted/db_migrator
+                cd $(System.ArtifactStagingDirectory)/extracted/db_migrator
                 dotnet ./ImpactSpace.Core.DbMigrator.dll
   - deployment: DeployBlazorApp
     displayName: 'Deploy Blazor App'
@@ -151,12 +151,12 @@ stages:
             inputs:
               buildType: 'current'
               artifactName: 'drop'
-              targetPath: '$(System.ArtifactsDirectory)'
+              targetPath: '$(System.ArtifactStagingDirectory)'
 
           - task: ExtractFiles@1
             inputs:
-              archiveFilePatterns: '$(System.ArtifactsDirectory)/drop/blazor_app/ImpactSpace.Core.Blazor.zip'
-              destinationFolder: '$(System.ArtifactsDirectory)/extracted/blazor_app'
+              archiveFilePatterns: '$(System.ArtifactStagingDirectory)/drop/blazor_app/ImpactSpace.Core.Blazor.zip'
+              destinationFolder: '$(System.ArtifactStagingDirectory)/extracted/blazor_app'
               cleanDestinationFolder: true
 
           - task: AzureWebApp@1
@@ -165,4 +165,4 @@ stages:
               appType: webAppLinux
               azureSubscription: 'Impact Space'
               appName: 'impactspace'
-              package: '$(System.ArtifactsDirectory)/extracted/blazor_app'
+              package: '$(System.ArtifactStagingDirectory)/extracted/blazor_app'
