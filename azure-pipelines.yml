@@ -124,9 +124,9 @@ stages:
               targetPath: '$(Pipeline.Workspace)'
 
           - task: ExtractFiles@1
-            displayName: 'Extract files'
+            displayName: 'Extract DbMigrator files'
             inputs:
-              archiveFilePatterns: '$(Pipeline.Workspace)/**/ImpactSpace.Core.DbMigrator.zip'
+              archiveFilePatterns: '$(Pipeline.Workspace)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
               destinationFolder: '$(System.DefaultWorkingDirectory)/extracted_db_migrator'
               cleanDestinationFolder: true
 
