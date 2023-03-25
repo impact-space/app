@@ -33,6 +33,7 @@ using Volo.Abp.AutoMapper;
 using Volo.Abp.Identity.Blazor.Server;
 using Volo.Abp.Localization;
 using Volo.Abp.Modularity;
+using Volo.Abp.OpenIddict;
 using Volo.Abp.SettingManagement.Blazor.Server;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.TenantManagement.Blazor.Server;
@@ -83,13 +84,22 @@ public class CoreBlazorModule : AbpModule
             });
         });
 
-        PreConfigureOpenIddictServerBuilder(context);
+        PreConfigureCertificatesForOpenIddict(context);
 
     }
 
-    private void PreConfigureOpenIddictServerBuilder(ServiceConfigurationContext context)
+    private void PreConfigureCertificatesForOpenIddict(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
+        
+        PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
+        {
+            if (!hostingEnvironment.IsDevelopment())
+            {
+                options.AddDevelopmentEncryptionAndSigningCertificate = false;
+            }
+        });
+
         
         PreConfigure<OpenIddictServerBuilder>(builder =>
         {
@@ -105,6 +115,8 @@ public class CoreBlazorModule : AbpModule
                 builder.AddSigningCertificate("4731DBDF38FE99D3D0EBE09EEB7B71CE06F4AACD");
             }
         });
+        
+        
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
