@@ -75,7 +75,7 @@ stages:
       inputs:
         command: 'publish'
         projects: '$(blazorProjectPath)'
-        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app --no-zip'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
 
 
     - task: PowerShell@2
@@ -95,7 +95,7 @@ stages:
         command: 'publish'
         publishWebProjects: false
         projects: '$(dbMigratorProjectPath)'
-        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator --no-zip'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish build artifacts'
