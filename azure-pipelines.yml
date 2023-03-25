@@ -124,10 +124,12 @@ stages:
               targetPath: '$(Pipeline.Workspace)'
 
           - task: ExtractFiles@1
+            displayName: 'Extract files'
             inputs:
-              archiveFilePatterns: '$(Pipeline.Workspace)/**/ImpactSpace.Core.DbMigrator.zip'
-              destinationFolder: '$(Pipeline.Workspace)/extracted_db_migrator'
+              archiveFilePatterns: '$(System.DefaultWorkingDirectory)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
+              destinationFolder: '$(System.DefaultWorkingDirectory)/extracted_db_migrator'
               cleanDestinationFolder: true
+
 
           - task: AzureCLI@2
             displayName: 'Run DbMigrator'
@@ -136,7 +138,7 @@ stages:
               scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                cd $(Pipeline.Workspace)/extracted_db_migrator
+                cd $(System.DefaultWorkingDirectory)/extracted_db_migrator
                 dotnet ./ImpactSpace.Core.DbMigrator.dll
   - deployment: DeployBlazorApp
     dependsOn: RunDbMigrator
