@@ -121,12 +121,12 @@ stages:
             inputs:
               buildType: 'current'
               artifactName: 'drop'
-              targetPath: '$(System.ArtifactStagingDirectory)'
+              targetPath: '$(Pipeline.Workspace)'
 
           - task: ExtractFiles@1
             inputs:
-              archiveFilePatterns: '$(System.ArtifactStagingDirectory)/drop/db_migrator/ImpactSpace.Core.DbMigrator.zip'
-              destinationFolder: '$(System.ArtifactStagingDirectory)/extracted/db_migrator'
+              archiveFilePatterns: '$(Pipeline.Workspace)/**/ImpactSpace.Core.DbMigrator.zip'
+              destinationFolder: '$(Pipeline.Workspace)/extracted_db_migrator'
               cleanDestinationFolder: true
 
           - task: AzureCLI@2
@@ -136,9 +136,10 @@ stages:
               scriptType: 'pscore'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                cd $(System.ArtifactStagingDirectory)/extracted/db_migrator
+                cd $(Pipeline.Workspace)/extracted_db_migrator
                 dotnet ./ImpactSpace.Core.DbMigrator.dll
   - deployment: DeployBlazorApp
+    dependsOn: RunDbMigrator
     displayName: 'Deploy Blazor App'
     pool:
       vmImage: 'ubuntu-latest'
@@ -151,13 +152,7 @@ stages:
             inputs:
               buildType: 'current'
               artifactName: 'drop'
-              targetPath: '$(System.ArtifactStagingDirectory)'
-
-          - task: ExtractFiles@1
-            inputs:
-              archiveFilePatterns: '$(System.ArtifactStagingDirectory)/drop/blazor_app/ImpactSpace.Core.Blazor.zip'
-              destinationFolder: '$(System.ArtifactStagingDirectory)/extracted/blazor_app'
-              cleanDestinationFolder: true
+              targetPath: '$(Pipeline.Workspace)'
 
           - task: AzureWebApp@1
             displayName: 'Deploy Blazor App to Azure App Service'
@@ -165,4 +160,4 @@ stages:
               appType: webAppLinux
               azureSubscription: 'Impact Space'
               appName: 'impactspace'
-              package: '$(System.ArtifactStagingDirectory)/extracted/blazor_app'
+              package: '$(Pipeline.Workspace)/**/ImpactSpace.Core.Blazor.zip'
