@@ -1,4 +1,5 @@
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using Blazorise.Bootstrap5;
 using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Builder;
@@ -89,35 +90,37 @@ public class CoreBlazorModule : AbpModule
 
     private void PreConfigureCertificatesForOpenIddict(ServiceConfigurationContext context)
     {
+        var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
         
         PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
         {
-            if (!hostingEnvironment.IsDevelopment())
+            if (hostingEnvironment.IsProduction())
             {
+                //https://documentation.openiddict.com/configuration/encryption-and-signing-credentials.html
                 options.AddDevelopmentEncryptionAndSigningCertificate = false;
             }
         });
 
         
-        PreConfigure<OpenIddictServerBuilder>(builder =>
+        PreConfigure<OpenIddictServerBuilder>(options =>
         {
-            if (hostingEnvironment.IsDevelopment())
+            if (hostingEnvironment.IsProduction())
             {
-                builder
-                    .AddDevelopmentEncryptionCertificate()
-                    .AddDevelopmentSigningCertificate();
-            }
-            else
-            {
-                builder.AddEncryptionCertificate("4731DBDF38FE99D3D0EBE09EEB7B71CE06F4AACD");
-                builder.AddSigningCertificate("4731DBDF38FE99D3D0EBE09EEB7B71CE06F4AACD");
+                options.AddEncryptionCertificate(LoadCertificate("7785791AA3CCC380C5D9CE9F94BB72E28234F04F"));
+                options.AddSigningCertificate(LoadCertificate("7C6478219A691D940D25745280A29DC2FAC40BA8"));
             }
         });
         
         
     }
 
+    private X509Certificate2 LoadCertificate(string thumbprint)
+    {
+        var bytes = File.ReadAllBytes($"/var/ssl/private/{thumbprint}.p12");
+        return new X509Certificate2(bytes);
+    }
+    
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
         var hostingEnvironment = context.Services.GetHostingEnvironment();
