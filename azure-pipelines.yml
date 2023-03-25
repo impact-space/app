@@ -97,11 +97,11 @@ stages:
         projects: '$(dbMigratorProjectPath)'
         arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish build artifacts'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish pipeline artifacts'
       inputs:
-        pathToPublish: '$(Build.ArtifactStagingDirectory)'
-        artifactName: 'drop' 
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'drop'
 
 - stage: CD
   displayName: 'Continuous Deployment'
@@ -117,12 +117,11 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadBuildArtifacts@0
+          - task: DownloadPipelineArtifact@2
             inputs:
               buildType: 'current'
-              downloadType: 'single'
               artifactName: 'drop'
-              downloadPath: '$(System.ArtifactsDirectory)'
+              targetPath: '$(System.ArtifactsDirectory)'
 
           - task: AzureCLI@2
             displayName: 'Run DbMigrator'
@@ -143,12 +142,11 @@ stages:
       runOnce:
         deploy:
           steps:
-          - task: DownloadBuildArtifacts@0
+          - task: DownloadPipelineArtifact@2
             inputs:
               buildType: 'current'
-              downloadType: 'single'
               artifactName: 'drop'
-              downloadPath: '$(System.ArtifactsDirectory)'
+              targetPath: '$(System.ArtifactsDirectory)'
 
           - task: AzureWebApp@1
             displayName: 'Deploy Blazor App to Azure App Service'
