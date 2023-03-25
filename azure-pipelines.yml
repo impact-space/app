@@ -1,97 +1,165 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
-- master
+  branches:
+    include:
+    - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
 variables:
   solution: '**/*.sln'
-  blazorProjectPath: '**/ImpactSpace.Core.Blazor.csproj'
-  dbMigratorProjectPath: '**/ImpactSpace.Core.DbMigrator.csproj'
+  blazorProjectPath: '$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/ImpactSpace.Core.Blazor.csproj'
+  dbMigratorProjectPath: '**/ImpactSpace.Core.DbMigrator/ImpactSpace.Core.DbMigrator.csproj'
   testProjectPath: '**/ImpactSpace.Core.Application.Tests.csproj'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
-steps:
-- task: NuGetToolInstaller@1
-  displayName: 'Install NuGet'
+stages:
+- stage: CI
+  displayName: 'Continuous Integration'
+  jobs:
+  - job: BuildAndTest
+    displayName: 'Build and Test'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: NuGetToolInstaller@1
+      displayName: 'Install NuGet'
 
-- task: UseDotNet@2
-  displayName: 'Install .NET 7 SDK'
-  inputs:
-    packageType: 'sdk'
-    version: '7.x'
-    installationPath: $(Agent.ToolsDirectory)/dotnet
+    - task: UseDotNet@2
+      displayName: 'Install .NET 7 SDK'
+      inputs:
+        packageType: 'sdk'
+        version: '7.x'
+        installationPath: $(Agent.ToolsDirectory)/dotnet
 
-- task: NuGetCommand@2
-  displayName: 'Restore NuGet packages'
-  inputs:
-    restoreSolution: '$(solution)'
+    - task: NuGetCommand@2
+      displayName: 'Restore NuGet packages'
+      inputs:
+        restoreSolution: '$(solution)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build solution'
-  inputs:
-    command: 'build'
-    projects: '$(solution)'
-    arguments: '--configuration Release'
+    - task: DotNetCoreCLI@2
+      displayName: 'Build solution'
+      inputs:
+        command: 'build'
+        projects: '$(solution)'
+        arguments: '--configuration Release'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Run integration tests'
-  inputs:
-    command: 'test'
-    projects: '$(testProjectPath)'
-    arguments: '--configuration $(buildConfiguration)'
+    - task: DotNetCoreCLI@2
+      displayName: 'Run integration tests'
+      inputs:
+        command: 'test'
+        projects: '$(testProjectPath)'
+        arguments: '--configuration $(buildConfiguration)'
 
-- task: PowerShell@2
-  displayName: 'Update appsettings.json for Blazor app'
-  inputs:
-    targetType: 'inline'
-    script: |
-      $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.production.json"
-      $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.json"
-      $content = Get-Content -Path $sourceFilePath -Raw
-      $updatedContent = $content `
-        -replace "#{AuthorityUrl}#", "$(AuthorityUrl)" `
-        -replace "#{BlazorSelfUrl}#", "$(BlazorSelfUrl)" `
-        -replace "#{DbConnectionString}#", "$(DbConnectionString)" `
-        -replace "#{DefaultPassPhrase}#", "$(DefaultPassPhrase)" `
-        -replace "#{IsSelfRegistrationEnabled}#", "$(IsSelfRegistrationEnabled)" `
-        -replace "#{RedirectAllowedUrls}#", "$(RedirectAllowedUrls)" `
-        -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)"
-      Set-Content -Path $destinationFilePath -Value $updatedContent
+    - task: PowerShell@2
+      displayName: 'Update appsettings.json for Blazor app'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.production.json"
+          $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.json"
+          $content = Get-Content -Path $sourceFilePath -Raw
+          $updatedContent = $content `
+            -replace "#{AuthorityUrl}#", "$(AuthorityUrl)" `
+            -replace "#{BlazorSelfUrl}#", "$(BlazorSelfUrl)" `
+            -replace "#{DbConnectionString}#", "$(DbConnectionString)" `
+            -replace "#{DefaultPassPhrase}#", "$(DefaultPassPhrase)" `
+            -replace "#{IsSelfRegistrationEnabled}#", "$(IsSelfRegistrationEnabled)" `
+            -replace "#{RedirectAllowedUrls}#", "$(RedirectAllowedUrls)" `
+            -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)"
+          Set-Content -Path $destinationFilePath -Value $updatedContent
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish Blazor app'
-  inputs:
-    command: 'publish'
-    projects: '$(blazorProjectPath)'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish Blazor app'
+      inputs:
+        command: 'publish'
+        projects: '$(blazorProjectPath)'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/blazor_app'
 
-- task: PowerShell@2
-  displayName: 'Update appsettings.json for DbMigrator'
-  inputs:
-    targetType: 'inline'
-    script: |
-      $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.DbMigrator/appsettings.production.json"
-      $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.DbMigrator/appsettings.json"
-      $content = Get-Content -Path $sourceFilePath -Raw
-      $updatedContent = $content.Replace("#{DbConnectionString}#", "$(DbConnectionString)")
-      Set-Content -Path $destinationFilePath -Value $updatedContent
 
-- task: DotNetCoreCLI@2
-  displayName: 'Publish DbMigrator'
-  inputs:
-    command: 'publish'
-    projects: '$(dbMigratorProjectPath)'
-    arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
+    - task: PowerShell@2
+      displayName: 'Update appsettings.json for DbMigrator'
+      inputs:
+        targetType: 'inline'
+        script: |
+          $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.DbMigrator/appsettings.production.json"
+          $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.DbMigrator/appsettings.json"
+          $content = Get-Content -Path $sourceFilePath -Raw
+          $updatedContent = $content.Replace("#{DbConnectionString}#", "$(DbConnectionString)")
+          Set-Content -Path $destinationFilePath -Value $updatedContent
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish build artifacts'
-  inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: 'drop'
+    - task: DotNetCoreCLI@2
+      displayName: 'Publish DbMigrator'
+      inputs:
+        command: 'publish'
+        publishWebProjects: false
+        projects: '$(dbMigratorProjectPath)'
+        arguments: '--configuration Release --output $(Build.ArtifactStagingDirectory)/db_migrator'
+
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish pipeline artifacts'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'drop'
+
+- stage: CD
+  displayName: 'Continuous Deployment'
+  dependsOn: CI
+  condition: succeeded('CI')
+  jobs:
+  - deployment: RunDbMigrator
+    displayName: 'Run DbMigrator'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'drop'
+              targetPath: '$(Pipeline.Workspace)'
+
+          - task: ExtractFiles@1
+            displayName: 'Extract DbMigrator files'
+            inputs:
+              archiveFilePatterns: '$(Pipeline.Workspace)/db_migrator/ImpactSpace.Core.DbMigrator.zip'
+              destinationFolder: '$(System.DefaultWorkingDirectory)/extracted_db_migrator'
+              cleanDestinationFolder: true
+
+
+          - task: AzureCLI@2
+            displayName: 'Run DbMigrator'
+            inputs:
+              azureSubscription: 'Impact Space'
+              scriptType: 'pscore'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                cd $(System.DefaultWorkingDirectory)/extracted_db_migrator
+                dotnet ./ImpactSpace.Core.DbMigrator.dll
+  - deployment: DeployBlazorApp
+    dependsOn: RunDbMigrator
+    displayName: 'Deploy Blazor App'
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'Production'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'drop'
+              targetPath: '$(Pipeline.Workspace)'
+
+          - task: AzureWebApp@1
+            displayName: 'Deploy Blazor App to Azure App Service'
+            inputs:
+              appType: webAppLinux
+              azureSubscription: 'Impact Space'
+              appName: 'impactspace'
+              package: '$(Pipeline.Workspace)/blazor_app/ImpactSpace.Core.Blazor.zip'
