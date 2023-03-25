@@ -73,6 +73,8 @@ public class CoreBlazorModule : AbpModule
                 typeof(CoreBlazorModule).Assembly
             );
         });
+        
+        PreConfigureCertificatesForOpenIddict(context);
 
         PreConfigure<OpenIddictBuilder>(builder =>
         {
@@ -83,9 +85,6 @@ public class CoreBlazorModule : AbpModule
                 options.UseAspNetCore();
             });
         });
-
-        PreConfigureCertificatesForOpenIddict(context);
-
     }
 
     private void PreConfigureCertificatesForOpenIddict(ServiceConfigurationContext context)
