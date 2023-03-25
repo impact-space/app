@@ -81,11 +81,30 @@ public class CoreBlazorModule : AbpModule
                 options.UseLocalServer();
                 options.UseAspNetCore();
             });
-            
-            
         });
-        
 
+        PreConfigureOpenIddictServerBuilder(context);
+
+    }
+
+    private void PreConfigureOpenIddictServerBuilder(ServiceConfigurationContext context)
+    {
+        var hostingEnvironment = context.Services.GetHostingEnvironment();
+        
+        PreConfigure<OpenIddictServerBuilder>(builder =>
+        {
+            if (hostingEnvironment.IsDevelopment())
+            {
+                builder
+                    .AddDevelopmentEncryptionCertificate()
+                    .AddDevelopmentSigningCertificate();
+            }
+            else
+            {
+                builder.AddEncryptionCertificate("4731DBDF38FE99D3D0EBE09EEB7B71CE06F4AACD");
+                builder.AddSigningCertificate("4731DBDF38FE99D3D0EBE09EEB7B71CE06F4AACD");
+            }
+        });
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
