@@ -53,12 +53,11 @@ stages:
         arguments: '--configuration $(buildConfiguration)'
 
     - task: PowerShell@2
-      displayName: 'Update appsettings.json for Blazor app'
+      displayName: 'Update appsettings.production.json for Blazor app'
       inputs:
         targetType: 'inline'
         script: |
           $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.production.json"
-          $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.json"
           $content = Get-Content -Path $sourceFilePath -Raw
           $updatedContent = $content `
             -replace "#{AuthorityUrl}#", "$(AuthorityUrl)" `
@@ -68,7 +67,7 @@ stages:
             -replace "#{IsSelfRegistrationEnabled}#", "$(IsSelfRegistrationEnabled)" `
             -replace "#{RedirectAllowedUrls}#", "$(RedirectAllowedUrls)" `
             -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)"
-          Set-Content -Path $destinationFilePath -Value $updatedContent
+          Set-Content -Path $sourceFilePath -Value $updatedContent
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish Blazor app'
