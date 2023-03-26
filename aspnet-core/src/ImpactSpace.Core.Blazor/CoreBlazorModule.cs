@@ -103,7 +103,7 @@ public class CoreBlazorModule : AbpModule
             }
         });
 
-        
+
         PreConfigure<OpenIddictServerBuilder>(options =>
         {
             if (hostingEnvironment.IsProduction())
@@ -112,8 +112,6 @@ public class CoreBlazorModule : AbpModule
                 options.AddSigningCertificate(LoadCertificate("7C6478219A691D940D25745280A29DC2FAC40BA8"));
             }
         });
-        
-        
     }
 
     private X509Certificate2 LoadCertificate(string thumbprint)
