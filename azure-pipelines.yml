@@ -70,6 +70,19 @@ stages:
           Set-Content -Path $sourceFilePath -Value $updatedContent
 
     - task: DotNetCoreCLI@2
+      displayName: 'Install ABP CLI'
+      inputs:
+        command: 'custom'
+        custom: 'tool'
+        arguments: 'install -g Volo.Abp.Cli'
+
+    - task: CmdLine@2
+      displayName: 'ABP Install Libs for Blazor app'
+      inputs:
+        script: |
+          abp install-libs --project-path $(blazorProjectPath)
+
+    - task: DotNetCoreCLI@2
       displayName: 'Publish Blazor app'
       inputs:
         command: 'publish'
