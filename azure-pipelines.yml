@@ -53,12 +53,11 @@ stages:
         arguments: '--configuration $(buildConfiguration)'
 
     - task: PowerShell@2
-      displayName: 'Update appsettings.json for Blazor app'
+      displayName: 'Update appsettings.production.json for Blazor app'
       inputs:
         targetType: 'inline'
         script: |
           $sourceFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.production.json"
-          $destinationFilePath = "$(Build.SourcesDirectory)/aspnet-core/src/ImpactSpace.Core.Blazor/appsettings.json"
           $content = Get-Content -Path $sourceFilePath -Raw
           $updatedContent = $content `
             -replace "#{AuthorityUrl}#", "$(AuthorityUrl)" `
@@ -68,7 +67,25 @@ stages:
             -replace "#{IsSelfRegistrationEnabled}#", "$(IsSelfRegistrationEnabled)" `
             -replace "#{RedirectAllowedUrls}#", "$(RedirectAllowedUrls)" `
             -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)"
-          Set-Content -Path $destinationFilePath -Value $updatedContent
+          Set-Content -Path $sourceFilePath -Value $updatedContent
+
+    - task: DotNetCoreCLI@2
+      displayName: 'Install ABP CLI'
+      inputs:
+        command: 'custom'
+        custom: 'tool'
+        arguments: 'install -g Volo.Abp.Cli'
+
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
+      inputs:
+        versionSpec: '18.x'
+
+    - task: CmdLine@2
+      displayName: 'ABP Install Libs for Blazor app'
+      inputs:
+        script: |
+          abp install-libs --project-path $(blazorProjectPath)
 
     - task: DotNetCoreCLI@2
       displayName: 'Publish Blazor app'
@@ -108,58 +125,59 @@ stages:
   dependsOn: CI
   condition: succeeded('CI')
   jobs:
-  - deployment: RunDbMigrator
-    displayName: 'Run DbMigrator'
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'Production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              buildType: 'current'
-              artifactName: 'drop'
-              targetPath: '$(Pipeline.Workspace)'
+    - deployment: RunDbMigrator
+      displayName: 'Run DbMigrator'
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: 'Production'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                buildType: 'current'
+                artifactName: 'drop'
+                targetPath: '$(Pipeline.Workspace)'
 
-          - task: ExtractFiles@1
-            displayName: 'Extract DbMigrator files'
-            inputs:
-              archiveFilePatterns: '$(Pipeline.Workspace)/db_migrator/ImpactSpace.Core.DbMigrator.zip'
-              destinationFolder: '$(System.DefaultWorkingDirectory)/extracted_db_migrator'
-              cleanDestinationFolder: true
+            - task: ExtractFiles@1
+              displayName: 'Extract DbMigrator files'
+              inputs:
+                archiveFilePatterns: '$(Pipeline.Workspace)/db_migrator/ImpactSpace.Core.DbMigrator.zip'
+                destinationFolder: '$(System.DefaultWorkingDirectory)/extracted_db_migrator'
+                cleanDestinationFolder: true
 
 
-          - task: AzureCLI@2
-            displayName: 'Run DbMigrator'
-            inputs:
-              azureSubscription: 'Impact Space'
-              scriptType: 'pscore'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                cd $(System.DefaultWorkingDirectory)/extracted_db_migrator
-                dotnet ./ImpactSpace.Core.DbMigrator.dll
-  - deployment: DeployBlazorApp
-    dependsOn: RunDbMigrator
-    displayName: 'Deploy Blazor App'
-    pool:
-      vmImage: 'ubuntu-latest'
-    environment: 'Production'
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              buildType: 'current'
-              artifactName: 'drop'
-              targetPath: '$(Pipeline.Workspace)'
+            - task: AzureCLI@2
+              displayName: 'Run DbMigrator'
+              inputs:
+                azureSubscription: 'Impact Space'
+                scriptType: 'pscore'
+                scriptLocation: 'inlineScript'
+                inlineScript: |
+                  cd $(System.DefaultWorkingDirectory)/extracted_db_migrator
+                  dotnet ./ImpactSpace.Core.DbMigrator.dll
+    - deployment: DeployBlazorApp
+      dependsOn: RunDbMigrator
+      displayName: 'Deploy Blazor App'
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: 'Production'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: DownloadPipelineArtifact@2
+              inputs:
+                buildType: 'current'
+                artifactName: 'drop'
+                targetPath: '$(Pipeline.Workspace)'
 
-          - task: AzureWebApp@1
-            displayName: 'Deploy Blazor App to Azure App Service'
-            inputs:
-              appType: webAppLinux
-              azureSubscription: 'Impact Space'
-              appName: 'impactspace'
-              package: '$(Pipeline.Workspace)/blazor_app/ImpactSpace.Core.Blazor.zip'
+            - task: AzureWebApp@1
+              displayName: 'Deploy Blazor App to Azure App Service'
+              inputs:
+                appType: webAppLinux
+                azureSubscription: 'Impact Space'
+                appName: 'impactspace'
+                package: '$(Pipeline.Workspace)/blazor_app/ImpactSpace.Core.Blazor.zip'
+
