@@ -76,6 +76,11 @@ stages:
         custom: 'tool'
         arguments: 'install -g Volo.Abp.Cli'
 
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
+      inputs:
+        versionSpec: '18.x'
+
     - task: CmdLine@2
       displayName: 'ABP Install Libs for Blazor app'
       inputs:
