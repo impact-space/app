@@ -38,13 +38,14 @@ public class CoreMenuContributor : IMenuContributor
 
         context.Menu.AddItem(
             new ApplicationMenuItem(
-                "SkillManagement",
-                l["Menu:SkillManagement"],
-                icon: "fas fa-bogs",
-                requiredPermissionName: CorePermissions.Skills.Default
+                CoreMenus.Settings,
+                l["Menu:Settings"],
+                icon: "fas fa-cogs",
+                requiredPermissionName: CorePermissions.Skills.Default,
+                order: 1
             ).AddItem(
                 new ApplicationMenuItem(
-                    "SkillGroups",
+                    CoreMenus.SkillGroups,
                     l["Menu:SkillGroups"],
                     url: "/skill-groups",
                     icon: "fas fa-layer-group",
@@ -52,7 +53,7 @@ public class CoreMenuContributor : IMenuContributor
                 )
             ).AddItem(
                 new ApplicationMenuItem(
-                    "Skills",
+                    CoreMenus.Skills,
                     l["Menu:Skills"],
                     url: "/skills",
                     icon: "fas fa-tasks",
