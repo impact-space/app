@@ -2,6 +2,7 @@
 using Blazorise.Icons.FontAwesome;
 using ImpactSpace.Core.Localization;
 using ImpactSpace.Core.MultiTenancy;
+using ImpactSpace.Core.Permissions;
 using Volo.Abp.Identity.Blazor;
 using Volo.Abp.SettingManagement.Blazor.Menus;
 using Volo.Abp.TenantManagement.Blazor.Navigation;
@@ -39,20 +40,23 @@ public class CoreMenuContributor : IMenuContributor
             new ApplicationMenuItem(
                 "SkillManagement",
                 l["Menu:SkillManagement"],
-                icon: "fas fa-bogs"
+                icon: "fas fa-bogs",
+                requiredPermissionName: CorePermissions.Skills.Default
             ).AddItem(
                 new ApplicationMenuItem(
                     "SkillGroups",
                     l["Menu:SkillGroups"],
                     url: "/skill-groups",
-                    icon: "fas fa-layer-group"
+                    icon: "fas fa-layer-group",
+                    requiredPermissionName: CorePermissions.SkillGroups.Default
                 )
             ).AddItem(
                 new ApplicationMenuItem(
                     "Skills",
                     l["Menu:Skills"],
                     url: "/skills",
-                    icon: "fas fa-tasks"
+                    icon: "fas fa-tasks",
+                    requiredPermissionName: CorePermissions.Skills.Default
                 )
             )
         );
