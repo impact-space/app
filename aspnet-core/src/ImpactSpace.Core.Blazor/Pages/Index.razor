@@ -2,6 +2,7 @@
 @using Volo.Abp.MultiTenancy
 @inherits CoreComponentBase
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 @if (!CurrentUser.IsAuthenticated)
 {
     <Jumbotron Background="Background.Default" Margin="Margin.Is4.FromBottom">
@@ -58,11 +59,18 @@
         Impact Space is currently in beta. If you would like to learn more about our platform, or if you have any questions or feedback, please contact us at [email]
     </Paragraph>
 
-    <Button Color="Color.Primary" Link="Account/Login" Margin="Margin.Is3.FromTop">
+    <Button Color="Color.Primary" Clicked="NavigateToLogin" Margin="Margin.Is3.FromTop">
         <Icon Name="IconName.User"/> @L["Login"]
     </Button>
 }
 else
 {
     <Heading Size="HeadingSize.Is4">Dashboard</Heading>
+}
+
+@code {
+    private void NavigateToLogin()
+    {
+        NavigationManager.NavigateTo("Account/Login", true);
+    }
 }
