@@ -62,12 +62,6 @@ namespace ImpactSpace.Core.Blazor;
    )]
 public class CoreBlazorModule : AbpModule
 {
-    private readonly ILogger<CoreBlazorModule> _logger;
-
-    public CoreBlazorModule(ILogger<CoreBlazorModule> logger)
-    {
-        _logger = logger;
-    }
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
         context.Services.PreConfigure<AbpMvcDataAnnotationsLocalizationOptions>(options =>
@@ -99,7 +93,7 @@ public class CoreBlazorModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-        _logger.LogInformation("Environment: " + hostingEnvironment.EnvironmentName);
+        
         PreConfigure<AbpOpenIddictAspNetCoreOptions>(options =>
         {
             if (hostingEnvironment.IsProduction())
