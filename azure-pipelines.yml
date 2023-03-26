@@ -187,9 +187,19 @@ stages:
                 targetPath: '$(Pipeline.Workspace)'
 
             - task: AzureWebApp@1
-              displayName: 'Deploy Blazor App to Azure App Service'
+              displayName: 'Deploy Blazor App to Azure App Service Staging Slot'
               inputs:
                 appType: webAppLinux
                 azureSubscription: 'Impact Space'
                 appName: 'impactspace'
                 package: '$(Pipeline.Workspace)/blazor_app/ImpactSpace.Core.Blazor.zip'
+                slotName: 'staging' # Add this line to specify the staging slot
+            - task: AzureAppServiceManage@0
+              displayName: 'Swap staging and production slots'
+              inputs:
+                azureSubscription: 'Impact Space'
+                action: 'Swap Slots'
+                webAppName: 'impactspace'
+                sourceSlot: 'staging'
+                targetSlot: 'production'
+
