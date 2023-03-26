@@ -125,23 +125,10 @@ stages:
   dependsOn: CI
   condition: succeeded('CI')
   jobs:
-    - job: WaitForApproval
-      displayName: 'Wait for approval'
-      pool: server
-      steps:
-      - task: ManualValidation@0
-        displayName: 'Manual approval'
-        inputs:
-          notifyUsers: 'beriniwlew@protonmail.com' # Replace with your email or a list of emails separated by semicolons
-          instructions: 'Please review the Impact Space deployment and approve or reject it.'
-          onTimeout: 'reject'
-
     - deployment: RunDbMigrator
       displayName: 'Run DbMigrator'
       pool:
         vmImage: 'ubuntu-latest'
-      dependsOn: WaitForApproval
-      condition: succeeded('WaitForApproval')
       environment: 'Production'
       strategy:
         runOnce:
