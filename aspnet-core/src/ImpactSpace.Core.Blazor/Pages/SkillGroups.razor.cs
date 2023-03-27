@@ -46,7 +46,6 @@ public partial class SkillGroups
     protected override async Task OnInitializedAsync()
     {
         await SetPermissionsAsync();
-        await GetSkillGroupsAsync();
     }
     
     private async Task SetPermissionsAsync() 
