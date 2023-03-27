@@ -4,6 +4,7 @@ using ImpactSpace.Core.Localization;
 using ImpactSpace.Core.MultiTenancy;
 using ImpactSpace.Core.Permissions;
 using Volo.Abp.Identity.Blazor;
+using Volo.Abp.SettingManagement;
 using Volo.Abp.SettingManagement.Blazor.Menus;
 using Volo.Abp.TenantManagement.Blazor.Navigation;
 using Volo.Abp.UI.Navigation;
@@ -38,26 +39,33 @@ public class CoreMenuContributor : IMenuContributor
 
         context.Menu.AddItem(
             new ApplicationMenuItem(
-                CoreMenus.Settings,
-                l["Menu:Settings"],
-                icon: "fas fa-cogs",
-                requiredPermissionName: CorePermissions.Skills.Default,
+                CoreMenus.GlobalTypes,
+                l["Menu:GlobalTypes"],
+                icon: "fas fa-globe",
+                requiredPermissionName: CorePermissions.GlobalTypes.Manage,
                 order: 1
             ).AddItem(
                 new ApplicationMenuItem(
-                    CoreMenus.SkillGroups,
-                    l["Menu:SkillGroups"],
-                    url: "/skill-groups",
-                    icon: "fas fa-layer-group",
-                    requiredPermissionName: CorePermissions.SkillGroups.Default
-                )
-            ).AddItem(
-                new ApplicationMenuItem(
-                    CoreMenus.Skills,
-                    l["Menu:Skills"],
-                    url: "/skills",
+                    CoreMenus.SkillManagement,
+                    l["Menu:SkillManagement"],
                     icon: "fas fa-tasks",
-                    requiredPermissionName: CorePermissions.Skills.Default
+                    requiredPermissionName: CorePermissions.GlobalTypes.Skills.Default
+                ).AddItem(
+                    new ApplicationMenuItem(
+                        CoreMenus.SkillGroups,
+                        l["Menu:SkillGroups"],
+                        url: "/skill-groups",
+                        icon: "fas fa-layer-group",
+                        requiredPermissionName: CorePermissions.GlobalTypes.SkillGroups.Default
+                    )
+                ).AddItem(
+                    new ApplicationMenuItem(
+                        CoreMenus.Skills,
+                        l["Menu:Skills"],
+                        url: "/skills",
+                        icon: "fas fa-tasks",
+                        requiredPermissionName: CorePermissions.GlobalTypes.Skills.Default
+                    )
                 )
             )
         );

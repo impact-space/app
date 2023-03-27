@@ -8,7 +8,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace ImpactSpace.Core.Skills;
 
-[Authorize( CorePermissions.Skills.Default)]
+[Authorize( CorePermissions.GlobalTypes.Skills.Default)]
 public class SkillAppService : CoreAppService, ISkillAppService
 {
     private readonly ISkillRepository _skillRepository;
@@ -53,7 +53,7 @@ public class SkillAppService : CoreAppService, ISkillAppService
         );
     }
 
-    [Authorize(CorePermissions.Skills.Create)]
+    [Authorize(CorePermissions.GlobalTypes.Skills.Create)]
     public async Task<SkillDto> CreateAsync(CreateSkillDto input)
     {
         var skill = await _skillManager.CreateAsync(
@@ -66,7 +66,7 @@ public class SkillAppService : CoreAppService, ISkillAppService
         return ObjectMapper.Map<Skill, SkillDto>(skill);
     }
 
-    [Authorize(CorePermissions.Skills.Edit)]
+    [Authorize(CorePermissions.GlobalTypes.Skills.Edit)]
     public async Task UpdateAsync(Guid id, UpdateSkillDto input)
     {
         var skill = await _skillRepository.GetAsync(id);
@@ -84,7 +84,7 @@ public class SkillAppService : CoreAppService, ISkillAppService
         await _skillRepository.UpdateAsync(skill);
     }
 
-    [Authorize(CorePermissions.Skills.Delete)]
+    [Authorize(CorePermissions.GlobalTypes.Skills.Delete)]
     public async Task DeleteAsync(Guid id)
     {
         await _skillRepository.GetAsync(id);

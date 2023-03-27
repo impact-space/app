@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace ImpactSpace.Core.Skills;
 
-[Authorize(CorePermissions.SkillGroups.Default)]
+[Authorize(CorePermissions.GlobalTypes.SkillGroups.Default)]
 public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
 {
     private readonly ISkillGroupRepository _skillGroupRepository;
@@ -21,7 +21,7 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
         _skillGroupManager = skillGroupManager;
     }
     
-    [Authorize(CorePermissions.SkillGroups.Create)]
+    [Authorize(CorePermissions.GlobalTypes.SkillGroups.Create)]
     public async Task<SkillGroupDto> CreateAsync(CreateSkillGroupDto input)
     {
         var skillGroup = await _skillGroupManager.CreateAsync(input.Name, input.Description);
@@ -31,7 +31,7 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
         return ObjectMapper.Map<SkillGroup, SkillGroupDto>(skillGroup);
     }
     
-    [Authorize(CorePermissions.SkillGroups.Edit)]
+    [Authorize(CorePermissions.GlobalTypes.SkillGroups.Edit)]
     public async Task UpdateAsync(Guid id, UpdateSkillGroupDto input)
     {
         var skillGroup = await _skillGroupRepository.GetAsync(id);
@@ -49,7 +49,7 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
         await _skillGroupRepository.UpdateAsync(skillGroup);
     }
     
-    [Authorize(CorePermissions.SkillGroups.Delete)]
+    [Authorize(CorePermissions.GlobalTypes.SkillGroups.Delete)]
     public async Task DeleteAsync(Guid id)
     {
         await _skillGroupManager.DeleteAsync(id);

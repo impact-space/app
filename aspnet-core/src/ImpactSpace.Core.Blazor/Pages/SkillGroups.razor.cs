@@ -51,9 +51,9 @@ public partial class SkillGroups
     
     private async Task SetPermissionsAsync() 
     {
-        CanCreateSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.SkillGroups.Create);
-        CanEditSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.SkillGroups.Edit);
-        CanDeleteSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.SkillGroups.Delete);
+        CanCreateSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.SkillGroups.Create);
+        CanEditSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.SkillGroups.Edit);
+        CanDeleteSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.SkillGroups.Delete);
     }
     
     private async Task OnFilterTextChanged(string newFilterText)

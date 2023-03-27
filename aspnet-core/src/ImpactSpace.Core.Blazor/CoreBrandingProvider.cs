@@ -6,5 +6,5 @@ namespace ImpactSpace.Core.Blazor;
 [Dependency(ReplaceServices = true)]
 public class CoreBrandingProvider : DefaultBrandingProvider
 {
-    public override string AppName => "Core";
+    public override string AppName => "Impact Space";
 }

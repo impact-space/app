@@ -8,11 +8,12 @@
     </JumbotronSubtitle>
     <Divider></Divider>
     <Paragraph>
-        Impact Space is here to help you streamline your workflows, keep track of your milestones, and ensure your quests lead to success. Our intuitive platform is designed with your needs in mind, providing you with powerful tools to manage your projects effectively.
+        Impact Space is here to help you streamline your workflows, keep track of your milestones, and ensure your quests lead to success. Our intuitive platform is designed with your needs in mind, providing you with powerful tools to manage your projects effectively. 
+        Our app is built on a robust, secure, and scalable framework, offering multi-tenancy support to accommodate organizations of all sizes. Our goal is to help you stay on track, meet your deadlines, and ultimately achieve your project objectives.
     </Paragraph>
 </Jumbotron>
 
-<Heading Size="HeadingSize.Is4"> With Impact Space, you can:</Heading>
+<Heading Size="HeadingSize.Is4">With Impact Space, you can:</Heading>
 
 <CardDeck Margin="Margin.Is4.FromBottom.Is4.FromTop" Gap="Gap.Is4.OnY">
     <Card>
@@ -59,18 +60,21 @@
     </Card>
 </CardDeck>
 
-<Paragraph>
-    Impact Space is built on a robust, secure, and scalable framework, offering multi-tenancy support to accommodate organizations of all sizes. Our goal is to help you stay on track, meet your deadlines, and ultimately achieve your project objectives.
-</Paragraph>
-
-<Paragraph Margin="Margin.Is3.FromTop">
-    Impact Space is currently in beta. If you would like to learn more about our platform, or if you have any questions or feedback, please contact us at [email]
-</Paragraph>
-
-<Button Color="Color.Primary" Clicked="NavigateToLogin" Margin="Margin.Is3.FromTop">
-    <Icon Name="IconName.User"/> @L["Login"]
-</Button>
-
+<Container>
+    <Card>
+        <CardBody>
+            <CardTitle TextAlignment="TextAlignment.Center">Current Status</CardTitle>
+            <CardText TextAlignment="TextAlignment.Center">
+                Impact Space is currently under construction. If you would like to learn more about our platform, or if you have any questions or feedback, please contact us at [email]
+            </CardText>
+        </CardBody>
+        <CardFooter TextAlignment="TextAlignment.Center">
+            <Button Color="Color.Primary" Clicked="NavigateToLogin" Margin="Margin.Is3.FromTop">
+                <Icon Name="IconName.User"/> @L["Login"]
+            </Button>
+        </CardFooter>
+    </Card>
+</Container>
 
 @code {
 
