@@ -40,6 +40,7 @@
                                 TItem="SkillGroupDto"
                                 Field="@nameof(SkillGroupDto.Id)"
                                 Sortable="false"
+                                SortDirection="SortDirection.Ascending"
                                 Caption="@L["Actions"]">
                     <DisplayTemplate>
                         <Dropdown>
@@ -65,6 +66,7 @@
                 </DataGridColumn>
                 <DataGridColumn TItem="SkillGroupDto"
                                 Field="@nameof(SkillGroupDto.Name)"
+                                Width="400px"
                                 Caption="@L["Name"]">
                 </DataGridColumn>
                 <DataGridColumn TItem="SkillGroupDto"
