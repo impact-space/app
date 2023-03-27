@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.TenantManagement;
 
 namespace ImpactSpace.Core.Organizations;
 
@@ -38,6 +39,8 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// Gets or sets the ID of the tenant to which the organization belongs.
     /// </summary>
     public Guid? TenantId { get; set; }
+    
+    public virtual Tenant Tenant { get; set; }
 
     /// <summary>
     /// Default constructor used for deserialization and ORM purposes.

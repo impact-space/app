@@ -242,6 +242,10 @@ public class CoreDbContext :
                 .HasMaxLength(OrganizationConstants.MaxNameLength);
             b.Property(x => x.Description)
                 .HasMaxLength(OrganizationConstants.MaxDescriptionLength);
+            b.HasOne(x => x.Tenant)
+                .WithOne()
+                .HasForeignKey<Organization>(x => x.TenantId)
+                .IsRequired(false);
         });
 
         builder.Entity<OrganizationMember>(b =>
