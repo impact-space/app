@@ -51,7 +51,6 @@ public partial class Skills
     {
         await base.OnInitializedAsync();
         await SetPermissionsAsync();
-        await GetSkillsAsync();
         await GetSkillGroupsAsync();
     }
     
