@@ -69,7 +69,8 @@
                 </DataGridColumn>
                 <DataGridColumn TItem="SkillGroupDto"
                                 Field="@nameof(SkillGroupDto.Description)"
-                                Caption="@L["Description"]">
+                                Caption="@L["Description"]"
+                                Sortable="false">
                     <DisplayTemplate>
                         @context.Description
                     </DisplayTemplate>
