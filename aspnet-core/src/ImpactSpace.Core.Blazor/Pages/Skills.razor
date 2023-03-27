@@ -74,11 +74,13 @@
                     </DisplayTemplate>
                 </DataGridColumn>
                 <DataGridColumn TItem="SkillDto"
+                                Width="400px"
                                 Field="@nameof(SkillDto.Name)"
                                 Caption="@L["Name"]">
                 </DataGridColumn>
                 <DataGridColumn TItem="SkillDto"
                                 Field="@nameof(SkillDto.SkillGroupId)"
+                                Sortable="false"
                                 Caption="@L["SkillGroup"]">
                     <DisplayTemplate>
                         @SkillGroupList.FirstOrDefault(sg => sg.Id == context.SkillGroupId)?.Name
