@@ -42,6 +42,7 @@
     "Core:00002" : "There is already a skill group with the same name: {name}",
     "Core:00003" : "The skill group {name} was not found",
     "Core:00004" : "The skill {name} was not found",
-    "Core:00005" : "The skill group {name} has skills assigned to it"
+    "Core:00005" : "The skill group {name} has skills assigned to it",
+    "Core:00006" : "There is already an organization with the same name: {name}"
   }
 }

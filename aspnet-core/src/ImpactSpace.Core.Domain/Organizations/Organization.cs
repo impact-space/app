@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
 using Volo.Abp;
@@ -55,13 +56,18 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// </summary>
     /// <param name="id">The ID of the organization.</param>
     /// <param name="name">The name of the organization.</param>
+    /// <param name="tenantId">The tenant of the organization</param>
     /// <param name="description">The description of the organization.</param>
-    internal Organization(Guid id, [NotNull] string name, [CanBeNull] string description)
+    internal Organization(
+        Guid id, 
+        [NotNull] string name, 
+        Guid tenantId,
+        [CanBeNull] string description = null)
         : base(id)
     {
         SetName(name);
         SetDescription(description);
-
+        TenantId = tenantId;
         Projects = new Collection<Project>();
         OrganizationMembers = new Collection<OrganizationMember>();
     }
@@ -114,7 +120,7 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when the description exceeds the maximum length allowed.
     /// </exception>
-    private void SetDescription(string description)
+    private void SetDescription([CanBeNull] string description)
     {
         Description = Check.Length(
             description,
@@ -130,9 +136,11 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     internal void AddProject(Project project)
     {
         Check.NotNull(project, nameof(project));
-        if (!Projects.Contains(project))
+        
+        // check if a project with the same Id already exists
+        if (Projects.Any(p => p.Id == project.Id))
         {
-            Projects.Add(project);
+            throw new ArgumentException($"A project with the ID {project.Id} already exists.");
         }
     }
 
@@ -152,10 +160,14 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     internal void AddOrganizationMember(OrganizationMember organizationMember)
     {
         Check.NotNull(organizationMember, nameof(organizationMember));
-        if (!OrganizationMembers.Contains(organizationMember))
+        
+        // check if a member with the same Id already exists
+        if (OrganizationMembers.Any(m => m.Id == organizationMember.Id))
         {
-            OrganizationMembers.Add(organizationMember);
+            throw new ArgumentException($"An organization member with the ID {organizationMember.Id} already exists.");
         }
+        
+        OrganizationMembers.Add(organizationMember);
     }
 
     /// <summary>
