@@ -108,8 +108,8 @@ public class CoreBlazorModule : AbpModule
         {
             if (hostingEnvironment.IsProduction())
             {
-                options.AddEncryptionCertificate(LoadCertificate("7785791AA3CCC380C5D9CE9F94BB72E28234F04F"));
-                options.AddSigningCertificate(LoadCertificate("7C6478219A691D940D25745280A29DC2FAC40BA8"));
+                options.AddEncryptionCertificate(LoadCertificate(configuration["EncryptionCertificateThumbprint"]));
+                options.AddSigningCertificate(LoadCertificate(configuration["SigningCertificateThumbprint"]));
             }
         });
     }
