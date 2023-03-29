@@ -55,7 +55,6 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
    - Install ABP CLI by running `dotnet tool install -g Volo.Abp.Cli`.
    - Install and configure PostgreSQL by following the instructions [here](https://www.postgresql.org/download/).
      - You can also run PostgreSQL in docker.  The docker-compose.yml is located in the /etc folder.
-3. Follow the steps in the [Getting Started](#getting-started) section.
 
 ```
 bash
