@@ -1,3 +1,5 @@
+[![.NET Build](https://github.com/impact-space/app/actions/workflows/dotnet.yml/badge.svg)](https://github.com/impact-space/app/actions/workflows/dotnet.yml)
+
 # Impact Space
 
 Impact Space is here to help you streamline your workflows, keep track  of your milestones, and ensure your quests lead to success. Our intuitive platform is designed with your needs in mind, providing you with powerful tools to manage your projects effectively. Our app is built on a robust, secure, and scalable framework, offering  multi-tenancy support to accommodate organizations of all sizes. Our goal is to help you stay on track, meet your deadlines, and ultimately achieve your project objectives.
