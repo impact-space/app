@@ -95,6 +95,6 @@ cd ../ImpactSpace.Core.Blazor
 dotnet run
 ```
 
-9. Open a web browser and navigate to `https://localhost:44380` to access the Impact Space application.
+9. Open a web browser and navigate to `http://localhost:44380` to access the Impact Space application.
 
 You should now have the Impact Space application running locally on your machine.
