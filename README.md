@@ -36,7 +36,7 @@ With Impact Space, you can:
 
 ## Community
 
-Impact Space is an open-source project and we welcome contributions from the community. If you'd like to contribute, feel free to open an issue or create a pull request. You can also join our [Gitter chat](https://gitter.im/impact-space/community) to discuss new features or report bugs.
+Impact Space is an open-source project and we welcome contributions from the community. If you'd like to contribute, feel free to open an issue or create a pull request.
 
 ## Acknowledgments
 
@@ -45,7 +45,6 @@ A special thanks to [ProgCode](https://progcode.org) for their support in making
 ## License
 
 This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
-
 
 ## Getting Started
 
