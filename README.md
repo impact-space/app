@@ -6,6 +6,8 @@
 
 Impact Space is here to help you streamline your workflows, keep track  of your milestones, and ensure your quests lead to success. Our intuitive platform is designed with your needs in mind, providing you with powerful tools to manage your projects effectively. Our app is built on a robust, secure, and scalable framework, offering  multi-tenancy support to accommodate organizations of all sizes. Our goal is to help you stay on track, meet your deadlines, and ultimately achieve your project objectives.
 
+[**Live Demo**](https://app.impactspace.io)
+
 ## Features
 
 With Impact Space, you can:
@@ -16,12 +18,34 @@ With Impact Space, you can:
 - Collaborate with team members: Allow for transparent communication and efficient delegation.
 - Monitor progress: Receive real-time updates on milestone completion, budget usage, and quest statuses.
 
+## Technologies and Libraries
+- Blazor
+- ASP.NET Core
+- .NET 7
+- C#
+- PostgreSQL
+- ABP Framework
+- Blazorise
+
 ## Requirements
 
 - .NET 7 SDK
 - Node.js 18.x
 - Volo.Abp.Cli (ABP CLI)
 - PostgreSQL
+
+## Community
+
+Impact Space is an open-source project and we welcome contributions from the community. If you'd like to contribute, feel free to open an issue or create a pull request. You can also join our [Gitter chat](https://gitter.im/impact-space/community) to discuss new features or report bugs.
+
+## Acknowledgments
+
+A special thanks to [ProgCode](https://progcode.org) for their support in making this project possible.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
+
 
 ## Getting Started
 
