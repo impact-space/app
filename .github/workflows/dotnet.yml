@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release aspnet-core/ImpactSpace.Core.sln
     - name: Test
-      run: dotnet test --no-build --verbosity normal aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj
+      run: dotnet test --configuration Release --verbosity normal aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj
