@@ -67,6 +67,8 @@ stages:
             -replace "#{IsSelfRegistrationEnabled}#", "$(IsSelfRegistrationEnabled)" `
             -replace "#{RedirectAllowedUrls}#", "$(RedirectAllowedUrls)" `
             -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)"
+            -replace "#{EncryptionCertificateThumbprint}#", "$(EncryptionCertificateThumbprint)"
+            -replace "#{SigningCertificateThumbprint}#", "$(SigningCertificateThumbprint)"
           Set-Content -Path $sourceFilePath -Value $updatedContent
 
     - task: DotNetCoreCLI@2
