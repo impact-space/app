@@ -56,6 +56,8 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
    - Install and configure PostgreSQL by following the instructions [here](https://www.postgresql.org/download/).
      - You can also run PostgreSQL in docker.  The docker-compose.yml is located in the /etc folder.
 
+3. Run the following command in the aspnet-core folder to restore the solution:
+
 ```
 bash
 dotnet restore
