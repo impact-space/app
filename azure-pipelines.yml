@@ -66,8 +66,8 @@ stages:
             -replace "#{DefaultPassPhrase}#", "$(DefaultPassPhrase)" `
             -replace "#{IsSelfRegistrationEnabled}#", "$(IsSelfRegistrationEnabled)" `
             -replace "#{RedirectAllowedUrls}#", "$(RedirectAllowedUrls)" `
-            -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)"
-            -replace "#{EncryptionCertificateThumbprint}#", "$(EncryptionCertificateThumbprint)"
+            -replace "#{RequireHttpsMetadata}#", "$(RequireHttpsMetadata)" `
+            -replace "#{EncryptionCertificateThumbprint}#", "$(EncryptionCertificateThumbprint)" `
             -replace "#{SigningCertificateThumbprint}#", "$(SigningCertificateThumbprint)"
           Set-Content -Path $sourceFilePath -Value $updatedContent
 
