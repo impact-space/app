@@ -1,4 +1,6 @@
-[![.NET Build](https://github.com/impact-space/app/actions/workflows/dotnet.yml/badge.svg)](https://github.com/impact-space/app/actions/workflows/dotnet.yml)
+[![.NET Build](https://github.com/impact-space/app/actions/workflows/dotnet.yml/badge.svg)](https://github.com/impact-space/app/actions/workflows/dotnet.yml) [![Last Commit](https://img.shields.io/github/last-commit/impact-space/app)](https://github.com/impact-space/app/commits/master) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+
 
 # Impact Space
 
