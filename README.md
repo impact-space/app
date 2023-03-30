@@ -39,7 +39,7 @@ A special thanks to [ProgCode](https://progcode.org) for their support in making
 
 ## License
 
-This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
+This project is licensed under the GNU General Public License v3.0. See the [LICENSE](LICENSE.md) file for more information.
 
 ## Getting Started
 
