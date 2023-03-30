@@ -6,8 +6,12 @@ name: .NET
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'aspnet-core/**'
   pull_request:
     branches: [ "master" ]
+    paths:
+      - 'aspnet-core/**'
 
 jobs:
   build:
