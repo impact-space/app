@@ -8,7 +8,6 @@ First of all, thank you for considering contributing to our project! We apprecia
   - [Reporting Bugs](#reporting-bugs)
   - [Suggesting Enhancements](#suggesting-enhancements)
   - [Submitting Pull Requests](#submitting-pull-requests)
-- [Development Setup](#development-setup)
 
 ## Code of Conduct
 
