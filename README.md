@@ -94,3 +94,11 @@ dotnet run
 9. Open a web browser and navigate to `http://localhost:44380` to access the Impact Space application.
 
 You should now have the Impact Space application running locally on your machine.
+
+10. Log in with this default username and password:
+
+```
+  username: admin
+  password: 1q2w3E*
+```
+
