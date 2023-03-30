@@ -15,9 +15,13 @@ Impact Space is here to help you streamline your workflows, keep track  of your 
 With Impact Space, you can:
 
 🤝 Democratically manage projects: Empower your team with a collaborative and democratic approach to managing projects.
+
 🎯 Create and manage milestones: Customize attributes like deadlines, budgets, priority levels, and status types.
+
 📝 Associate quests or tasks: Ensure a clear and organized workflow with each milestone.
+
 💬 Collaborate with team members: Allow for transparent communication and efficient delegation.
+
 📊 Monitor progress: Receive real-time updates on milestone completion, budget usage, and quest statuses.
 
 ## Requirements
