@@ -18,15 +18,6 @@ With Impact Space, you can:
 - Collaborate with team members: Allow for transparent communication and efficient delegation.
 - Monitor progress: Receive real-time updates on milestone completion, budget usage, and quest statuses.
 
-## Technologies and Libraries
-- Blazor
-- ASP.NET Core
-- .NET 7
-- C#
-- PostgreSQL
-- ABP Framework
-- Blazorise
-
 ## Requirements
 
 - .NET 7 SDK
