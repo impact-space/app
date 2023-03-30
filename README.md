@@ -59,15 +59,13 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
 
 3. Run the following command in the aspnet-core folder to restore the solution:
 
-```
-bash
+```bash
 dotnet restore
 ```
 
 4. Use the ABP CLI to install the required libraries for the Blazor app by running:
 
-```
-bash
+```bash
 abp install-libs --project-path src/ImpactSpace.Core.Blazor/ImpactSpace.Core.Blazor.csproj
 ```
 
@@ -75,23 +73,20 @@ abp install-libs --project-path src/ImpactSpace.Core.Blazor/ImpactSpace.Core.Bla
 
 6. Build the solution by running the following command in the `aspnet-core` folder:
 
-```
-bash
+```bash
 dotnet build
 ```
 
 7. Run the database migration using the DbMigrator project:
 
-```
-bash
+```bash
 cd src/ImpactSpace.Core.DbMigrator
 dotnet run
 ```
 
 8. Start the Blazor app by navigating to the `ImpactSpace.Core.Blazor` project folder and running:
 
-```
-bash
+```bash
 cd ../ImpactSpace.Core.Blazor
 dotnet run
 ```
