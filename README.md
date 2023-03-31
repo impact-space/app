@@ -8,8 +8,6 @@ Impact Space is here to help you streamline your workflows, keep track  of your 
 
 **Please note that Impact Space is currently in early development. We appreciate your feedback and contributions as we continue to improve and expand our platform.**
 
-[**Live Demo**](https://app.impactspace.io)
-
 ## Features
 
 With Impact Space, you can:
