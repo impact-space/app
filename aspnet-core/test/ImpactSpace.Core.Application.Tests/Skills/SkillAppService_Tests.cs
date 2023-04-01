@@ -86,7 +86,7 @@ public class SkillAppService_Tests : CoreApplicationTestBase
     [Fact]
     public async Task Should_Create_Skill()
     {
-        var result = await _skillAppService.CreateAsync(new CreateSkillDto
+        var result = await _skillAppService.CreateAsync(new SkillCreateDto
         {
             Name = "Test Skill",
             SkillGroupId = (await _skillAppService.GetListAsync(new GetSkillListDto())).Items.First().SkillGroupId
@@ -103,7 +103,7 @@ public class SkillAppService_Tests : CoreApplicationTestBase
         
         await Should.ThrowAsync<SkillAlreadyExistsException>(async () =>
         {
-            await _skillAppService.CreateAsync(new CreateSkillDto
+            await _skillAppService.CreateAsync(new SkillCreateDto
             {
                 Name = skill.Name,
                 SkillGroupId = skill.SkillGroupId
@@ -116,7 +116,7 @@ public class SkillAppService_Tests : CoreApplicationTestBase
     {
         await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _skillAppService.CreateAsync(new CreateSkillDto
+            await _skillAppService.CreateAsync(new SkillCreateDto
             {
                 Name = "Test Skill",
                 SkillGroupId = Guid.NewGuid()

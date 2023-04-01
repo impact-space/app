@@ -54,7 +54,7 @@ public class SkillAppService : CoreAppService, ISkillAppService
     }
 
     [Authorize(CorePermissions.GlobalTypes.Skills.Create)]
-    public async Task<SkillDto> CreateAsync(CreateSkillDto input)
+    public async Task<SkillDto> CreateAsync(SkillCreateDto input)
     {
         var skill = await _skillManager.CreateAsync(
             input.Name,

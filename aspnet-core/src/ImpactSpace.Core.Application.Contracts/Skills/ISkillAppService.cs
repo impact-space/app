@@ -5,7 +5,7 @@ using Volo.Abp.Application.Services;
 
 namespace ImpactSpace.Core.Skills;
 
-public interface ISkillAppService : ICrudAppService<SkillDto, Guid, GetSkillListDto, CreateSkillDto, SkillUpdateDto>
+public interface ISkillAppService : ICrudAppService<SkillDto, Guid, GetSkillListDto, SkillCreateDto, SkillUpdateDto>
 {
     
 }

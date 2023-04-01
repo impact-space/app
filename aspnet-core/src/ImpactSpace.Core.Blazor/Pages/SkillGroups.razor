@@ -91,11 +91,11 @@
                 <CloseButton Clicked="CloseCreateSkillGroupModal"/>
             </ModalHeader>
             <ModalBody>
-                <Validations @ref="@CreateValidationsRef" Model="@NewSkillGroup" ValidateOnLoad="false">
+                <Validations @ref="@CreateValidationsRef" Model="@New" ValidateOnLoad="false">
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@NewSkillGroup.Name">
+                            <TextEdit @bind-Text="@New.Name">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>
@@ -105,7 +105,7 @@
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit Rows="5" @bind-Text="@NewSkillGroup.Description">
+                            <MemoEdit Rows="5" @bind-Text="@New.Description">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>
@@ -135,15 +135,15 @@
     <ModalContent IsCentered="true">
         <Form>
             <ModalHeader>
-                <ModalTitle>@EditingSkillGroup.Name</ModalTitle>
+                <ModalTitle>@Editing.Name</ModalTitle>
                 <CloseButton Clicked="CloseEditSkillGroupModal" />
             </ModalHeader>
             <ModalBody>
-                <Validations @ref="@EditValidationsRef" Model="@EditingSkillGroup" ValidateOnLoad="false">
+                <Validations @ref="@EditValidationsRef" Model="@Editing" ValidateOnLoad="false">
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@EditingSkillGroup.Name">
+                            <TextEdit @bind-Text="@Editing.Name">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>
@@ -153,7 +153,7 @@
                     <Validation>
                         <Field>
                             <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit Rows="5" @bind-Text="@EditingSkillGroup.Description">
+                            <MemoEdit Rows="5" @bind-Text="@Editing.Description">
                                 <Feedback>
                                     <ValidationError/>
                                 </Feedback>

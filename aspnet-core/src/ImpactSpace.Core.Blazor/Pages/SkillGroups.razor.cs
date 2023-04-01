@@ -25,10 +25,10 @@ public partial class SkillGroups
     private bool CanEditSkillGroup { get; set; }
     private bool CanDeleteSkillGroup { get; set; }
     
-    private CreateSkillGroupDto NewSkillGroup { get; set; }
+    private SkillGroupCreateDto New { get; set; }
     
     private Guid EditingSkillGroupId { get; set; }
-    private UpdateSkillGroupDto EditingSkillGroup { get; set; }
+    private SkillGroupUpdateDto Editing { get; set; }
     
     private Modal CreateSkillGroupModal { get; set; }
     private Modal EditSkillGroupModal { get; set; }
@@ -39,8 +39,8 @@ public partial class SkillGroups
     
     public SkillGroups()
     {
-        NewSkillGroup = new CreateSkillGroupDto();
-        EditingSkillGroup = new UpdateSkillGroupDto();
+        New = new SkillGroupCreateDto();
+        Editing = new SkillGroupUpdateDto();
     }
     
     protected override async Task OnInitializedAsync()
@@ -93,7 +93,7 @@ public partial class SkillGroups
     {
         CreateValidationsRef.ClearAll();
         
-        NewSkillGroup = new CreateSkillGroupDto();
+        New = new SkillGroupCreateDto();
         CreateSkillGroupModal.Show();
     }
     
@@ -107,7 +107,7 @@ public partial class SkillGroups
         EditValidationsRef.ClearAll();
         
         EditingSkillGroupId = skillGroup.Id;
-        EditingSkillGroup = ObjectMapper.Map<SkillGroupDto, UpdateSkillGroupDto>(skillGroup);
+        Editing = ObjectMapper.Map<SkillGroupDto, SkillGroupUpdateDto>(skillGroup);
         EditSkillGroupModal.Show();
     }
     
@@ -133,7 +133,7 @@ public partial class SkillGroups
     {
         if (await CreateValidationsRef.ValidateAll())
         {
-            await SkillGroupAppService.CreateAsync(NewSkillGroup);
+            await SkillGroupAppService.CreateAsync(New);
             await GetSkillGroupsAsync();
             CloseCreateSkillGroupModal();
         }
@@ -143,7 +143,7 @@ public partial class SkillGroups
     {
         if (await EditValidationsRef.ValidateAll())
         {
-            await SkillGroupAppService.UpdateAsync(EditingSkillGroupId, EditingSkillGroup);
+            await SkillGroupAppService.UpdateAsync(EditingSkillGroupId, Editing);
             await GetSkillGroupsAsync();
             CloseEditSkillGroupModal();
         }

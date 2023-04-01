@@ -22,7 +22,7 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
     }
     
     [Authorize(CorePermissions.GlobalTypes.SkillGroups.Create)]
-    public async Task<SkillGroupDto> CreateAsync(CreateSkillGroupDto input)
+    public async Task<SkillGroupDto> CreateAsync(SkillGroupCreateDto input)
     {
         var skillGroup = await _skillGroupManager.CreateAsync(input.Name, input.Description);
         
@@ -32,7 +32,7 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
     }
     
     [Authorize(CorePermissions.GlobalTypes.SkillGroups.Edit)]
-    public async Task UpdateAsync(Guid id, UpdateSkillGroupDto input)
+    public async Task UpdateAsync(Guid id, SkillGroupUpdateDto input)
     {
         var skillGroup = await _skillGroupRepository.GetAsync(id);
 

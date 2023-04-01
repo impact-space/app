@@ -69,7 +69,7 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
     [Fact]
     public async Task Should_Create_SkillGroup()
     {
-        var result = await _skillGroupAppService.CreateAsync(new CreateSkillGroupDto
+        var result = await _skillGroupAppService.CreateAsync(new SkillGroupCreateDto
         {
             Name = "Test Skill Group",
             Description = "Test Skill Group Description"
@@ -86,7 +86,7 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
     {
         await Should.ThrowAsync<SkillGroupAlreadyExistsException>(async () =>
         {
-            await _skillGroupAppService.CreateAsync(new CreateSkillGroupDto
+            await _skillGroupAppService.CreateAsync(new SkillGroupCreateDto
             {
                 Name = "Activism",
                 Description = "Test Skill Group Description"
@@ -97,13 +97,13 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
     [Fact]
     public async Task Should_Update_SkillGroup()
     {
-        var result = await _skillGroupAppService.CreateAsync(new CreateSkillGroupDto
+        var result = await _skillGroupAppService.CreateAsync(new SkillGroupCreateDto
         {
             Name = "Test Skill Group",
             Description = "Test Skill Group Description"
         });
 
-        await _skillGroupAppService.UpdateAsync(result.Id, new UpdateSkillGroupDto
+        await _skillGroupAppService.UpdateAsync(result.Id, new SkillGroupUpdateDto
         {
             Name = "Test Skill Group Updated",
             Description = "Test Skill Group Description Updated"
@@ -120,7 +120,7 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
     [Fact]
     public async Task Should_Not_Allow_To_Update_SkillGroup_With_Same_Name()
     {
-        var result = await _skillGroupAppService.CreateAsync(new CreateSkillGroupDto
+        var result = await _skillGroupAppService.CreateAsync(new SkillGroupCreateDto
         {
             Name = "Test Skill Group",
             Description = "Test Skill Group Description"
@@ -128,7 +128,7 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
 
         await Should.ThrowAsync<SkillGroupAlreadyExistsException>(async () =>
         {
-            await _skillGroupAppService.UpdateAsync(result.Id, new UpdateSkillGroupDto
+            await _skillGroupAppService.UpdateAsync(result.Id, new SkillGroupUpdateDto
             {
                 Name = "Activism",
                 Description = "Test Skill Group Description Updated"
@@ -139,7 +139,7 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
     [Fact]
     public async Task Should_Delete_SkillGroup()
     {
-        var result = await _skillGroupAppService.CreateAsync(new CreateSkillGroupDto
+        var result = await _skillGroupAppService.CreateAsync(new SkillGroupCreateDto
         {
             Name = "Test Skill Group",
             Description = "Test Skill Group Description"
