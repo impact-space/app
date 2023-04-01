@@ -5,11 +5,7 @@ using Volo.Abp.Application.Services;
 
 namespace ImpactSpace.Core.Skills;
 
-public interface ISkillGroupAppService : IApplicationService
+public interface ISkillGroupAppService : ICrudAppService<SkillGroupDto, Guid, GetSkillGroupListDto, SkillGroupCreateDto, SkillGroupUpdateDto>
 {
-    Task<SkillGroupDto> CreateAsync(SkillGroupCreateDto input);
-    Task UpdateAsync(Guid id, SkillGroupUpdateDto input);
-    Task DeleteAsync(Guid id);
-    Task<SkillGroupDto> GetAsync(Guid id);
-    Task<PagedResultDto<SkillGroupDto>> GetListAsync(GetSkillGroupListDto input);
+
 }

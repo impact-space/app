@@ -2,178 +2,135 @@
 @using ImpactSpace.Core.Skills
 @using ImpactSpace.Core.Localization
 @using Volo.Abp.AspNetCore.Components.Web
-@inherits CoreComponentBase
-@inject ISkillGroupAppService SkillGroupAppService
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
-
+@inherits AbpCrudPageBase<ISkillGroupAppService, SkillGroupDto, Guid, GetSkillGroupListDto, SkillGroupCreateDto, SkillGroupUpdateDto>
 <Card>
     <CardHeader>
-        <Row Class="justify-content-between">
-            <Column ColumnSize="ColumnSize.IsAuto">
-                <h2>@L["SkillGroups"]</h2>
-            </Column>
-            <Column ColumnSize="ColumnSize.IsAuto">
-                @if (CanCreateSkillGroup)
-                {
-                    <Button Color="Color.Primary"
-                            Clicked="OpenCreateSkillGroupModal">
-                        @L["NewSkillGroup"]
-                    </Button>
-                }
-            </Column>
-        </Row>
+        @* ************************* PAGE HEADER ************************* *@
+        <PageHeader Title="@L["SkillGroups"]"
+                    BreadcrumbItems="@BreadcrumbItems"
+                    Toolbar="@Toolbar">
+        </PageHeader>
         <Row>
-            <Column ColumnSize="ColumnSize.IsFull">
-                <TextEdit Text="@FilterText" TextChanged="@OnFilterTextChanged" Placeholder="@L["Search"]" />
+            <Column ColumnSize="ColumnSize.IsHalf">
+                <Label>@L["Search"]</Label>
+                <TextEdit Text="@FilterText" TextChanged="@OnFilterTextChanged" />
             </Column>
         </Row>
     </CardHeader>
     <CardBody>
-        <DataGrid TItem="SkillGroupDto"
-                  Data="SkillGroupList"
-                  ReadData="OnDataGridReadAsync"
-                  TotalItems="TotalCount"
-                  ShowPager="true"
-                  PageSize="PageSize">
-            <DataGridColumns>
-                <DataGridColumn Width="150px"
-                                TItem="SkillGroupDto"
-                                Field="@nameof(SkillGroupDto.Id)"
-                                Sortable="false"
-                                Caption="@L["Actions"]">
-                    <DisplayTemplate>
-                        <Dropdown>
-                            <DropdownToggle Color="Color.Primary">
-                                @L["Actions"]
-                            </DropdownToggle>
-                            <DropdownMenu>
-                                @if (CanEditSkillGroup)
-                                {
-                                    <DropdownItem Clicked="() => OpenEditSkillGroupModal(context)">
-                                        @L["Edit"]
-                                    </DropdownItem>
-                                }
-                                @if (CanDeleteSkillGroup)
-                                {
-                                    <DropdownItem Clicked="() => DeleteSkillGroupAsync(context)">
-                                        @L["Delete"]
-                                    </DropdownItem>
-                                }
-                            </DropdownMenu>
-                        </Dropdown>
-                    </DisplayTemplate>
-                </DataGridColumn>
-                <DataGridColumn TItem="SkillGroupDto"
-                                Field="@nameof(SkillGroupDto.Name)"
-                                SortDirection="SortDirection.Ascending"
-                                Width="400px"
-                                Caption="@L["Name"]">
-                </DataGridColumn>
-                <DataGridColumn TItem="SkillGroupDto"
-                                Field="@nameof(SkillGroupDto.Description)"
-                                Caption="@L["Description"]"
-                                Sortable="false">
-                    <DisplayTemplate>
-                        @context.Description
-                    </DisplayTemplate>
-                </DataGridColumn>
-            </DataGridColumns>
-        </DataGrid>
+        @* ************************* DATA GRID ************************* *@
+        <AbpExtensibleDataGrid TItem="SkillGroupDto"
+                               Data="@Entities"
+                               ReadData="@OnDataGridReadAsync"
+                               TotalItems="@TotalCount"
+                               ShowPager="true"
+                               PageSize="@PageSize"
+                               CurrentPage="@CurrentPage"
+                               Columns="@SkillGroupManagementTableColumns">
+        </AbpExtensibleDataGrid>
     </CardBody>
 </Card>
 
-<Modal @ref="CreateSkillGroupModal">
-    <ModalBackdrop/>
-    <ModalContent IsCentered="true">
-        <Form>
-            <ModalHeader>
-                <ModalTitle>@L["NewSkillGroup"]</ModalTitle>
-                <CloseButton Clicked="CloseCreateSkillGroupModal"/>
-            </ModalHeader>
-            <ModalBody>
-                <Validations @ref="@CreateValidationsRef" Model="@New" ValidateOnLoad="false">
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@New.Name">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit Rows="5" @bind-Text="@New.Description">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </MemoEdit>
-                        </Field>
-                    </Validation>
-                </Validations>
-            </ModalBody>
-            <ModalFooter>
-                <Button Color="Color.Secondary"
-                        Clicked="CloseCreateSkillGroupModal">
-                    @L["Cancel"]
-                </Button>
-                <Button Color="Color.Primary"
-                        Type="@ButtonType.Submit"
-                        PreventDefaultOnSubmit="true"
-                        Clicked="CreateSkillGroupAsync">
-                    @L["Save"]
-                </Button>
-            </ModalFooter>
-        </Form>
-    </ModalContent>
-</Modal>
+@* ************************* CREATE MODAL ************************* *@
+@if (HasCreatePermission)
+{
+    <Modal @ref="CreateModal">
+        <ModalContent IsCentered="true">
+            <Form>
+                <ModalHeader>
+                    <ModalTitle>@L["NewSkillGroup"]</ModalTitle>
+                    <CloseButton Clicked="CloseCreateModalAsync"/>
+                </ModalHeader>
+                <ModalBody>
+                    <Validations @ref="@CreateValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Name"]</FieldLabel>
+                                <TextEdit @bind-Text="@NewEntity.Name">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Description"]</FieldLabel>
+                                <MemoEdit Rows="5" @bind-Text="@NewEntity.Description">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </MemoEdit>
+                            </Field>
+                        </Validation>
+                    </Validations>
+                </ModalBody>
+                <ModalFooter>
+                    <Button Color="Color.Secondary"
+                            Clicked="CloseCreateModalAsync">
+                        @L["Cancel"]
+                    </Button>
+                    <Button Color="Color.Primary"
+                            Type="@ButtonType.Submit"
+                            PreventDefaultOnSubmit="true"
+                            Clicked="CreateEntityAsync">
+                        @L["Save"]
+                    </Button>
+                </ModalFooter>
+            </Form>
+        </ModalContent>
+    </Modal>
+}
 
-<Modal @ref="EditSkillGroupModal">
-    <ModalBackdrop />
-    <ModalContent IsCentered="true">
-        <Form>
-            <ModalHeader>
-                <ModalTitle>@Editing.Name</ModalTitle>
-                <CloseButton Clicked="CloseEditSkillGroupModal" />
-            </ModalHeader>
-            <ModalBody>
-                <Validations @ref="@EditValidationsRef" Model="@Editing" ValidateOnLoad="false">
-                    <Validation MessageLocalizer="@LH.Localize">
-                        <Field>
-                            <FieldLabel>@L["Name"]</FieldLabel>
-                            <TextEdit @bind-Text="@Editing.Name">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </TextEdit>
-                        </Field>
-                    </Validation>
-                    <Validation>
-                        <Field>
-                            <FieldLabel>@L["Description"]</FieldLabel>
-                            <MemoEdit Rows="5" @bind-Text="@Editing.Description">
-                                <Feedback>
-                                    <ValidationError/>
-                                </Feedback>
-                            </MemoEdit>
-                        </Field>
-                    </Validation>
-                </Validations>
-            </ModalBody>
-            <ModalFooter>
-                <Button Color="Color.Secondary"
-                        Clicked="CloseEditSkillGroupModal">
-                    @L["Cancel"]
-                </Button>
-                <Button Color="Color.Primary"
-                        Type="@ButtonType.Submit"
-                        PreventDefaultOnSubmit="true"
-                        Clicked="UpdateSkillGroupAsync">
-                    @L["Save"]
-                </Button>
-            </ModalFooter>
-        </Form>
-    </ModalContent>
-</Modal>
+@* ************************* EDIT MODAL ************************* *@
+@if (HasUpdatePermission)
+{
+    <Modal @ref="EditModal">
+        <ModalContent IsCentered="true">
+            <Form>
+                <ModalHeader>
+                    <ModalTitle>@EditingEntity.Name</ModalTitle>
+                    <CloseButton Clicked="CloseEditModalAsync" />
+                </ModalHeader>
+                <ModalBody>
+                    <Validations @ref="@EditValidationsRef" Model="@EditingEntity" ValidateOnLoad="false">
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Name"]</FieldLabel>
+                                <TextEdit @bind-Text="@EditingEntity.Name">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Description"]</FieldLabel>
+                                <MemoEdit Rows="5" @bind-Text="@EditingEntity.Description">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </MemoEdit>
+                            </Field>
+                        </Validation>
+                    </Validations>
+                </ModalBody>
+                <ModalFooter>
+                    <Button Color="Color.Secondary"
+                            Clicked="CloseEditModalAsync">
+                        @L["Cancel"]
+                    </Button>
+                    <Button Color="Color.Primary"
+                            Type="@ButtonType.Submit"
+                            PreventDefaultOnSubmit="true"
+                            Clicked="UpdateEntityAsync">
+                        @L["Save"]
+                    </Button>
+                </ModalFooter>
+            </Form>
+        </ModalContent>
+    </Modal>
+}

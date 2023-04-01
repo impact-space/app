@@ -1,151 +1,110 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ImpactSpace.Core.Skills;
 using ImpactSpace.Core.Permissions;
+using ImpactSpace.Core.Localization;
 using Blazorise;
-using Blazorise.DataGrid;
-using Microsoft.AspNetCore.Authorization;
-using Volo.Abp.Application.Dtos;
+using Volo.Abp.AspNetCore.Components.Web.Extensibility.EntityActions;
+using Volo.Abp.AspNetCore.Components.Web.Extensibility.TableColumns;
+using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
 
 namespace ImpactSpace.Core.Blazor.Pages;
 
 public partial class SkillGroups
 {
-    private IReadOnlyList<SkillGroupDto> SkillGroupList { get; set; }
-
     private string FilterText { get; set; } = string.Empty;
-    private int PageSize { get; } = LimitedResultRequestDto.DefaultMaxResultCount;
-    private int CurrentPage { get; set; }
-    private string CurrentSorting { get; set; }
-    private int TotalCount { get; set; }
-    
-    private bool CanCreateSkillGroup { get; set; }
-    private bool CanEditSkillGroup { get; set; }
-    private bool CanDeleteSkillGroup { get; set; }
-    
-    private SkillGroupCreateDto New { get; set; }
-    
-    private Guid EditingSkillGroupId { get; set; }
-    private SkillGroupUpdateDto Editing { get; set; }
-    
-    private Modal CreateSkillGroupModal { get; set; }
-    private Modal EditSkillGroupModal { get; set; }
 
-    protected Validations CreateValidationsRef;
-    
-    protected Validations EditValidationsRef;
-    
+    protected PageToolbar Toolbar { get; } = new();
+
+    protected List<TableColumn> SkillGroupManagementTableColumns => TableColumns.Get<SkillGroups>();
+
     public SkillGroups()
     {
-        New = new SkillGroupCreateDto();
-        Editing = new SkillGroupUpdateDto();
+        LocalizationResource = typeof(CoreResource);
+        CreatePolicyName = CorePermissions.GlobalTypes.SkillGroups.Create;
+        UpdatePolicyName = CorePermissions.GlobalTypes.SkillGroups.Edit;
+        DeletePolicyName = CorePermissions.GlobalTypes.SkillGroups.Delete;
     }
-    
-    protected override async Task OnInitializedAsync()
+
+    protected override ValueTask SetBreadcrumbItemsAsync()
     {
-        await SetPermissionsAsync();
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem(L["Menu:SkillManagement"].Value));
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem(L["Menu:SkillGroups"].Value));
+        return base.SetBreadcrumbItemsAsync();
     }
-    
-    private async Task SetPermissionsAsync() 
+
+    protected override Task UpdateGetListInputAsync()
     {
-        CanCreateSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.SkillGroups.Create);
-        CanEditSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.SkillGroups.Edit);
-        CanDeleteSkillGroup = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.SkillGroups.Delete);
+        GetListInput.Filter = FilterText;
+        return base.UpdateGetListInputAsync();
     }
-    
+
+    protected override ValueTask SetEntityActionsAsync()
+    {
+        EntityActions
+            .Get<SkillGroups>()
+            .AddRange(new EntityAction[]
+            {
+                new EntityAction
+                {
+                    Text = L["Edit"],
+                    Visible = (data) => HasUpdatePermission,
+                    Clicked = async (data) => { await OpenEditModalAsync(data.As<SkillGroupDto>()); }
+                },
+                new EntityAction
+                {
+                    Text = L["Delete"],
+                    Visible = (data) => HasDeletePermission,
+                    Clicked = async (data) => await DeleteEntityAsync(data.As<SkillGroupDto>()),
+                    ConfirmationMessage = (data) => GetDeleteConfirmationMessage(data.As<SkillGroupDto>())
+                }
+            });
+
+        return base.SetEntityActionsAsync();
+    }
+
+    protected override ValueTask SetTableColumnsAsync()
+    {
+        SkillGroupManagementTableColumns
+            .AddRange(new[]
+            {
+                new TableColumn
+                {
+                    Title = L["Actions"],
+                    Actions = EntityActions.Get<SkillGroups>(),
+                },
+                new TableColumn
+                {
+                    Title = L["Name"],
+                    Sortable = true,
+                    Data = nameof(SkillGroupDto.Name),
+                },
+                new TableColumn
+                {
+                    Title = L["Description"],
+                    Sortable = true,
+                    Data = nameof(SkillGroupDto.Description),
+                }
+            });
+
+        return base.SetTableColumnsAsync();
+    }
+
+    protected override ValueTask SetToolbarItemsAsync()
+    {
+        Toolbar.AddButton(L["NewSkillGroup"], OpenCreateModalAsync,
+            IconName.Add,
+            requiredPolicyName: CreatePolicyName);
+
+        return base.SetToolbarItemsAsync();
+    }
+
+
     private async Task OnFilterTextChanged(string newFilterText)
     {
         FilterText = newFilterText;
-        CurrentPage = 0;
-        await GetSkillGroupsAsync();
-    }
-    
-    private async Task GetSkillGroupsAsync()
-    {
-        var result = await SkillGroupAppService.GetListAsync(new GetSkillGroupListDto
-        {
-            SkipCount = CurrentPage * PageSize,
-            MaxResultCount = PageSize,
-            Sorting = CurrentSorting,
-            Filter = FilterText
-        });
-        
-        SkillGroupList = result.Items;
-        TotalCount = (int)result.TotalCount;
-    }
-
-    private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<SkillGroupDto> e)
-    {
-        CurrentSorting = e.Columns
-            .Where(c => c.SortDirection != SortDirection.Default)
-            .Select(c => c.Field + (c.SortDirection == SortDirection.Descending ? " DESC" : ""))
-            .JoinAsString(",");
-        CurrentPage = e.Page - 1;
-
-        await GetSkillGroupsAsync();
-        
-        await InvokeAsync(StateHasChanged);
-    }
-    
-    private void OpenCreateSkillGroupModal()
-    {
-        CreateValidationsRef.ClearAll();
-        
-        New = new SkillGroupCreateDto();
-        CreateSkillGroupModal.Show();
-    }
-    
-    private void CloseCreateSkillGroupModal()
-    {
-        CreateSkillGroupModal.Hide();
-    }
-    
-    private void OpenEditSkillGroupModal(SkillGroupDto skillGroup)
-    {
-        EditValidationsRef.ClearAll();
-        
-        EditingSkillGroupId = skillGroup.Id;
-        Editing = ObjectMapper.Map<SkillGroupDto, SkillGroupUpdateDto>(skillGroup);
-        EditSkillGroupModal.Show();
-    }
-    
-    private async Task DeleteSkillGroupAsync(SkillGroupDto skillGroup)
-    {
-        var confirmMessage = L["SkillGroupDeletionConfirmationMessage", skillGroup.Name];
-        if (!await Message.Confirm(confirmMessage))
-        {
-            return;
-        }
-        
-        await SkillGroupAppService.DeleteAsync(skillGroup.Id);
-            
-        await GetSkillGroupsAsync();
-    }
-    
-    private void CloseEditSkillGroupModal()
-    {
-        EditSkillGroupModal.Hide();
-    }
-    
-    private async Task CreateSkillGroupAsync()
-    {
-        if (await CreateValidationsRef.ValidateAll())
-        {
-            await SkillGroupAppService.CreateAsync(New);
-            await GetSkillGroupsAsync();
-            CloseCreateSkillGroupModal();
-        }
-    }
-    
-    private async Task UpdateSkillGroupAsync()
-    {
-        if (await EditValidationsRef.ValidateAll())
-        {
-            await SkillGroupAppService.UpdateAsync(EditingSkillGroupId, Editing);
-            await GetSkillGroupsAsync();
-            CloseEditSkillGroupModal();
-        }
+        CurrentPage = 1;
+        await GetEntitiesAsync();
     }
 }

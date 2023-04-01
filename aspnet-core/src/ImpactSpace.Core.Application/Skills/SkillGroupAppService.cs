@@ -32,7 +32,7 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
     }
     
     [Authorize(CorePermissions.GlobalTypes.SkillGroups.Edit)]
-    public async Task UpdateAsync(Guid id, SkillGroupUpdateDto input)
+    public async Task<SkillGroupDto> UpdateAsync(Guid id, SkillGroupUpdateDto input)
     {
         var skillGroup = await _skillGroupRepository.GetAsync(id);
 
@@ -47,6 +47,8 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
         }
 
         await _skillGroupRepository.UpdateAsync(skillGroup);
+
+        return ObjectMapper.Map<SkillGroup, SkillGroupDto>(skillGroup);
     }
     
     [Authorize(CorePermissions.GlobalTypes.SkillGroups.Delete)]
