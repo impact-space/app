@@ -37,35 +37,29 @@ public class CoreMenuContributor : IMenuContributor
             )
         );
 
-        context.Menu.AddItem(
+        // Add SkillManagement menu items to the Administration area
+        administration.AddItem(
             new ApplicationMenuItem(
-                CoreMenus.GlobalTypes,
-                l["Menu:GlobalTypes"],
-                icon: "fas fa-globe",
-                requiredPermissionName: CorePermissions.GlobalTypes.Manage,
-                order: 1
+                CoreMenus.SkillManagement,
+                l["Menu:SkillManagement"],
+                icon: "fas fa-tasks",
+                requiredPermissionName: CorePermissions.GlobalTypes.Skills.Default,
+                order: 3
             ).AddItem(
                 new ApplicationMenuItem(
-                    CoreMenus.SkillManagement,
-                    l["Menu:SkillManagement"],
+                    CoreMenus.SkillGroups,
+                    l["Menu:SkillGroups"],
+                    url: "/skill-groups",
+                    icon: "fas fa-layer-group",
+                    requiredPermissionName: CorePermissions.GlobalTypes.SkillGroups.Default
+                )
+            ).AddItem(
+                new ApplicationMenuItem(
+                    CoreMenus.Skills,
+                    l["Menu:Skills"],
+                    url: "/skills",
                     icon: "fas fa-tasks",
                     requiredPermissionName: CorePermissions.GlobalTypes.Skills.Default
-                ).AddItem(
-                    new ApplicationMenuItem(
-                        CoreMenus.SkillGroups,
-                        l["Menu:SkillGroups"],
-                        url: "/skill-groups",
-                        icon: "fas fa-layer-group",
-                        requiredPermissionName: CorePermissions.GlobalTypes.SkillGroups.Default
-                    )
-                ).AddItem(
-                    new ApplicationMenuItem(
-                        CoreMenus.Skills,
-                        l["Menu:Skills"],
-                        url: "/skills",
-                        icon: "fas fa-tasks",
-                        requiredPermissionName: CorePermissions.GlobalTypes.Skills.Default
-                    )
                 )
             )
         );
@@ -76,7 +70,7 @@ public class CoreMenuContributor : IMenuContributor
         }
 
         administration.SetSubItemOrder(IdentityMenuNames.GroupName, 2);
-        administration.SetSubItemOrder(SettingManagementMenus.GroupName, 3);
+        administration.SetSubItemOrder(SettingManagementMenus.GroupName, 4);
         
         
 

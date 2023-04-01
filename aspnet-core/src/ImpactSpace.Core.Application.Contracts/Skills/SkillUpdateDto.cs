@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ImpactSpace.Core.Skills;
 
-public class UpdateSkillDto
+public class SkillUpdateDto
 {
     [Required]
     [StringLength(SkillConstants.MaxNameLength)]

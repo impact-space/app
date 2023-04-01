@@ -67,7 +67,7 @@ public class SkillAppService : CoreAppService, ISkillAppService
     }
 
     [Authorize(CorePermissions.GlobalTypes.Skills.Edit)]
-    public async Task UpdateAsync(Guid id, UpdateSkillDto input)
+    public async Task<SkillDto> UpdateAsync(Guid id, SkillUpdateDto input)
     {
         var skill = await _skillRepository.GetAsync(id);
         
@@ -82,6 +82,8 @@ public class SkillAppService : CoreAppService, ISkillAppService
         }
         
         await _skillRepository.UpdateAsync(skill);
+        
+        return ObjectMapper.Map<Skill, SkillDto>(skill);
     }
 
     [Authorize(CorePermissions.GlobalTypes.Skills.Delete)]

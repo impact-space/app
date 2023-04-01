@@ -4,54 +4,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using ImpactSpace.Core.Skills;
 using ImpactSpace.Core.Permissions;
+using ImpactSpace.Core.Localization;
 using Blazorise;
-using Blazorise.DataGrid;
-using Microsoft.AspNetCore.Authorization;
-using Volo.Abp.Application.Dtos;
+using Volo.Abp.AspNetCore.Components.Web.Extensibility.EntityActions;
+using Volo.Abp.AspNetCore.Components.Web.Extensibility.TableColumns;
+using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
 
 namespace ImpactSpace.Core.Blazor.Pages;
 
 public partial class Skills
 {
-    private IReadOnlyList<SkillDto> SkillList { get; set; }
     private IReadOnlyList<SkillGroupDto> SkillGroupList { get; set; } = Array.Empty<SkillGroupDto>();
     
     private string FilterText { get; set; } = string.Empty;
     
     private Guid? SelectedSkillGroupId { get; set; }
-    
-    private int PageSize { get; } = LimitedResultRequestDto.DefaultMaxResultCount;
-    private int CurrentPage { get; set; }
-    private string CurrentSorting { get; set; }
-    private int TotalCount { get; set; }
-    
-    private bool CanCreateSkill { get; set; }
-    private bool CanEditSkill { get; set; }
-    private bool CanDeleteSkill { get; set; }
-    
-    private CreateSkillDto NewSkill { get; set; }
-    
-    private Guid EditingSkillId { get; set; }
-    private UpdateSkillDto EditingSkill { get; set; }
-    
-    private Modal CreateSkillModal { get; set; }
-    private Modal EditSkillModal { get; set; }
+    protected PageToolbar Toolbar { get; } = new();
 
-    protected Validations CreateValidationsRef;
-    
-    protected Validations EditValidationsRef;
-    
+    protected List<TableColumn> SkillManagementTableColumns => TableColumns.Get<Skills>();
+
     public Skills()
     {
-        NewSkill = new CreateSkillDto();
-        EditingSkill = new UpdateSkillDto();
+        LocalizationResource = typeof(CoreResource);
+        CreatePolicyName = CorePermissions.GlobalTypes.Skills.Create;
+        UpdatePolicyName = CorePermissions.GlobalTypes.Skills.Edit;
+        DeletePolicyName = CorePermissions.GlobalTypes.Skills.Delete;
     }
     
-    protected override async Task OnInitializedAsync()
+    protected override ValueTask SetBreadcrumbItemsAsync()
     {
-        await base.OnInitializedAsync();
-        await SetPermissionsAsync();
-        await GetSkillGroupsAsync();
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem(L["Menu:SkillManagement"].Value));
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem(L["Menu:Skills"].Value));
+        return base.SetBreadcrumbItemsAsync();
     }
     
     private async Task GetSkillGroupsAsync()
@@ -63,112 +47,91 @@ public partial class Skills
         })).Items;
     }
     
-    private async Task SetPermissionsAsync() 
+    protected override async Task OnInitializedAsync()
     {
-        CanCreateSkill = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.Skills.Create);
-        CanEditSkill = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.Skills.Edit);
-        CanDeleteSkill = await AuthorizationService.IsGrantedAsync(CorePermissions.GlobalTypes.Skills.Delete);
+        await GetSkillGroupsAsync();
+        await base.OnInitializedAsync();
+    }
+
+    protected override Task UpdateGetListInputAsync()
+    {
+        GetListInput.Filter = FilterText;
+        GetListInput.SkillGroupId = SelectedSkillGroupId;
+        return base.UpdateGetListInputAsync();
+    }
+
+    protected override ValueTask SetEntityActionsAsync()
+    {
+        EntityActions
+            .Get<Skills>()
+            .AddRange(new EntityAction[]
+            {
+                new EntityAction
+                {
+                    Text = L["Edit"],
+                    Visible = (data) => HasUpdatePermission,
+                    Clicked = async (data) => { await OpenEditModalAsync(data.As<SkillDto>()); }
+                },
+                new EntityAction
+                {
+                    Text = L["Delete"],
+                    Visible = (data) => HasDeletePermission,
+                    Clicked = async (data) => await DeleteEntityAsync(data.As<SkillDto>()),
+                    ConfirmationMessage = (data) => GetDeleteConfirmationMessage(data.As<SkillDto>())
+                }
+            });
+
+        return base.SetEntityActionsAsync();
+    }
+    
+    protected override ValueTask SetTableColumnsAsync()
+    {
+        SkillManagementTableColumns
+            .AddRange(new[]
+            {
+                new TableColumn
+                {
+                    Title = L["Actions"],
+                    Actions = EntityActions.Get<Skills>(),
+                },
+                new TableColumn
+                {
+                    Title = L["Skill"],
+                    Sortable = true,
+                    Data = nameof(SkillDto.Name),
+                },
+                new TableColumn
+                {
+                    Title = L["SkillGroup"],
+                    Sortable = false,
+                    Data = nameof(SkillDto.SkillGroupId),
+                    ValueConverter = (value) => SkillGroupList.FirstOrDefault(x => x.Id == ((SkillDto)value).SkillGroupId)?.Name
+                }
+            });
+
+        return base.SetTableColumnsAsync();
+    }
+    
+    protected override ValueTask SetToolbarItemsAsync()
+    {
+        Toolbar.AddButton(L["NewSkill"], OpenCreateModalAsync,
+            IconName.Add,
+            requiredPolicyName: CreatePolicyName);
+
+        return base.SetToolbarItemsAsync();
     }
     
     private async Task OnFilterTextChanged(string newFilterText)
     {
         FilterText = newFilterText;
-        CurrentPage = 0;
-        await GetSkillsAsync();
+        CurrentPage = 1;
+        await GetEntitiesAsync();
     }
     
     private async Task OnSkillGroupFilterChanged(Guid? newSkillGroupId)
     {
         SelectedSkillGroupId = newSkillGroupId;
-        CurrentPage = 0;
-        await GetSkillsAsync();
-    }
-    
-    private async Task GetSkillsAsync()
-    {
-        var result = await SkillAppService.GetListAsync(new GetSkillListDto
-        {
-            SkipCount = CurrentPage * PageSize,
-            MaxResultCount = PageSize,
-            Sorting = CurrentSorting,
-            Filter = FilterText,
-            SkillGroupId = SelectedSkillGroupId
-        });
-        
-        SkillList = result.Items;
-        TotalCount = (int)result.TotalCount;
-    }
-
-    private async Task OnDataGridReadAsync(DataGridReadDataEventArgs<SkillDto> e)
-    {
-        CurrentSorting = e.Columns
-            .Where(c => c.SortDirection != SortDirection.Default)
-            .Select(c => c.Field + (c.SortDirection == SortDirection.Descending ? " DESC" : ""))
-            .JoinAsString(",");
-        CurrentPage = e.Page - 1;
-
-        await GetSkillsAsync();
-        
-        await InvokeAsync(StateHasChanged);
-    }
-    
-    private void OpenCreateSkillModal()
-    {
-        CreateValidationsRef.ClearAll();
-        
-        NewSkill = new CreateSkillDto();
-        CreateSkillModal.Show();
-    }
-    
-    private void CloseCreateSkillModal()
-    {
-        CreateSkillModal.Hide();
-    }
-    
-    private void OpenEditSkillModal(SkillDto Skill)
-    {
-        EditValidationsRef.ClearAll();
-        
-        EditingSkillId = Skill.Id;
-        EditingSkill = ObjectMapper.Map<SkillDto, UpdateSkillDto>(Skill);
-        EditSkillModal.Show();
-    }
-    
-    private async Task DeleteSkillAsync(SkillDto Skill)
-    {
-        var confirmMessage = L["SkillDeletionConfirmationMessage", Skill.Name];
-        if (!await Message.Confirm(confirmMessage))
-        {
-            return;
-        }
-        
-        await SkillAppService.DeleteAsync(Skill.Id);
-            
-        await GetSkillsAsync();
-    }
-    
-    private void CloseEditSkillModal()
-    {
-        EditSkillModal.Hide();
-    }
-    
-    private async Task CreateSkillAsync()
-    {
-        if (await CreateValidationsRef.ValidateAll())
-        {
-            await SkillAppService.CreateAsync(NewSkill);
-            await GetSkillsAsync();
-            CloseCreateSkillModal();
-        }
-    }
-    
-    private async Task UpdateSkillAsync()
-    {
-        if (await EditValidationsRef.ValidateAll())
-        {
-            await SkillAppService.UpdateAsync(EditingSkillId, EditingSkill);
-            await GetSkillsAsync();
-            CloseEditSkillModal();
-        }
+        CurrentPage = 1;
+        await GetEntitiesAsync();
     }
 }

@@ -131,7 +131,7 @@ public class SkillAppService_Tests : CoreApplicationTestBase
         
         var skillGroup = (await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Strategy" } )).Items.First();
         
-        await _skillAppService.UpdateAsync(skill.Id, new UpdateSkillDto
+        await _skillAppService.UpdateAsync(skill.Id, new SkillUpdateDto
         {
             Name = "Test Skill",
             SkillGroupId = skillGroup.Id
@@ -153,7 +153,7 @@ public class SkillAppService_Tests : CoreApplicationTestBase
         
         await Should.ThrowAsync<SkillAlreadyExistsException>(async () =>
         {
-            await _skillAppService.UpdateAsync(skill.Id, new UpdateSkillDto
+            await _skillAppService.UpdateAsync(skill.Id, new SkillUpdateDto
             {
                 Name = "Political Operative",
                 SkillGroupId = skillGroup.Id
@@ -168,7 +168,7 @@ public class SkillAppService_Tests : CoreApplicationTestBase
         
         await Should.ThrowAsync<EntityNotFoundException>(async () =>
         {
-            await _skillAppService.UpdateAsync(skill.Id, new UpdateSkillDto
+            await _skillAppService.UpdateAsync(skill.Id, new SkillUpdateDto
             {
                 Name = "Test Skill",
                 SkillGroupId = Guid.NewGuid()
