@@ -1,4 +1,5 @@
-﻿using ImpactSpace.Core.Organizations;
+﻿using ImpactSpace.Core.Challenges;
+using ImpactSpace.Core.Organizations;
 using ImpactSpace.Core.Projects;
 using ImpactSpace.Core.Skills;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,9 @@ public class CoreDbContext :
     public DbSet<Objective> Objectives { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ProjectTag> ProjectTags { get; set; }
+    public DbSet<Challenge> Challenges { get; set; }
+    public DbSet<OrganizationMemberChallenge> OrganizationMemberChallenges { get; set; }
+    public DbSet<ProjectChallenge> ProjectChallenges { get; set; }
 
     #region Entities from the modules
 
