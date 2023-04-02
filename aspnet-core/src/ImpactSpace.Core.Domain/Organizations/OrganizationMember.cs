@@ -32,7 +32,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     public string Phone { get; private set; }
 
     /// <summary>
-    /// Gets or sets the list of project actions associated with the organization member.
+    /// Gets or sets the list of objective actions associated with the organization member.
     /// </summary>
     public virtual ICollection<OrganizationMemberAction> OrganizationMemberActions { get; private set; }
 
