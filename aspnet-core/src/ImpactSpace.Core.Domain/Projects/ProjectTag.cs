@@ -12,6 +12,8 @@ public class ProjectTag : Entity, IMultiTenant
     public Guid TagId { get; set; }
     public virtual Tag Tag { get; set; }
     
+    public Guid? TenantId { get; }
+    
     public ProjectTag()
     {
         
@@ -22,11 +24,11 @@ public class ProjectTag : Entity, IMultiTenant
         ProjectId = projectId;
         TagId = tagId;
     }
-    
+
     public override object[] GetKeys()
     {
         return new object[] {ProjectId, TagId};
     }
 
-    public Guid? TenantId { get; }
+    
 }

@@ -24,7 +24,11 @@ public class SkillGroupManager : DomainService
         [NotNull] string name,
         [CanBeNull] string description = null)
     {
-        Check.NotNullOrWhiteSpace(name, nameof(name));
+        Check.NotNullOrWhiteSpace(
+            name, 
+            nameof(name),
+            SkillGroupConstants.MaxNameLength
+        );
 
         var existingSkillGroup = await _skillGroupRepository.FindByNameAsync(name);
 
