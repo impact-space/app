@@ -26,7 +26,7 @@ public static class ProjectsConfigurationExtensions
 
             b.Property(x => x.Name)
                 .IsRequired()
-                .HasMaxLength(32);
+                .HasMaxLength(TagConstants.MaxNameLength);
         });
 
         // Add configurations for ProjectTag
