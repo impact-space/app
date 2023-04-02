@@ -69,7 +69,7 @@ public class SkillGroup : AggregateRoot<Guid>
     /// </summary>
     /// <param name="description">The new description of the skill group.</param>
     /// <returns>The updated skill group.</returns>
-    internal SkillGroup ChangeDescription(string description)
+    internal SkillGroup ChangeDescription([CanBeNull] string description)
     {
         Description = description;
         return this;

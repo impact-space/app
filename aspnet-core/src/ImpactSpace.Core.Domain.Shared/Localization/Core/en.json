@@ -69,6 +69,7 @@
     "Core:00005" : "The skill group {name} has skills assigned to it",
     "Core:00006" : "There is already an organization with the same name: {name}",
     "Core:00007" : "There is already a tag with the same name: {name}",
-    "Core:00008" : "There is already a project with the same name: {name}"
+    "Core:00008" : "There is already a project with the same name: {name}",
+    "Core:00009" : "There is already a challenge with the same name: {name}"
   }
 }
