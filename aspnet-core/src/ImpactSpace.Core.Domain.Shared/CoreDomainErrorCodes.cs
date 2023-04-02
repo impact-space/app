@@ -8,4 +8,6 @@ public static class CoreDomainErrorCodes
     public const string SkillNotFound = "Core:00004";
     public const string SkillGroupHasSkills = "Core:00005";
     public const string OrganizationAlreadyExists = "Core:00006";
+    public const string TagAlreadyExists = "Core:00007";
+    public const string ProjectAlreadyExists = "Core:00008";
 }

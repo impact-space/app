@@ -17,12 +17,12 @@ public class Skill : AggregateRoot<Guid>
         /// <summary>
         /// Gets the name of the skill.
         /// </summary>
-        public string Name { get; private set; }
+        public virtual string Name { get; private set; }
         
         /// <summary>
         /// Gets or sets the skill group ID to which this skill belongs.
         /// </summary>
-        public Guid SkillGroupId { get; private set; }
+        public virtual Guid SkillGroupId { get; private set; }
 
         /// <summary>
         /// Gets the skills associated with members of an organization.

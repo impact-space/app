@@ -59,6 +59,8 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 
     public virtual ICollection<ProjectSkill> RequiredSkills { get; private set; }
     
+    public virtual ICollection<ProjectTag> ProjectTags { get; private set; }
+    
     public Guid OrganizationId { get; private set; }
     
     public virtual Organization Organization { get; private set; }
@@ -99,6 +101,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         Milestones = new Collection<Milestone>();
         TeamMembers = new Collection<OrganizationMember>();
         RequiredSkills = new Collection<ProjectSkill>();
+        ProjectTags = new Collection<ProjectTag>();
     }
 
     #endregion

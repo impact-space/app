@@ -12,9 +12,9 @@ using Volo.Abp.MultiTenancy;
 namespace ImpactSpace.Core.Projects
 {
     /// <summary>
-    /// Represents a activity within a quest.
+    /// Represents an objective within a quest.
     /// </summary>
-    public class Activity : AuditedAggregateRoot<Guid>, IMultiTenant
+    public class Objective : AuditedAggregateRoot<Guid>, IMultiTenant
     {
         // Properties
         public string Name { get; private set; }
@@ -37,17 +37,17 @@ namespace ImpactSpace.Core.Projects
         
         public int EstimatedEffort { get; private set; }
         
-        public virtual ICollection<OrganizationMemberActivity> OrganizationMemberActivities { get; private set; }
+        public virtual ICollection<OrganizationMemberObjective> OrganizationMemberActivities { get; private set; }
         
         public Guid? TenantId { get; private set; }
 
         // Constructors
-        protected Activity()
+        protected Objective()
         {
             // This constructor is for deserialization / ORM purposes
         }
 
-        public Activity(Guid id, [NotNull] string name, string description, StatusType statusType, DateTime? dueDate,
+        public Objective(Guid id, [NotNull] string name, string description, StatusType statusType, DateTime? dueDate,
             PriorityLevel priorityLevel, Guid questId, decimal budget, int estimatedEffort, Guid? tenantId)
             : base(id)
         {
@@ -61,7 +61,7 @@ namespace ImpactSpace.Core.Projects
             EstimatedEffort = estimatedEffort;
             TenantId = tenantId;
 
-            OrganizationMemberActivities = new Collection<OrganizationMemberActivity>();
+            OrganizationMemberActivities = new Collection<OrganizationMemberObjective>();
         }
 
         // Methods

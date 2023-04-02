@@ -15,17 +15,17 @@ public class SkillGroup : AggregateRoot<Guid>
     /// <summary>
     /// Gets or sets the name of the skill group.
     /// </summary>
-    public string Name { get; private set; }
+    public virtual string Name { get; private set; }
     
     /// <summary>
     /// Gets or sets the description of the skill group.
     /// </summary>
-    public string Description { get; private set; }
+    public virtual string Description { get; private set; }
     
     /// <summary>
     /// Gets or sets the skills in the skill group.
     /// </summary>
-    public ICollection<Skill> Skills { get; private set; }
+    public virtual ICollection<Skill> Skills { get; private set; }
 
     /// <summary>
     /// This constructor is for deserialization / ORM purposes

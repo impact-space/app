@@ -5,24 +5,24 @@ using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Organizations;
 
-public class OrganizationMemberActivity : Entity, IMultiTenant
+public class OrganizationMemberObjective : Entity, IMultiTenant
 {
     public Guid OrganizationMemberId { get; private set; }
 
     public virtual OrganizationMember OrganizationMember { get; private set; }
     
-    public Guid ActivityId { get; private set; }
+    public Guid ObjectiveId { get; private set; }
 
-    public virtual Activity Activity { get; private set; }
+    public virtual Objective Objective { get; private set; }
 
-    protected OrganizationMemberActivity()
+    protected OrganizationMemberObjective()
     {
         
     }
     
     public override object[] GetKeys()
     {
-        return new object[] { OrganizationMemberId, ActivityId };
+        return new object[] { OrganizationMemberId, ObjectiveId };
     }
 
     public Guid? TenantId { get; }

@@ -17,32 +17,32 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets the name of the quest.
     /// </summary>
-    public string Name { get; private set; }
+    public virtual string Name { get; private set; }
 
     /// <summary>
     /// Gets or sets the description of the quest.
     /// </summary>
-    public string Description { get; private set; }
+    public virtual string Description { get; private set; }
 
     /// <summary>
     /// Gets or sets the due date of the quest, if any.
     /// </summary>
-    public DateTime? DueDate { get; private set; }
+    public virtual DateTime? DueDate { get; private set; }
 
     /// <summary>
     /// Gets or sets the completion date of the quest, if any.
     /// </summary>
-    public DateTime? CompletedDate { get; private set; }
+    public virtual DateTime? CompletedDate { get; private set; }
 
     /// <summary>
     /// Gets or sets the budget allocated to the quest.
     /// </summary>
-    public decimal Budget { get; private set; }
+    public virtual decimal Budget { get; private set; }
 
     /// <summary>
     /// Gets or sets the ID of the milestone to which the quest belongs.
     /// </summary>
-    public Guid MilestoneId { get; private set; }
+    public virtual Guid MilestoneId { get; private set; }
 
     /// <summary>
     /// Gets or sets the milestone to which the quest belongs.
@@ -52,7 +52,7 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets the project actions associated with this quest.
     /// </summary>
-    public virtual ICollection<Activity> Activities { get; private set; }
+    public virtual ICollection<Objective> Objectives { get; private set; }
 
     /// <summary>
     /// Gets or sets the status type of the quest.
@@ -85,7 +85,7 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
         MilestoneId = milestoneId;
         TenantId = tenantId;
 
-        Activities = new Collection<Activity>();
+        Objectives = new Collection<Objective>();
     }
     
     /// <summary>
@@ -161,31 +161,17 @@ public class Quest : AuditedAggregateRoot<Guid>, IMultiTenant
         return this;
     }
 
-    /// <summary>
-    /// Adds a project action to the quest.
-    /// </summary>
-    /// <param name="activity">The project action to be added.</param>
-    public void AddProjectAction(Activity activity)
+    public void AddQuestObjective(Objective objective)
     {
-        if (activity == null)
-        {
-            throw new ArgumentNullException(nameof(activity));
-        }
+        Check.NotNull(objective, nameof(objective));
 
-        Activities.Add(activity);
+        Objectives.Add(objective);
     }
 
-    /// <summary>
-    /// Removes a project action from the quest.
-    /// </summary>
-    /// <param name="activity">The project action to be removed.</param>
-    public void RemoveProjectAction(Activity activity)
+    public void RemoveQuestObjective(Objective objective)
     {
-        if (activity == null)
-        {
-            throw new ArgumentNullException(nameof(activity));
-        }
+        Check.NotNull(objective, nameof(objective));
 
-        Activities.Remove(activity);
+        Objectives.Remove(objective);
     }
 }
