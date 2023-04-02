@@ -1,7 +1,8 @@
 namespace ImpactSpace.Core.Projects;
 
-public class ActivityConstants
+public static class ObjectiveConstants
 {
     public const int MaxNameLength = 128;
+
     public const int MaxDescriptionLength = 500;
 }

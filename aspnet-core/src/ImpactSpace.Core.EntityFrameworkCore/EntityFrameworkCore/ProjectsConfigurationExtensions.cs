@@ -27,6 +27,10 @@ public static class ProjectsConfigurationExtensions
             b.Property(x => x.Name)
                 .IsRequired()
                 .HasMaxLength(TagConstants.MaxNameLength);
+            
+            b.HasMany(x => x.ProjectTags)
+                .WithOne(x => x.Tag)
+                .HasForeignKey(x => x.TagId);
         });
 
         // Add configurations for ProjectTag
@@ -42,7 +46,7 @@ public static class ProjectsConfigurationExtensions
                 .HasForeignKey(x => x.ProjectId);
 
             b.HasOne(x => x.Tag)
-                .WithMany()
+                .WithMany(x => x.ProjectTags)
                 .HasForeignKey(x => x.TagId);
         });
 
@@ -73,23 +77,23 @@ public static class ProjectsConfigurationExtensions
                 .HasForeignKey(x => x.ProjectId);
         });
 
-        builder.Entity<Objective>(b =>
+        builder.Entity<Action>(b =>
         {
-            b.ToTable(CoreConsts.DbTablePrefix + "Activities", CoreConsts.DbSchema);
+            b.ToTable(CoreConsts.DbTablePrefix + "Actions", CoreConsts.DbSchema);
             b.ConfigureByConvention();
             
             b.Property(x => x.Name)
                 .IsRequired()
-                .HasMaxLength(ActivityConstants.MaxNameLength);
+                .HasMaxLength(ActionConstants.MaxNameLength);
             b.Property(x => x.Description)
-                .HasMaxLength(ActivityConstants.MaxDescriptionLength);
+                .HasMaxLength(ActionConstants.MaxDescriptionLength);
             
-            b.HasOne(x => x.Quest)
-                .WithMany(x => x.Objectives)
-                .HasForeignKey(x => x.QuestId);
-            b.HasMany(x => x.OrganizationMemberActivities)
-                .WithOne(x => x.Objective)
+            b.HasOne(x => x.Objective)
+                .WithMany(x => x.Actions)
                 .HasForeignKey(x => x.ObjectiveId);
+            b.HasMany(x => x.OrganizationMemberActions)
+                .WithOne(x => x.Action)
+                .HasForeignKey(x => x.ActionId);
         });
         
         builder.Entity<ProjectCategory>(b =>
@@ -122,19 +126,19 @@ public static class ProjectsConfigurationExtensions
                 .HasForeignKey(x => x.SkillId);
         });
 
-        builder.Entity<Quest>(b =>
+        builder.Entity<Objective>(b =>
         {
-            b.ToTable(CoreConsts.DbTablePrefix + "Quests", CoreConsts.DbSchema);
+            b.ToTable(CoreConsts.DbTablePrefix + "Objectives", CoreConsts.DbSchema);
             b.ConfigureByConvention();
             
             b.Property(x => x.Name)
                 .IsRequired()
-                .HasMaxLength(QuestConstants.MaxNameLength);
+                .HasMaxLength(ObjectiveConstants.MaxNameLength);
             
             b.Property(x => x.Description)
-                .HasMaxLength(QuestConstants.MaxDescriptionLength);
+                .HasMaxLength(ObjectiveConstants.MaxDescriptionLength);
             b.HasOne(x => x.Milestone)
-                .WithMany(x => x.Quests)
+                .WithMany(x => x.Objectives)
                 .HasForeignKey(x => x.MilestoneId);
             
         });

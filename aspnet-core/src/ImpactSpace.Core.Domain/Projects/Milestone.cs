@@ -60,9 +60,9 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     public virtual Project Project { get; private set; }
 
     /// <summary>
-    /// Gets the quests associated with the milestone.
+    /// Gets the objectives associated with the milestone.
     /// </summary>
-    public virtual ICollection<Quest> Quests { get; private set; }
+    public virtual ICollection<Objective> Objectives { get; private set; }
 
     /// <summary>
     /// Gets the priority level of the milestone.
@@ -104,7 +104,7 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
         StatusType = statusType;
         TenantId = tenantId;
 
-        Quests = new Collection<Quest>();
+        Objectives = new Collection<Objective>();
     }
     
     /// <summary>
@@ -294,25 +294,5 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
         }
 
         Deadline = deadline;
-    }
-
-    /// <summary>
-    /// Adds a quest to the list of quests associated with the milestone.
-    /// </summary>
-    /// <param name="quest">The quest to add.</param>
-    public void AddQuest(Quest quest)
-    {
-        Check.NotNull(quest, nameof(quest));
-        Quests.Add(quest);
-    }
-
-    /// <summary>
-    /// Removes a quest from the list of quests associated with the milestone.
-    /// </summary>
-    /// <param name="quest">The quest to remove.</param>
-    public void RemoveQuest(Quest quest)
-    {
-        Check.NotNull(quest, nameof(quest));
-        Quests.Remove(quest);
     }
 }

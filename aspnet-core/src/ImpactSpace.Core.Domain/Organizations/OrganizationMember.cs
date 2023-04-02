@@ -34,7 +34,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// Gets or sets the list of project actions associated with the organization member.
     /// </summary>
-    public virtual ICollection<OrganizationMemberObjective> OrganizationMemberActivities { get; private set; }
+    public virtual ICollection<OrganizationMemberAction> OrganizationMemberActions { get; private set; }
 
     /// <summary>
     /// Gets or sets the list of projects associated with the organization member.
@@ -93,7 +93,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         OrganizationId = organizationId;
         TenantId = tenantId;
 
-        OrganizationMemberActivities = new Collection<OrganizationMemberObjective>();
+        OrganizationMemberActions = new Collection<OrganizationMemberAction>();
         Projects = new Collection<Project>();
         Skills = new Collection<OrganizationMemberSkill>();
     }

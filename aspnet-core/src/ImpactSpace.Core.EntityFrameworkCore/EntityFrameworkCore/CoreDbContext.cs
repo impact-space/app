@@ -36,10 +36,10 @@ public class CoreDbContext :
     public DbSet<MilestoneVote> MilestoneVotes { get; set; }
     public DbSet<MilestoneVoteAggregate> MilestoneVoteAggregates { get; set; }
     public DbSet<Project> Projects { get; set; }
-    public DbSet<Objective> Objectives { get; set; }
+    public DbSet<Action> Actions { get; set; }
     public DbSet<ProjectCategory> ProjectCategories { get; set; }
     public DbSet<ProjectSkill> ProjectSkills { get; set; }
-    public DbSet<Quest> Quests { get; set; }
+    public DbSet<Objective> Objectives { get; set; }
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ProjectTag> ProjectTags { get; set; }
 

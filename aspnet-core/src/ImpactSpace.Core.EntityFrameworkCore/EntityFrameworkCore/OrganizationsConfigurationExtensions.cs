@@ -47,7 +47,7 @@ public static class OrganizationsConfigurationExtensions
             b.HasMany(x => x.Skills)
                 .WithOne(x => x.OrganizationMember)
                 .HasForeignKey(x => x.OrganizationMemberId);
-            b.HasMany(x => x.OrganizationMemberActivities)
+            b.HasMany(x => x.OrganizationMemberActions)
                 .WithOne(x => x.OrganizationMember)
                 .HasForeignKey(x => x.OrganizationMemberId);
         });
@@ -68,20 +68,20 @@ public static class OrganizationsConfigurationExtensions
                 .HasForeignKey(x => x.SkillId);
         });
         
-        builder.Entity<OrganizationMemberObjective>(b =>
+        builder.Entity<OrganizationMemberAction>(b =>
         {
-            b.ToTable(CoreConsts.DbTablePrefix + "OrganizationMemberActivities", CoreConsts.DbSchema);
+            b.ToTable(CoreConsts.DbTablePrefix + "OrganizationMemberActions", CoreConsts.DbSchema);
             b.ConfigureByConvention();
 
-            b.HasKey(x => new { x.OrganizationMemberId, ActivityId = x.ObjectiveId });
+            b.HasKey(x => new { x.OrganizationMemberId, x.ActionId });
 
             b.HasOne(x => x.OrganizationMember)
-                .WithMany(x => x.OrganizationMemberActivities)
+                .WithMany(x => x.OrganizationMemberActions)
                 .HasForeignKey(x => x.OrganizationMemberId);
 
-            b.HasOne(x => x.Objective)
-                .WithMany(x => x.OrganizationMemberActivities)
-                .HasForeignKey(x => x.ObjectiveId);
+            b.HasOne(x => x.Action)
+                .WithMany(x => x.OrganizationMemberActions)
+                .HasForeignKey(x => x.ActionId);
         });
     }
 }
