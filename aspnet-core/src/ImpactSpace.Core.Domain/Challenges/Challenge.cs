@@ -11,7 +11,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Challenges;
 
-public class Challenge : Entity<Guid>, IMultiTenant
+public class Challenge : Entity<Guid>, IMultiTenant, IHasConcurrencyStamp
 {
     public string Name { get; private set; }
     
@@ -20,6 +20,8 @@ public class Challenge : Entity<Guid>, IMultiTenant
     public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; private set; }
     
     public Guid? TenantId { get; set; }
+    
+    public string ConcurrencyStamp { get; set; }
 
     protected Challenge()
     {
@@ -47,4 +49,6 @@ public class Challenge : Entity<Guid>, IMultiTenant
             maxLength: ChallengeConstants.MaxNameLength
         );
     }
+
+
 }

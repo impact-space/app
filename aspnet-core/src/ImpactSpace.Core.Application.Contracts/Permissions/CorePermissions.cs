@@ -28,6 +28,14 @@ public static class CorePermissions
             public const string Edit = Default + ".Edit";
             public const string Delete = Default + ".Delete";
         }
+        
+        public static class Challenges
+        {
+            public const string Default = GlobalTypeGroupName + ".Challenges";
+            public const string Create = Default + ".Create";
+            public const string Edit = Default + ".Edit";
+            public const string Delete = Default + ".Delete";
+        }
     }
 
     public static class Organizations
