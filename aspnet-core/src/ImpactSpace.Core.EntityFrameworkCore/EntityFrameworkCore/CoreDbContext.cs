@@ -99,5 +99,6 @@ public class CoreDbContext :
         builder.ConfigureSkills();
         builder.ConfigureOrganizations();
         builder.ConfigureProjects();
+        builder.ConfigureChallenges();
     }
 }

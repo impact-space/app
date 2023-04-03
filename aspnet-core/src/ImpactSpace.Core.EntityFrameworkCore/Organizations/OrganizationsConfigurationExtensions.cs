@@ -22,6 +22,7 @@ public static class OrganizationsConfigurationExtensions
                 .WithOne()
                 .HasForeignKey<Organization>(x => x.TenantId)
                 .IsRequired(false);
+
         });
 
         builder.Entity<OrganizationMember>(b =>
@@ -48,6 +49,9 @@ public static class OrganizationsConfigurationExtensions
                 .WithOne(x => x.OrganizationMember)
                 .HasForeignKey(x => x.OrganizationMemberId);
             b.HasMany(x => x.OrganizationMemberActions)
+                .WithOne(x => x.OrganizationMember)
+                .HasForeignKey(x => x.OrganizationMemberId);
+            b.HasMany(x => x.OrganizationMemberChallenges)
                 .WithOne(x => x.OrganizationMember)
                 .HasForeignKey(x => x.OrganizationMemberId);
         });

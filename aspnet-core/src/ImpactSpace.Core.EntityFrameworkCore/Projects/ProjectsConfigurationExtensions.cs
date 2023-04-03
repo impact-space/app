@@ -75,6 +75,9 @@ public static class ProjectsConfigurationExtensions
             b.HasMany(x => x.ProjectTags)
                 .WithOne(x => x.Project)
                 .HasForeignKey(x => x.ProjectId);
+            b.HasMany(x => x.ProjectChallenges)
+                .WithOne(x => x.Project)
+                .HasForeignKey(x => x.ProjectId);
         });
 
         builder.Entity<Action>(b =>

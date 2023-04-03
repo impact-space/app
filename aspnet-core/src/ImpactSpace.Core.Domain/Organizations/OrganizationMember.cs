@@ -66,6 +66,8 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// </summary>
     public Guid? TenantId { get; private set; }
 
+    public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; private set; }
+
     /// <summary>
     /// This constructor is for deserialization / ORM purposes
     /// </summary>
@@ -96,6 +98,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         OrganizationMemberActions = new Collection<OrganizationMemberAction>();
         Projects = new Collection<Project>();
         Skills = new Collection<OrganizationMemberSkill>();
+        OrganizationMemberChallenges = new Collection<OrganizationMemberChallenge>();
     }
 
 

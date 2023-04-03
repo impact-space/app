@@ -66,6 +66,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     public virtual Organization Organization { get; private set; }
 
     public virtual Guid? TenantId { get; private set; }
+    public ICollection<ProjectChallenge> ProjectChallenges { get; private set; }
 
     #endregion
 
@@ -102,6 +103,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         TeamMembers = new Collection<OrganizationMember>();
         RequiredSkills = new Collection<ProjectSkill>();
         ProjectTags = new Collection<ProjectTag>();
+        ProjectChallenges = new Collection<ProjectChallenge>();
     }
 
     #endregion

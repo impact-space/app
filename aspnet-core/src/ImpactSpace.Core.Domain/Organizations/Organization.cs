@@ -43,6 +43,7 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual Tenant Tenant { get; set; }
 
+
     /// <summary>
     /// Default constructor used for deserialization and ORM purposes.
     /// </summary>
