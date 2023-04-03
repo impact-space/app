@@ -47,8 +47,6 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual OrganizationMember ProjectOwner { get; private set; }
 
-    public virtual ProjectType ProjectType { get; private set; }
-
     public virtual string ProjectImageUrl { get; private set; }
 
     public virtual int Progress { get; private set; }
@@ -65,7 +63,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual Organization Organization { get; private set; }
 
-    public virtual Guid? TenantId { get; private set; }
+    public virtual Guid? TenantId { get; set; }
     public ICollection<ProjectChallenge> ProjectChallenges { get; private set; }
 
     #endregion
@@ -76,28 +74,36 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     {
     }
 
-    internal Project(Guid id, [NotNull] string name, [CanBeNull] string description, DateTime? startDate,
-        DateTime? actualEndDate, [CanBeNull] string purpose, decimal? fundingAllocated, decimal? fundraisingTarget,
-        decimal totalBudget, decimal remainingBudget, bool isFeatured, StatusType statusType, ProjectType projectType,
-        [CanBeNull] string projectImageUrl,
-        int progress, Guid? tenantId)
+    internal Project(
+        Guid id, 
+        [NotNull] string name, 
+        [CanBeNull] string description = null, 
+        DateTime? startDate = null,
+        DateTime? actualEndDate = null, 
+        [CanBeNull] string purpose = null, 
+        decimal? fundingAllocated = null, 
+        decimal? fundraisingTarget = null,
+        decimal totalBudget = 0, 
+        decimal remainingBudget = 0, 
+        bool isFeatured = false, 
+        StatusType statusType = StatusType.Draft,
+        [CanBeNull] string projectImageUrl = null,
+        int progress = 0)
         : base(id)
     {
-        ChangeName(name);
-        ChangeDescription(description);
-        ChangeStartDate(startDate);
-        ChangeActualEndDate(actualEndDate);
-        ChangePurpose(purpose);
-        ChangeFundingAllocated(fundingAllocated);
-        ChangeFundraisingTarget(fundraisingTarget);
+        SetName(name);
+        SetDescription(description);
+        SetStartDate(startDate);
+        SetActualEndDate(actualEndDate);
+        SetPurpose(purpose);
+        SetFundingAllocated(fundingAllocated);
+        SetFundraisingTarget(fundraisingTarget);
         UpdateTotalBudget(totalBudget);
         UpdateRemainingBudget(remainingBudget);
-        ChangeIsFeatured(isFeatured);
-        ChangeStatusType(statusType);
-        ChangeProjectType(projectType);
-        ChangeProjectImageUrl(projectImageUrl);
-        ChangeProgress(progress);
-        ChangeTenantId(tenantId);
+        SetIsFeatured(isFeatured);
+        SetStatusType(statusType);
+        SetProjectImageUrl(projectImageUrl);
+        SetProgress(progress);
 
         Milestones = new Collection<Milestone>();
         TeamMembers = new Collection<OrganizationMember>();
@@ -115,6 +121,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         SetName(name);
         return this;
     }
+   
     public virtual Project ChangeDescription([CanBeNull] string description)
     {
         SetDescription(description);
@@ -176,28 +183,13 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         return this;
     }
 
-    public virtual Project ChangeProjectType(ProjectType projectType)
-    {
-        SetProjectType(projectType);
-        return this;
-    }
-
-    public virtual Project ChangeTenantId(Guid? tenantId)
-    {
-        SetTenantId(tenantId);
-        return this;
-    }
-
     private void SetName([NotNull] string name)
     {
-        if (string.IsNullOrWhiteSpace(name) || name.Length > ProjectConstants.MaxNameLength)
-        {
-            throw new BusinessException(
-                code: "Project.Name.Invalid",
-                message: $"The name must be between 1 and {ProjectConstants.MaxNameLength} characters long."
-            );
-        }
-
+        Check.NotNullOrWhiteSpace(
+            name,
+            nameof(name),
+            ProjectConstants.MaxNameLength);
+        
         Name = name;
     }
 
@@ -272,21 +264,15 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual void UpdateTotalBudget(decimal totalBudget)
     {
-        if (totalBudget < 0)
-        {
-            throw new ArgumentException("TotalBudget cannot be negative.", nameof(totalBudget));
-        }
-
+        Check.Range(totalBudget, nameof(totalBudget), 0);
+        
         TotalBudget = totalBudget;
     }
 
     public virtual void UpdateRemainingBudget(decimal remainingBudget)
     {
-        if (remainingBudget < 0)
-        {
-            throw new ArgumentException("RemainingBudget cannot be negative.", nameof(remainingBudget));
-        }
-
+        Check.Range(remainingBudget, nameof(remainingBudget), 0);
+        
         RemainingBudget = remainingBudget;
     }
 
@@ -304,11 +290,19 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 
     private void SetFundingAllocated(decimal? fundingAllocated)
     {
+        if (fundingAllocated != null)
+        {
+            Check.Range(fundingAllocated.Value, nameof(fundingAllocated), 0);
+        }
         FundingAllocated = fundingAllocated;
     }
 
     private void SetFundraisingTarget(decimal? fundraisingTarget)
     {
+        if (fundraisingTarget != null)
+        {
+            Check.Range(fundraisingTarget.Value, nameof(fundraisingTarget), 0);
+        }
         FundraisingTarget = fundraisingTarget;
     }
 
@@ -320,27 +314,6 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     private void SetStatusType(StatusType statusType)
     {
         StatusType = statusType;
-    }
-
-    private void SetProjectType(ProjectType projectType)
-    {
-        ProjectType = projectType;
-    }
-
-    private void SetTenantId(Guid? tenantId)
-    {
-        TenantId = tenantId;
-    }
-    
-    public virtual TimeSpan CalculateDuration()
-    {
-        DateTime endDate = ActualEndDate ?? DateTime.UtcNow; // Use the current date if the project is ongoing
-        return endDate - StartDate.Value;
-    }
-
-    public virtual decimal CalculateBudgetUsedPercentage()
-    {
-        return ((TotalBudget - RemainingBudget) / TotalBudget) * 100;
     }
 
     private void ValidateStartAndEndDate()
