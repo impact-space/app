@@ -1,11 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ImpactSpace.Core.Organizations;
-using ImpactSpace.Core.Projects;
 using Shouldly;
 using Volo.Abp.Domain.Entities;
-using Volo.Abp.Domain.Repositories;
 using Xunit;
 
 namespace ImpactSpace.Core.Challenges;
