@@ -22,7 +22,8 @@ public static class OrganizationsConfigurationExtensions
                 .WithOne()
                 .HasForeignKey<Organization>(x => x.TenantId)
                 .IsRequired(false);
-
+            
+            b.HasIndex(o => o.TenantId).IsUnique();
         });
 
         builder.Entity<OrganizationMember>(b =>
