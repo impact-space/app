@@ -10,5 +10,6 @@ public class CoreMenus
     public const string SkillManagement = GlobalTypes + ".SkillManagement";
     public const string SkillGroups = GlobalTypes + ".SkillGroups";
     public const string Skills = GlobalTypes + ".Skills";
+    public const string ChallengeManagement = GlobalTypes + ".ChallengeManagement";
 
 }

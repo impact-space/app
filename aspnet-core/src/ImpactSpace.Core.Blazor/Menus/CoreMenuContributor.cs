@@ -63,6 +63,18 @@ public class CoreMenuContributor : IMenuContributor
                 )
             )
         );
+        
+        // Add ChallengeManagement menu item to the Administration area
+        administration.AddItem(
+            new ApplicationMenuItem(
+                CoreMenus.ChallengeManagement,
+                l["Menu:Challenges"],
+                url: "/challenges",
+                icon: "fas fa-flag-checkered",
+                requiredPermissionName: CorePermissions.GlobalTypes.Challenges.Default,
+                order: 3
+            )
+        );
 
         if (MultiTenancyConsts.IsEnabled)
         {

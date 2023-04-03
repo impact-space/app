@@ -23,6 +23,12 @@ public class CorePermissionDefinitionProvider : PermissionDefinitionProvider
         skillGroupsGroup.AddChild(CorePermissions.GlobalTypes.SkillGroups.Create, L("Permission:GlobalTypes.SkillGroups.Create"));
         skillGroupsGroup.AddChild(CorePermissions.GlobalTypes.SkillGroups.Edit, L("Permission:GlobalTypes.SkillGroups.Edit"));
         skillGroupsGroup.AddChild(CorePermissions.GlobalTypes.SkillGroups.Delete, L("Permission:GlobalTypes.SkillGroups.Delete"));
+        
+        var challengesGroup = myGroup.AddPermission(CorePermissions.GlobalTypes.Challenges.Default, L("Permission:GlobalTypes.Challenges"));
+        challengesGroup.AddChild(CorePermissions.GlobalTypes.Challenges.Create, L("Permission:GlobalTypes.Challenges.Create"));
+        challengesGroup.AddChild(CorePermissions.GlobalTypes.Challenges.Edit, L("Permission:GlobalTypes.Challenges.Edit"));
+        challengesGroup.AddChild(CorePermissions.GlobalTypes.Challenges.Delete, L("Permission:GlobalTypes.Challenges.Delete"));
+    
     }
 
     private static LocalizableString L(string name)

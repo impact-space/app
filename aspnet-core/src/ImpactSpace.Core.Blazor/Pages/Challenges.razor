@@ -1,0 +1,119 @@
+@page "/challenges"
+@attribute [Authorize(CorePermissions.GlobalTypes.Challenges.Default)]
+@using ImpactSpace.Core.Challenges
+@using ImpactSpace.Core.Localization
+@using ImpactSpace.Core.Permissions
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+@inherits AbpCrudPageBase<IChallengeAppService, ChallengeDto, Guid, GetChallengeListDto, ChallengeCreateDto, ChallengeUpdateDto>
+
+<Card>
+    <CardHeader>
+        @* ************************* PAGE HEADER ************************* *@
+        <PageHeader Title="@L["Challenges"]"
+                    BreadcrumbItems="@BreadcrumbItems"
+                    Toolbar="@Toolbar">
+        </PageHeader>
+        <Row>
+            <Column ColumnSize="ColumnSize.IsHalf">
+                <Label>@L["Search"]</Label>
+                <TextEdit Text="@FilterText" TextChanged="@OnFilterTextChanged" />
+            </Column>
+        </Row>
+    </CardHeader>
+    <CardBody>
+        @* ************************* DATA GRID ************************* *@
+        <AbpExtensibleDataGrid TItem="ChallengeDto"
+                               Data="@Entities"
+                               ReadData="@OnDataGridReadAsync"
+                               TotalItems="@TotalCount"
+                               ShowPager="true"
+                               PageSize="@PageSize"
+                               CurrentPage="@CurrentPage"
+                               Columns="@ChallengeManagementTableColumns">
+        </AbpExtensibleDataGrid>
+    </CardBody>
+</Card>
+
+@* ************************* CREATE MODAL ************************* *@
+@if (HasCreatePermission)
+{
+    <Modal @ref="CreateModal">
+        <ModalContent IsCentered="true">
+            <Form>
+                <ModalHeader>
+                    <ModalTitle>@L["NewChallenge"]</ModalTitle>
+                    <CloseButton Clicked="CloseCreateModalAsync"/>
+                </ModalHeader>
+                <ModalBody>
+                    <Validations @ref="@CreateValidationsRef" Model="@NewEntity" ValidateOnLoad="false">
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Name"]</FieldLabel>
+                                <TextEdit @bind-Text="@NewEntity.Name">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                    </Validations>
+                </ModalBody>
+                <ModalFooter>
+                    <Button Color="Color.Secondary"
+                            Clicked="CloseCreateModalAsync">
+                        @L["Cancel"]
+                    </Button>
+                    <Button Color="Color.Primary"
+                            Type="@ButtonType.Submit"
+                            PreventDefaultOnSubmit="true"
+                            Clicked="CreateEntityAsync">
+                        @L["Save"]
+                    </Button>
+                </ModalFooter>
+            </Form>
+        </ModalContent>
+    </Modal>
+}
+
+@* ************************* EDIT MODAL ************************* *@
+@if (HasUpdatePermission)
+{
+    <Modal @ref="EditModal">
+        <ModalContent IsCentered="true">
+            <Form>
+                <ModalHeader>
+                    <ModalTitle>@EditingEntity.Name</ModalTitle>
+                    <CloseButton Clicked="CloseEditModalAsync" />
+                </ModalHeader>
+                <ModalBody>
+                    <Validations @ref="@EditValidationsRef" Model="@EditingEntity" ValidateOnLoad="false">
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Name"]</FieldLabel>
+                                <TextEdit @bind-Text="@EditingEntity.Name">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                    </Validations>
+                </ModalBody>
+                <ModalFooter>
+                    <Button Color="Color.Secondary"
+                            Clicked="CloseEditModalAsync">
+                        @L["Cancel"]
+                    </Button>
+                    <Button Color="Color.Primary"
+                            Type="@ButtonType.Submit"
+                            PreventDefaultOnSubmit="true"
+                            Clicked="UpdateEntityAsync">
+                        @L["Save"]
+                    </Button>
+                </ModalFooter>
+            </Form>
+        </ModalContent>
+    </Modal>
+}

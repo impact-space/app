@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ImpactSpace.Core.Challenges;
 using ImpactSpace.Core.Skills;
 
 namespace ImpactSpace.Core;
@@ -15,5 +16,9 @@ public class CoreApplicationAutoMapperProfile : Profile
         CreateMap<SkillGroup, SkillGroupDto>();
         CreateMap<SkillGroupDto, SkillGroupUpdateDto>();
         CreateMap<SkillDto, SkillUpdateDto>();
+        
+        CreateMap<Challenge, ChallengeDto>();
+        CreateMap<ChallengeDto, ChallengeUpdateDto>();
+        CreateMap<ChallengeCreateDto, Challenge>();
     }
 }
