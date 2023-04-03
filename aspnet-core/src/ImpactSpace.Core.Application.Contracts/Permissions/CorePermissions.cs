@@ -10,31 +10,28 @@ public static class CorePermissions
     
     public static class GlobalTypes
     {
-        public const string Default = GlobalTypeGroupName + ".Default";
-        public const string Manage = GlobalTypeGroupName + ".Manage";
-        
         public static class Skills
         {
-            public const string Default = GlobalTypeGroupName + ".Skills";
-            public const string Create = Default + ".Create";
-            public const string Edit = Default + ".Edit";
-            public const string Delete = Default + ".Delete";
+            public const string Manage = GlobalTypeGroupName + ".Skills";
+            public const string Create = Manage + ".Create";
+            public const string Edit = Manage + ".Edit";
+            public const string Delete = Manage + ".Delete";
         }
     
         public static class SkillGroups
         {
-            public const string Default = GlobalTypeGroupName + ".SkillGroups";
-            public const string Create = Default + ".Create";
-            public const string Edit = Default + ".Edit";
-            public const string Delete = Default + ".Delete";
+            public const string Manage = GlobalTypeGroupName + ".SkillGroups";
+            public const string Create = Manage + ".Create";
+            public const string Edit = Manage + ".Edit";
+            public const string Delete = Manage + ".Delete";
         }
         
         public static class Challenges
         {
-            public const string Default = GlobalTypeGroupName + ".Challenges";
-            public const string Create = Default + ".Create";
-            public const string Edit = Default + ".Edit";
-            public const string Delete = Default + ".Delete";
+            public const string Manage = GlobalTypeGroupName + ".Challenges";
+            public const string Create = Manage + ".Create";
+            public const string Edit = Manage + ".Edit";
+            public const string Delete = Manage + ".Delete";
         }
     }
 

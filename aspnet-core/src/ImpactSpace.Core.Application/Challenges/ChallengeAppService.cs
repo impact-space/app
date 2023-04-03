@@ -8,7 +8,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace ImpactSpace.Core.Challenges;
 
-[Authorize(CorePermissions.GlobalTypes.Challenges.Default)]
+[Authorize]
 public class ChallengeAppService : CoreAppService,
     IChallengeAppService
 {

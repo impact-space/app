@@ -8,7 +8,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace ImpactSpace.Core.Skills;
 
-[Authorize( CorePermissions.GlobalTypes.Skills.Default)]
+[Authorize]
 public class SkillAppService : CoreAppService, ISkillAppService
 {
     private readonly ISkillRepository _skillRepository;

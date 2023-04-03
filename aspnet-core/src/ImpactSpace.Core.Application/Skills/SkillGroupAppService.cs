@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace ImpactSpace.Core.Skills;
 
-[Authorize(CorePermissions.GlobalTypes.SkillGroups.Default)]
+[Authorize]
 public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
 {
     private readonly ISkillGroupRepository _skillGroupRepository;
@@ -19,6 +19,38 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
     {
         _skillGroupRepository = skillGroupRepository;
         _skillGroupManager = skillGroupManager;
+    }
+    
+    public async Task<SkillGroupDto> GetAsync(Guid id)
+    {
+        var skillGroup = await _skillGroupRepository.GetAsync(id);
+        
+        return ObjectMapper.Map<SkillGroup, SkillGroupDto>(skillGroup);
+    }
+    
+    public async Task<PagedResultDto<SkillGroupDto>> GetListAsync(GetSkillGroupListDto input)
+    {
+        if (input.Sorting.IsNullOrWhiteSpace())
+        {
+            input.Sorting = nameof(SkillGroup.Name);
+        }
+        
+        var skillGroups = await _skillGroupRepository.GetListAsync(
+            input.SkipCount,
+            input.MaxResultCount,
+            input.Sorting,
+            input.Filter,
+            input.IncludeSkills);
+        
+        var totalCount = input.Filter == null
+            ? await _skillGroupRepository.CountAsync()
+            : await _skillGroupRepository.CountAsync(
+                skillGroup => skillGroup.Name.Contains(input.Filter));
+        
+        return new PagedResultDto<SkillGroupDto>(
+            totalCount,
+            ObjectMapper.Map<List<SkillGroup>, List<SkillGroupDto>>(skillGroups)
+        );
     }
     
     [Authorize(CorePermissions.GlobalTypes.SkillGroups.Create)]
@@ -55,37 +87,5 @@ public class SkillGroupAppService : ApplicationService, ISkillGroupAppService
     public async Task DeleteAsync(Guid id)
     {
         await _skillGroupManager.DeleteAsync(id);
-    }
-    
-    public async Task<SkillGroupDto> GetAsync(Guid id)
-    {
-        var skillGroup = await _skillGroupRepository.GetAsync(id);
-        
-        return ObjectMapper.Map<SkillGroup, SkillGroupDto>(skillGroup);
-    }
-    
-    public async Task<PagedResultDto<SkillGroupDto>> GetListAsync(GetSkillGroupListDto input)
-    {
-        if (input.Sorting.IsNullOrWhiteSpace())
-        {
-            input.Sorting = nameof(SkillGroup.Name);
-        }
-        
-        var skillGroups = await _skillGroupRepository.GetListAsync(
-            input.SkipCount,
-            input.MaxResultCount,
-            input.Sorting,
-            input.Filter,
-            input.IncludeSkills);
-        
-        var totalCount = input.Filter == null
-            ? await _skillGroupRepository.CountAsync()
-            : await _skillGroupRepository.CountAsync(
-                skillGroup => skillGroup.Name.Contains(input.Filter));
-        
-        return new PagedResultDto<SkillGroupDto>(
-            totalCount,
-            ObjectMapper.Map<List<SkillGroup>, List<SkillGroupDto>>(skillGroups)
-        );
     }
 }

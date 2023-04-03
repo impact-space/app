@@ -29,7 +29,6 @@ public class OrganizationAppService : CoreAppService, IOrganizationAppService
         return ObjectMapper.Map<Organization, OrganizationDto>(organization);
     }
 
-    [Authorize(CorePermissions.Organizations.Manage)]
     public async Task<PagedResultDto<OrganizationDto>> GetListAsync(GetOrganizationListDto input)
     {
         if(input.Sorting.IsNullOrWhiteSpace())
@@ -53,7 +52,7 @@ public class OrganizationAppService : CoreAppService, IOrganizationAppService
             ObjectMapper.Map<List<Organization>, List<OrganizationDto>>(organizations)
         );
     }
-
+    
     public async Task<OrganizationDto> CreateAsync(CreateOrganizationDto input)
     {
         var tenantId = CurrentTenant.Id;

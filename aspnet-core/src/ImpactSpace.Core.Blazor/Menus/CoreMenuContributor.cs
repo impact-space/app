@@ -43,7 +43,7 @@ public class CoreMenuContributor : IMenuContributor
                 CoreMenus.SkillManagement,
                 l["Menu:SkillManagement"],
                 icon: "fas fa-tasks",
-                requiredPermissionName: CorePermissions.GlobalTypes.Skills.Default,
+                requiredPermissionName: CorePermissions.GlobalTypes.Skills.Manage,
                 order: 3
             ).AddItem(
                 new ApplicationMenuItem(
@@ -51,7 +51,7 @@ public class CoreMenuContributor : IMenuContributor
                     l["Menu:SkillGroups"],
                     url: "/skill-groups",
                     icon: "fas fa-layer-group",
-                    requiredPermissionName: CorePermissions.GlobalTypes.SkillGroups.Default
+                    requiredPermissionName: CorePermissions.GlobalTypes.SkillGroups.Manage
                 )
             ).AddItem(
                 new ApplicationMenuItem(
@@ -59,7 +59,7 @@ public class CoreMenuContributor : IMenuContributor
                     l["Menu:Skills"],
                     url: "/skills",
                     icon: "fas fa-tasks",
-                    requiredPermissionName: CorePermissions.GlobalTypes.Skills.Default
+                    requiredPermissionName: CorePermissions.GlobalTypes.Skills.Manage
                 )
             )
         );
@@ -71,7 +71,7 @@ public class CoreMenuContributor : IMenuContributor
                 l["Menu:Challenges"],
                 url: "/challenges",
                 icon: "fas fa-flag-checkered",
-                requiredPermissionName: CorePermissions.GlobalTypes.Challenges.Default,
+                requiredPermissionName: CorePermissions.GlobalTypes.Challenges.Manage,
                 order: 3
             )
         );
