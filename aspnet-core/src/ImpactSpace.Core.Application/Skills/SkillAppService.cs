@@ -89,6 +89,7 @@ public class SkillAppService : CoreAppService, ISkillAppService
     [Authorize(CorePermissions.GlobalTypes.Skills.Delete)]
     public async Task DeleteAsync(Guid id)
     {
+        await _skillRepository.GetAsync(id);
         await _skillRepository.DeleteAsync(id);
     }
 }

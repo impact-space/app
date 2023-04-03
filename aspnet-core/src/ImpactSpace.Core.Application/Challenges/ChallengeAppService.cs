@@ -81,6 +81,7 @@ public class ChallengeAppService : CoreAppService,
     [Authorize(CorePermissions.GlobalTypes.Challenges.Delete)]
     public async Task DeleteAsync(Guid id)
     {
+        await _challengeRepository.GetAsync(id);
         await _challengeManager.DeleteAsync(id);
     }
 }
