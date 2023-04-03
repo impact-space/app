@@ -85,8 +85,13 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <param name="phone">The phone number of the organization member.</param>
     /// <param name="organizationId">The Guid ID of the organization associated with the organization member.</param>
     /// <param name="tenantId">The Guid ID of the tenant associated with the organization member.</param>
-    internal OrganizationMember(Guid id, [NotNull] string name, [NotNull] string email, string phone,
-        Guid organizationId, Guid? tenantId)
+    internal OrganizationMember(
+        Guid id, 
+        [NotNull] string name, 
+        [NotNull] string email, 
+        string phone,
+        Guid organizationId, 
+        Guid? tenantId)
         : base(id)
     {
         SetName(name);

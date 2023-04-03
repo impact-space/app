@@ -80,7 +80,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         DateTime? actualEndDate, [CanBeNull] string purpose, decimal? fundingAllocated, decimal? fundraisingTarget,
         decimal totalBudget, decimal remainingBudget, bool isFeatured, StatusType statusType, ProjectType projectType,
         [CanBeNull] string projectImageUrl,
-        int progress, Guid tenantId, Guid? parentProjectId)
+        int progress, Guid? tenantId)
         : base(id)
     {
         ChangeName(name);
@@ -182,7 +182,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         return this;
     }
 
-    public virtual Project ChangeTenantId(Guid tenantId)
+    public virtual Project ChangeTenantId(Guid? tenantId)
     {
         SetTenantId(tenantId);
         return this;
@@ -327,7 +327,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         ProjectType = projectType;
     }
 
-    private void SetTenantId(Guid tenantId)
+    private void SetTenantId(Guid? tenantId)
     {
         TenantId = tenantId;
     }
