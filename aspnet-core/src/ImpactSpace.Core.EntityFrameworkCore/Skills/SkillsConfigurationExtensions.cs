@@ -1,8 +1,7 @@
-using ImpactSpace.Core.Skills;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
-namespace ImpactSpace.Core.EntityFrameworkCore;
+namespace ImpactSpace.Core.Skills;
 
 public static class SkillsConfigurationExtensions
 {

@@ -1,8 +1,9 @@
-using ImpactSpace.Core.Organizations;
+using ImpactSpace.Core.Common;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
-namespace ImpactSpace.Core.EntityFrameworkCore;
+namespace ImpactSpace.Core.Organizations;
 
 public static class OrganizationsConfigurationExtensions
 {
@@ -23,7 +24,38 @@ public static class OrganizationsConfigurationExtensions
                 .HasForeignKey<Organization>(x => x.TenantId)
                 .IsRequired(false);
             
+            b.HasOne(x => x.OrganizationProfile)
+                .WithOne(x => x.Organization)
+                .HasForeignKey<OrganizationProfile>(x => x.OrganizationId);
+            
             b.HasIndex(o => o.TenantId).IsUnique();
+        });
+        
+        builder.Entity<OrganizationProfile>(b =>
+        {
+            b.ToTable(CoreConsts.DbTablePrefix + "OrganizationProfiles", CoreConsts.DbSchema);
+            b.ConfigureByConvention();
+
+            b.Property(x => x.MissionStatement)
+                .HasMaxLength(OrganizationProfileConstants.MaxMissionStatementLength);
+            b.Property(x => x.Website)
+                .HasMaxLength(CommonConstants.MaxWebsiteLength);
+            b.Property(x => x.Email)
+                .HasMaxLength(CommonConstants.MaxEmailLength);
+            b.Property(x => x.LogoUrl)
+                .HasMaxLength(OrganizationProfileConstants.MaxLogoUrlLength);
+
+            b.OwnsOne(x => x.PhoneNumber, PhoneNumberConfiguration);
+            b.OwnsMany(x => x.SocialMediaLinks, sm =>
+            {
+                sm.WithOwner().HasForeignKey("OrganizationProfileId");
+                sm.ToTable(CoreConsts.DbTablePrefix + "OrganizationProfileSocialMediaLinks", CoreConsts.DbSchema);
+                
+                sm.Property(s => s.Url)
+                    .HasMaxLength(CommonConstants.MaxWebsiteLength);
+            });
+
+            b.HasIndex(x => x.OrganizationId).IsUnique();
         });
 
         builder.Entity<OrganizationMember>(b =>
@@ -36,17 +68,16 @@ public static class OrganizationsConfigurationExtensions
                 .HasMaxLength(OrganizationMemberConsts.MaxNameLength);
             b.Property(x => x.Email)
                 .IsRequired()
-                .HasMaxLength(OrganizationMemberConsts.MaxEmailLength);
-            b.Property(x => x.Phone)
-                .HasMaxLength(OrganizationMemberConsts.MaxPhoneLength);
+                .HasMaxLength(CommonConstants.MaxEmailLength);
 
             b.HasOne(x => x.Organization)
-                .WithMany(x => x.OrganizationMembers) // Add this line
+                .WithMany(x => x.OrganizationMembers)
                 .HasForeignKey(x => x.OrganizationId);
-            b.HasMany(x => x.Projects)
-                .WithOne(x => x.ProjectOwner)
-                .HasForeignKey(x => x.ProjectOwnerId);
-            b.HasMany(x => x.Skills)
+            b.HasOne(x => x.IdentityUser)
+                .WithMany()
+                .HasForeignKey(x => x.IdentityUserId)
+                .IsRequired(false);
+            b.HasMany(x => x.OrganizationMemberSkills)
                 .WithOne(x => x.OrganizationMember)
                 .HasForeignKey(x => x.OrganizationMemberId);
             b.HasMany(x => x.OrganizationMemberActions)
@@ -55,6 +86,23 @@ public static class OrganizationsConfigurationExtensions
             b.HasMany(x => x.OrganizationMemberChallenges)
                 .WithOne(x => x.OrganizationMember)
                 .HasForeignKey(x => x.OrganizationMemberId);
+            b.HasMany(x => x.OrganizationMemberProjects)
+                .WithOne(x => x.OrganizationMember)
+                .HasForeignKey(x => x.OrganizationMemberId);
+            b.HasMany(x => x.OwnedProjects)
+                .WithOne(x => x.Owner)
+                .HasForeignKey(x => x.OwnerId)
+                .IsRequired(false);
+            
+            b.OwnsOne(x => x.PhoneNumber, PhoneNumberConfiguration);
+            b.OwnsMany(x => x.SocialMediaLinks, sm =>
+            {
+                sm.WithOwner().HasForeignKey("OrganizationMemberId");
+                sm.ToTable(CoreConsts.DbTablePrefix + "OrganizationMemberSocialMediaLinks", CoreConsts.DbSchema);
+
+                sm.Property(s => s.Url)
+                    .HasMaxLength(CommonConstants.MaxWebsiteLength);
+            });
         });
 
         builder.Entity<OrganizationMemberSkill>(b =>
@@ -66,7 +114,7 @@ public static class OrganizationsConfigurationExtensions
             b.HasKey(x => new { x.OrganizationMemberId, x.SkillId });
             
             b.HasOne(x => x.OrganizationMember)
-                .WithMany(x => x.Skills)
+                .WithMany(x => x.OrganizationMemberSkills)
                 .HasForeignKey(x => x.OrganizationMemberId);
             b.HasOne(x => x.Skill)
                 .WithMany(x => x.OrganizationMemberSkills)
@@ -88,5 +136,53 @@ public static class OrganizationsConfigurationExtensions
                 .WithMany(x => x.OrganizationMemberActions)
                 .HasForeignKey(x => x.ActionId);
         });
+        
+        builder.Entity<OrganizationMemberChallenge>(b =>
+        {
+            b.ToTable(CoreConsts.DbTablePrefix + "OrganizationMemberChallenges", CoreConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            b.HasKey(x => new { x.OrganizationMemberId, x.ChallengeId });
+
+            b.HasOne(x => x.OrganizationMember)
+                .WithMany(x => x.OrganizationMemberChallenges)
+                .HasForeignKey(x => x.OrganizationMemberId);
+
+            b.HasOne(x => x.Challenge)
+                .WithMany(x => x.OrganizationMemberChallenges)
+                .HasForeignKey(x => x.ChallengeId);
+        });
+        
+        builder.Entity<OrganizationMemberProject>(b =>
+        {
+            b.ToTable(CoreConsts.DbTablePrefix + "OrganizationMemberProjects", CoreConsts.DbSchema);
+            b.ConfigureByConvention();
+            
+            b.HasKey(x => new { x.OrganizationMemberId, x.ProjectId });
+
+            b.HasOne(x => x.OrganizationMember)
+                .WithMany(x => x.OrganizationMemberProjects)
+                .HasForeignKey(x => x.OrganizationMemberId);
+
+            b.HasOne(x => x.Project)
+                .WithMany(x => x.OrganizationMemberProjects)
+                .HasForeignKey(x => x.ProjectId);
+        });
+    }
+    
+    private static void PhoneNumberConfiguration(OwnedNavigationBuilder<OrganizationProfile, PhoneNumber> builder)
+    {
+        builder.Property(x => x.CountryCode).IsRequired();
+        builder.Property(x => x.NationalNumber)
+            .IsRequired()
+            .HasMaxLength(CommonConstants.MaxNationalNumberLength);
+    }
+    
+    private static void PhoneNumberConfiguration(OwnedNavigationBuilder<OrganizationMember, PhoneNumber> builder)
+    {
+        builder.Property(x => x.CountryCode).IsRequired();
+        builder.Property(x => x.NationalNumber)
+            .IsRequired()
+            .HasMaxLength(CommonConstants.MaxNationalNumberLength);
     }
 }

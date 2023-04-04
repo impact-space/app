@@ -35,6 +35,8 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// A list of the members of the organization
     /// </summary>
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; private set; }
+    
+    public virtual OrganizationProfile OrganizationProfile { get; private set; }
 
     /// <summary>
     /// Gets or sets the ID of the tenant to which the organization belongs.

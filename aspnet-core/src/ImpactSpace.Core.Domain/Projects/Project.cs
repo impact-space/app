@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ImpactSpace.Core.Common;
@@ -43,9 +44,9 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 
     public virtual ProjectCategory ProjectCategory { get; private set; }
 
-    public Guid ProjectOwnerId { get; private set; }
+    public Guid OwnerId { get; private set; }
     
-    public virtual OrganizationMember ProjectOwner { get; private set; }
+    public virtual OrganizationMember Owner { get; private set; }
 
     public virtual string ProjectImageUrl { get; private set; }
 
@@ -53,11 +54,11 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 
     public virtual ICollection<Milestone> Milestones { get; private set; }
 
-    public virtual ICollection<OrganizationMember> TeamMembers { get; private set; }
-
     public virtual ICollection<ProjectSkill> RequiredSkills { get; private set; }
     
     public virtual ICollection<ProjectTag> ProjectTags { get; private set; }
+    
+    public virtual ICollection<OrganizationMemberProject> OrganizationMemberProjects { get; private set; }
     
     public Guid OrganizationId { get; private set; }
     
@@ -77,18 +78,18 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     internal Project(
         Guid id, 
         [NotNull] string name, 
-        [CanBeNull] string description = null, 
-        DateTime? startDate = null,
-        DateTime? actualEndDate = null, 
-        [CanBeNull] string purpose = null, 
-        decimal? fundingAllocated = null, 
-        decimal? fundraisingTarget = null,
-        decimal totalBudget = 0, 
-        decimal remainingBudget = 0, 
-        bool isFeatured = false, 
-        StatusType statusType = StatusType.Draft,
-        [CanBeNull] string projectImageUrl = null,
-        int progress = 0)
+        [CanBeNull] string description, 
+        DateTime? startDate,
+        DateTime? actualEndDate, 
+        [CanBeNull] string purpose, 
+        decimal? fundingAllocated, 
+        decimal? fundraisingTarget,
+        decimal totalBudget, 
+        decimal remainingBudget, 
+        bool isFeatured, 
+        StatusType statusType,
+        [CanBeNull] string projectImageUrl,
+        int progress)
         : base(id)
     {
         SetName(name);
@@ -106,7 +107,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         SetProgress(progress);
 
         Milestones = new Collection<Milestone>();
-        TeamMembers = new Collection<OrganizationMember>();
+        OrganizationMemberProjects = new Collection<OrganizationMemberProject>();
         RequiredSkills = new Collection<ProjectSkill>();
         ProjectTags = new Collection<ProjectTag>();
         ProjectChallenges = new Collection<ProjectChallenge>();
@@ -238,18 +239,6 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         Milestones.Remove(milestone);
     }
 
-    public virtual void AddTeamMember(OrganizationMember teamMember)
-    {
-        Check.NotNull(teamMember, nameof(teamMember));
-        TeamMembers.Add(teamMember);
-    }
-
-    public virtual void RemoveTeamMember(OrganizationMember teamMember)
-    {
-        Check.NotNull(teamMember, nameof(teamMember));
-        TeamMembers.Remove(teamMember);
-    }
-
     public virtual void AddRequiredSkill(ProjectSkill requiredSkill)
     {
         Check.NotNull(requiredSkill, nameof(requiredSkill));
@@ -262,14 +251,14 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
         RequiredSkills.Remove(requiredSkill);
     }
     
-    public virtual void UpdateTotalBudget(decimal totalBudget)
+    public void UpdateTotalBudget(decimal totalBudget)
     {
         Check.Range(totalBudget, nameof(totalBudget), 0);
         
         TotalBudget = totalBudget;
     }
 
-    public virtual void UpdateRemainingBudget(decimal remainingBudget)
+    public void UpdateRemainingBudget(decimal remainingBudget)
     {
         Check.Range(remainingBudget, nameof(remainingBudget), 0);
         

@@ -1,8 +1,7 @@
-using ImpactSpace.Core.Projects;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore.Modeling;
 
-namespace ImpactSpace.Core.EntityFrameworkCore;
+namespace ImpactSpace.Core.Projects;
 
 public static class ProjectsConfigurationExtensions
 {
@@ -66,9 +65,9 @@ public static class ProjectsConfigurationExtensions
             b.HasOne(x => x.ProjectCategory)
                 .WithMany(x => x.Projects)
                 .HasForeignKey(x => x.ProjectCategoryId);
-            b.HasOne(x => x.ProjectOwner)
-                .WithMany(x=>x.Projects)
-                .HasForeignKey(x => x.ProjectOwnerId);
+            b.HasOne(x => x.Owner)
+                .WithMany(x=>x.OwnedProjects)
+                .HasForeignKey(x => x.OwnerId);
             b.HasOne(x => x.Organization)
                 .WithMany(x => x.Projects)
                 .HasForeignKey(x => x.OrganizationId);

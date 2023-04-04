@@ -7,200 +7,102 @@ using JetBrains.Annotations;
 using Volo.Abp;
 using Volo.Abp.Domain.Entities.Auditing;
 using Volo.Abp.MultiTenancy;
+using Volo.Abp.Identity;
 
 namespace ImpactSpace.Core.Organizations;
 
-/// <summary>
-/// Represents an organization member within the Impact Space app.
-/// </summary>
 public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
 {
     
-    /// <summary>
-    /// Gets or sets the name of the organization member.
-    /// </summary>
     public string Name { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the email of the organization member.
-    /// </summary>
-    public string Email { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the phone number of the organization member.
-    /// </summary>
-    public string Phone { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the list of objective actions associated with the organization member.
-    /// </summary>
-    public virtual ICollection<OrganizationMemberAction> OrganizationMemberActions { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the list of projects associated with the organization member.
-    /// </summary>
-    public virtual ICollection<Project> Projects { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the Guid of the user account associated with the organization member.
-    /// </summary>
-    public Guid? UserId { get; private set; }
     
-    /// <summary>
-    /// Gets or sets the list of skills associated with the organization member.
-    /// </summary>
-    public virtual ICollection<OrganizationMemberSkill> Skills { get; private set; }
+    public string Email { get; private set; }
+    
+    public PhoneNumber PhoneNumber { get; private set; }
 
-    /// <summary>
-    /// Gets or sets the Guid of the organization associated with the organization member.
-    /// </summary>
+    public Guid? IdentityUserId { get; private set; }
+    
+    public virtual IdentityUser IdentityUser { get; private set; }
+
     public Guid OrganizationId { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the organization associated with the organization member.
-    /// </summary>
+    
     public virtual Organization Organization { get; private set; }
-
-    /// <summary>
-    /// Gets or sets the Guid of the tenant associated with the organization member.
-    /// </summary>
+    
     public Guid? TenantId { get; private set; }
 
-    public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; private set; }
+    public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; }
+    
+    public virtual ICollection<OrganizationMemberAction> OrganizationMemberActions { get; }
+    
+    public virtual ICollection<OrganizationMemberProject> OrganizationMemberProjects { get; }
 
-    /// <summary>
-    /// This constructor is for deserialization / ORM purposes
-    /// </summary>
-    protected OrganizationMember()
+    public virtual ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; }
+    
+    public virtual ICollection<SocialMediaLink> SocialMediaLinks { get; }
+    
+    public virtual ICollection<Project> OwnedProjects { get; }
+
+    protected OrganizationMember(ICollection<SocialMediaLink> socialMediaLinks)
     {
-
+        SocialMediaLinks = socialMediaLinks;
     }
-
-    /// <summary>
-    /// Creates a new instance of the <see cref="OrganizationMember"/> class with the specified parameters.
-    /// </summary>
-    /// <param name="id">The Guid ID of the organization member.</param>
-    /// <param name="name">The name of the organization member.</param>
-    /// <param name="email">The email of the organization member.</param>
-    /// <param name="phone">The phone number of the organization member.</param>
-    /// <param name="organizationId">The Guid ID of the organization associated with the organization member.</param>
-    /// <param name="tenantId">The Guid ID of the tenant associated with the organization member.</param>
+    
     internal OrganizationMember(
         Guid id, 
         [NotNull] string name, 
         [NotNull] string email, 
-        string phone,
-        Guid organizationId, 
-        Guid? tenantId)
+        PhoneNumber phone,
+        Guid organizationId)
         : base(id)
     {
         SetName(name);
         SetEmail(email);
-        SetPhone(phone);
+        SetPhoneNumber(phone);
         OrganizationId = organizationId;
-        TenantId = tenantId;
 
         OrganizationMemberActions = new Collection<OrganizationMemberAction>();
-        Projects = new Collection<Project>();
-        Skills = new Collection<OrganizationMemberSkill>();
+        OrganizationMemberProjects = new Collection<OrganizationMemberProject>();
+        OrganizationMemberSkills = new Collection<OrganizationMemberSkill>();
         OrganizationMemberChallenges = new Collection<OrganizationMemberChallenge>();
+        SocialMediaLinks = new Collection<SocialMediaLink>();
+        OwnedProjects = new Collection<Project>();
     }
 
-
-    /// <summary>
-    /// Changes the name of the organization member.
-    /// </summary>
-    /// <param name="name">The new name for the organization member.</param>
-    /// <returns>The updated organization member.</returns>
+    
     internal OrganizationMember ChangeName([NotNull] string name)
     {
         SetName(name);
         return this;
     }
-
-    /// <summary>
-    /// Changes the email address of the organization member.
-    /// </summary>
-    /// <param name="email">The new email address for the organization member.</param>
-    /// <returns>The updated organization member.</returns>
+    
     internal OrganizationMember ChangeEmail([NotNull] string email)
     {
         SetEmail(email);
         return this;
     }
-
-    /// <summary>
-    /// Changes the phone number of the organization member.
-    /// </summary>
-    /// <param name="phone">The new phone number for the organization member.</param>
-    /// <returns>The updated organization member.</returns>
-    internal OrganizationMember ChangePhone(string phone)
+    
+    internal OrganizationMember ChangePhoneNumber([CanBeNull] PhoneNumber phoneNumber)
     {
-        SetPhone(phone);
+        SetPhoneNumber(phoneNumber);
         return this;
     }
-
-    /// <summary>
-    /// Changes the organization that the member belongs to.
-    /// </summary>
-    /// <param name="organizationId">The ID of the new organization.</param>
-    /// <returns>The updated organization member.</returns>
+    
     internal OrganizationMember ChangeOrganization(Guid organizationId)
     {
         OrganizationId = organizationId;
         return this;
     }
-    
-    /// <summary>
-    /// Changes the user ID associated with the organization member.
-    /// </summary>
-    /// <param name="userId">The new user ID for the organization member.</param>
-    /// <returns>The updated organization member.</returns>
-    internal OrganizationMember ChangeUserId(Guid? userId)
-    {
-        return SetUserId(userId);
-    }
 
-    /// <summary>
-    /// Adds a project to the list of projects associated with the organization member.
-    /// </summary>
-    /// <param name="project">The project to be added.</param>
-    internal void AddProject(Project project)
-    {
-        Projects.Add(Check.NotNull(project, nameof(project)));
-    }
-
-    /// <summary>
-    /// Removes a project from the list of projects associated with the organization member.
-    /// </summary>
-    /// <param name="project">The project to be removed.</param>
-    internal void RemoveProject(Project project)
-    {
-        Projects.Remove(Check.NotNull(project, nameof(project)));
-    }
-
-    /// <summary>
-    /// Adds a skill to the list of skills associated with the organization member.
-    /// </summary>
-    /// <param name="skill">The skill to be added.</param>
     internal void AddSkill(OrganizationMemberSkill skill)
     {
-        Skills.Add(Check.NotNull(skill, nameof(skill)));
+        OrganizationMemberSkills.Add(Check.NotNull(skill, nameof(skill)));
     }
-
-    /// <summary>
-    /// Removes a skill from the list of skills associated with the organization member.
-    /// </summary>
-    /// <param name="skill">The skill to be removed.</param>
+    
     internal void RemoveSkill(OrganizationMemberSkill skill)
     {
-        Skills.Remove(Check.NotNull(skill, nameof(skill)));
+        OrganizationMemberSkills.Remove(Check.NotNull(skill, nameof(skill)));
     }
-
-    /// <summary>
-    /// Sets the Name property for the organization member.
-    /// </summary>
-    /// <param name="name">The name of the organization member.</param>
+    
     private void SetName([NotNull] string name)
     {
         Name = Check.NotNullOrWhiteSpace(
@@ -209,41 +111,19 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
             maxLength: OrganizationMemberConsts.MaxNameLength
         );
     }
-
-    /// <summary>
-    /// Sets the Email property for the organization member.
-    /// </summary>
-    /// <param name="email">The email of the organization member.</param>
-    private void SetEmail([NotNull] string email)
+    
+    private void SetEmail([CanBeNull] string email)
     {
-        Email = Check.NotNullOrWhiteSpace(
-            email,
-            nameof(email),
-            maxLength: CommonConsts.MaxEmailLength
-        );
+        if (!email.IsNullOrWhiteSpace() && !ValidationHelper.IsValidEmail(email))
+        {
+            throw new ArgumentException("The provided email is not valid.", nameof(email));
+        }
+
+        Email = email;
     }
-
-    /// <summary>
-    /// Sets the Phone property for the organization member.
-    /// </summary>
-    /// <param name="phone">The phone number of the organization member.</param>
-    private void SetPhone(string phone)
+    
+    private void SetPhoneNumber([CanBeNull] PhoneNumber phoneNumber)
     {
-        Phone = Check.Length(
-            phone,
-            nameof(phone),
-            maxLength: CommonConsts.MaxPhoneLength
-        );
-    }
-
-    /// <summary>
-    /// Sets the UserId property for the organization member.
-    /// </summary>
-    /// <param name="userId">The Guid of the user account associated with the organization member.</param>
-    /// <returns>The updated organization member.</returns>
-    private OrganizationMember SetUserId(Guid? userId)
-    {
-        UserId = userId;
-        return this;
+        PhoneNumber = phoneNumber;
     }
 }

@@ -33,6 +33,9 @@ public class CoreDbContext :
     public DbSet<Organization> Organizations { get; set; }
     public DbSet<OrganizationMember> OrganizationMembers { get; set; }
     public DbSet<OrganizationMemberSkill> OrganizationMemberSkills { get; set; }
+    public DbSet<OrganizationMemberChallenge> OrganizationMemberChallenges { get; set; }
+    public DbSet<OrganizationMemberAction> OrganizationMemberActions { get; set; }
+    public DbSet<OrganizationProfile> OrganizationProfiles { get; set; }
     public DbSet<Milestone> Milestones { get; set; }
     public DbSet<MilestoneVote> MilestoneVotes { get; set; }
     public DbSet<MilestoneVoteAggregate> MilestoneVoteAggregates { get; set; }
@@ -44,7 +47,7 @@ public class CoreDbContext :
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ProjectTag> ProjectTags { get; set; }
     public DbSet<Challenge> Challenges { get; set; }
-    public DbSet<OrganizationMemberChallenge> OrganizationMemberChallenges { get; set; }
+
     public DbSet<ProjectChallenge> ProjectChallenges { get; set; }
 
     #region Entities from the modules
