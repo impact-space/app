@@ -42,9 +42,9 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual ICollection<Project> OwnedProjects { get; }
 
-    protected OrganizationMember(ICollection<SocialMediaLink> socialMediaLinks)
+    protected OrganizationMember()
     {
-        SocialMediaLinks = socialMediaLinks;
+        
     }
     
     internal OrganizationMember(
