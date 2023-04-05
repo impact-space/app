@@ -5,12 +5,12 @@ using Xunit;
 
 namespace ImpactSpace.Core.Challenges;
 
-public class ChallengeManager_Tests : CoreDomainTestBase
+public class ChallengeManagerTests : CoreDomainTestBase
 {
     private readonly ChallengeManager _challengeManager;
     private readonly IChallengeRepository _challengeRepository;
 
-    public ChallengeManager_Tests()
+    public ChallengeManagerTests()
     {
         _challengeManager = GetRequiredService<ChallengeManager>();
         _challengeRepository = GetRequiredService<IChallengeRepository>();
