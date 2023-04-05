@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Services;
 
 namespace ImpactSpace.Core.Projects;
 
-public class TagManager : DomainService
+public sealed class TagManager : DomainService
 {
     private readonly ITagRepository _tagRepository;
     private readonly IRepository<ProjectTag> _projectTagRepository;

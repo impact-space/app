@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Services;
 
 namespace ImpactSpace.Core.Skills;
 
-public class SkillGroupManager : DomainService
+public sealed class SkillGroupManager : DomainService
 {
     private readonly ISkillGroupRepository _skillGroupRepository;
     private readonly ISkillRepository _skillRepository;

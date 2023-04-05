@@ -9,7 +9,7 @@ using Volo.Abp.Domain.Services;
 
 namespace ImpactSpace.Core.Challenges;
 
-public class ChallengeManager : DomainService
+public sealed class ChallengeManager : DomainService
 {
     private readonly IChallengeRepository _challengeRepository;
     private readonly IRepository<OrganizationMemberChallenge> _organizationMemberChallengeRepository;
