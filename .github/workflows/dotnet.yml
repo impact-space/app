@@ -24,6 +24,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.x
+        
     - name: Install Coverlet
       run: dotnet tool install --global coverlet.console
     
@@ -35,18 +36,20 @@ jobs:
 
     - name: Test Application Layer with Coverage
       run: |
-        dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover /p:CoverletOutput=./aspnet-core/test/ImpactSpace.Core.Application.Tests/coverage.opencover.xml aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj
-        ls -la aspnet-core/test/ImpactSpace.Core.Application.Tests/
+        dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover /p:CoverletOutput=./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/coverage.opencover.xml aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj
+        ls -la aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/
+
     - name: Test Domain Layer with Coverage
       run: |
-        dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover /p:CoverletOutput=./aspnet-core/test/ImpactSpace.Core.Domain.Tests/coverage.opencover.xml aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj
-        ls -la aspnet-core/test/ImpactSpace.Core.Domain.Tests/
+        dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover /p:CoverletOutput=./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/coverage.opencover.xml aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj
+        ls -la aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/
+
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: |
-          ./aspnet-core/test/ImpactSpace.Core.Application.Tests/coverage.opencover.xml
-          ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/coverage.opencover.xml
+          ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/*/coverage.opencover.xml
+          ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/*/coverage.opencover.xml
 
