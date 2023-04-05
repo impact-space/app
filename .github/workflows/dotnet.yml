@@ -50,6 +50,6 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: |
-          ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/*/coverage.opencover.xml
-          ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/*/coverage.opencover.xml
+          ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/coverage.opencover.xml
+          ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/coverage.opencover.xml
 
