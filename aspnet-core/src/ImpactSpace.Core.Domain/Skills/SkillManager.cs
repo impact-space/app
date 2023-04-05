@@ -61,12 +61,7 @@ public class SkillManager : DomainService
     {
         Check.NotNull(skill, nameof(skill));
         
-        var existingSkillGroup = await _skillGroupRepository.GetAsync(skillGroupId);
-
-        if (existingSkillGroup == null)
-        {
-            throw new SkillGroupNotFoundException(skillGroupId);
-        }
+        await _skillGroupRepository.GetAsync(skillGroupId);
 
         skill.ChangeSkillGroup(skillGroupId);
     }

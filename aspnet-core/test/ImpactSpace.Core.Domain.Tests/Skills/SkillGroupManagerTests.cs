@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Skills;
 
-public class SkillGroupManagerTests : CoreDomainTestBase
+public sealed class SkillGroupManagerTests : CoreDomainTestBase
     {
         private readonly ISkillGroupRepository _skillGroupRepository;
         private readonly ISkillRepository _skillRepository;
@@ -16,7 +16,6 @@ public class SkillGroupManagerTests : CoreDomainTestBase
         {
             _skillGroupRepository = GetRequiredService<ISkillGroupRepository>();
             _skillRepository = GetRequiredService<ISkillRepository>();
-            //_skillGroupManager = new SkillGroupManager(_skillGroupRepository, _skillRepository);
             _skillGroupManager = GetRequiredService<SkillGroupManager>();
         }
 
