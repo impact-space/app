@@ -29,8 +29,8 @@ public static class ValidationHelper
             return false;
         }
     }
-    
-    public static bool IsValidPhoneNumber(string phoneNumber, PhoneCountryCode countryCode)
+
+    private static bool IsValidPhoneNumber(string phoneNumber, string regionCode)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
         {
@@ -40,31 +40,25 @@ public static class ValidationHelper
         try
         {
             var phoneNumberUtil = PhoneNumberUtil.GetInstance();
-
-            PhoneNumber parsedPhoneNumber;
-
-            if (countryCode == PhoneCountryCode.Canada)
-            {
-                // Use the area code for Alberta, Canada
-                parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, "CA");
-            }
-            else if (countryCode == PhoneCountryCode.Bahamas)
-            {
-                // Use the default region code for the United States (US) and Canada (CA) and the Bahamas (BS)
-                parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, "BS");
-            }
-            else
-            {
-                // Use the region code corresponding to the given PhoneCountryCode enum value
-                parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, 
-                    phoneNumberUtil.GetRegionCodeForCountryCode((int)countryCode));
-            }
-
+            var parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, regionCode);
             return phoneNumberUtil.IsValidNumber(parsedPhoneNumber);
         }
-        catch (NumberParseException ex)
+        catch (NumberParseException)
         {
             return false;
         }
     }
+
+    public static bool IsValidPhoneNumber(string phoneNumber, PhoneCountryCode countryCode)
+    {
+        return countryCode switch
+        {
+            PhoneCountryCode.Canada => IsValidPhoneNumber(phoneNumber, "CA"),
+            PhoneCountryCode.Bahamas => IsValidPhoneNumber(phoneNumber, "BS"),
+            _ => IsValidPhoneNumber(phoneNumber,
+                PhoneNumberUtil.GetInstance().GetRegionCodeForCountryCode((int)countryCode))
+        };
+    }
+    
+
 }
