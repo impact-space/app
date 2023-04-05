@@ -8,7 +8,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Projects;
 
-public class Tag : Entity<Guid>, IMultiTenant
+public class Tag : Entity<Guid>, IMultiTenant, IHasConcurrencyStamp
 {
     public string Name { get; private set; }
 
@@ -45,5 +45,6 @@ public class Tag : Entity<Guid>, IMultiTenant
         );
         Name = name;
     }
-    
+
+    public string ConcurrencyStamp { get; set; }
 }

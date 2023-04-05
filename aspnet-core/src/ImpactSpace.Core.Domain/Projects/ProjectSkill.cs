@@ -9,7 +9,7 @@ namespace ImpactSpace.Core.Projects;
 /// <summary>
     /// Represents a ProjectSkill entity that associates a Skill with a Project and its proficiency level.
     /// </summary>
-    public class ProjectSkill : Entity, IMultiTenant
+    public class ProjectSkill : Entity, IMultiTenant, IHasConcurrencyStamp
     {
         /// <summary>
         /// Gets the associated Project's Id.
@@ -40,6 +40,8 @@ namespace ImpactSpace.Core.Projects;
         /// Gets the Tenant Id for multi-tenancy support.
         /// </summary>
         public Guid? TenantId { get; private set; }
+        
+        public string ConcurrencyStamp { get; set; }
 
         /// <summary>
         /// Private constructor for deserialization / ORM purposes.

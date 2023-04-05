@@ -8,13 +8,15 @@ using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Projects
 {
-    public class ProjectCategory : Entity<Guid>, IMultiTenant
+    public class ProjectCategory : Entity<Guid>, IMultiTenant, IHasConcurrencyStamp
     {
         public string Name { get; private set; }
         
         public virtual ICollection<Project> Projects { get; private set; }
         
         public Guid? TenantId { get; set; }
+        
+        public string ConcurrencyStamp { get; set; }
 
         protected ProjectCategory()
         {

@@ -5,13 +5,16 @@ using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Projects;
 
-public class ProjectChallenge: Entity, IMultiTenant
+public class ProjectChallenge: Entity, IMultiTenant, IHasConcurrencyStamp
 {
     public virtual Guid ProjectId { get; private set; }
     public virtual Project Project { get; private set; }
     public virtual Guid ChallengeId { get; private set; }
     public virtual Challenge Challenge { get; private set; }
+    
     public Guid? TenantId { get; set; }
+    
+    public string ConcurrencyStamp { get; set; }
 
     public override object[] GetKeys()
     {

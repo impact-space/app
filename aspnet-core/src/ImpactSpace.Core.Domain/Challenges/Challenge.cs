@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using ImpactSpace.Core.Organizations;
@@ -49,6 +48,4 @@ public class Challenge : Entity<Guid>, IMultiTenant, IHasConcurrencyStamp
             maxLength: ChallengeConstants.MaxNameLength
         );
     }
-
-
 }
