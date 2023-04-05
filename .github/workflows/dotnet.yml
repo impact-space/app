@@ -31,9 +31,9 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release aspnet-core/ImpactSpace.Core.sln
     - name: Test Application Layer with Coverage
-      run: dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj
+      run: dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover /p:CoverletOutput=./aspnet-core/test/ImpactSpace.Core.Application.Tests/ aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj
     - name: Test Domain Layer with Coverage
-      run: dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj
+      run: dotnet test --configuration Release --collect:"XPlat Code Coverage" /p:Exclude="[xunit.*]*" /p:CoverletOutputFormat=opencover /p:CoverletOutput=./aspnet-core/test/ImpactSpace.Core.Domain.Tests/ aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
