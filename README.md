@@ -41,10 +41,6 @@ Impact Space is an open-source project and we welcome contributions from the com
 
 A special thanks to [ProgCode](https://progcode.org) for their support in making this project possible.
 
-## License
-
-This project is licensed under the GNU Lesser General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
-
 ## Getting Started
 
 1. Clone the repository to your local machine.
@@ -100,3 +96,6 @@ You should now have the Impact Space application running locally on your machine
   password: 1q2w3E*
 ```
 
+## License
+
+This project is licensed under the GNU Lesser General Public License v3.0. See the [LICENSE](LICENSE) file for more information.
