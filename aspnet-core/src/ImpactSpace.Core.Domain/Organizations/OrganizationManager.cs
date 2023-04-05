@@ -7,7 +7,7 @@ using Volo.Abp.TenantManagement;
 
 namespace ImpactSpace.Core.Organizations;
 
-public class OrganizationManager : DomainService
+public sealed class OrganizationManager : DomainService
 {
     private readonly IOrganizationRepository _organizationRepository;
     private readonly ITenantRepository _tenantRepository;
@@ -22,8 +22,7 @@ public class OrganizationManager : DomainService
     
     public async Task<bool> ExistsForTenantAsync(Guid tenantId)
     {
-        var organization = await _organizationRepository.FindByTenantIdAsync(tenantId);
-        return organization != null;
+        return await _organizationRepository.FindByTenantIdAsync(tenantId) != null;
     }
     
     
