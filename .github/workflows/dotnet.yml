@@ -38,5 +38,7 @@ jobs:
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./aspnet-core/test/ImpactSpace.Core.Application.Tests/coverage.opencover.xml
+        files: |
+          ./aspnet-core/test/ImpactSpace.Core.Application.Tests/coverage.opencover.xml
+          ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/coverage.opencover.xml
 
