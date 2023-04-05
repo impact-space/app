@@ -45,11 +45,14 @@ jobs:
         ls -la aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/
 
 
-    - name: Upload coverage reports to Codecov
+    - name: Upload coverage report - Application Tests
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: |
-          ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/coverage.opencover.xml
-          ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/coverage.opencover.xml
+        files: ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/coverage.opencover.xml
 
+    - name: Upload coverage report - Domain Tests
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        files: ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/coverage.opencover.xml
