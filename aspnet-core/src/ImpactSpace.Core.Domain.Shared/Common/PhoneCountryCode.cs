@@ -1,34 +1,97 @@
-namespace ImpactSpace.Core.Common;
+using System.ComponentModel;
 
-public enum PhoneCountryCode
+namespace ImpactSpace.Core.Common
 {
-    Australia = 61,
-    Brazil = 55,
-    Canada = 1,
-    China = 86,
-    Denmark = 45,
-    Finland = 358,
-    France = 33,
-    Germany = 49,
-    India = 91,
-    Ireland = 353,
-    Italy = 39,
-    Japan = 81,
-    Mexico = 52,
-    Netherlands = 31,
-    NewZealand = 64,
-    Nigeria = 234,
-    Norway = 47,
-    Pakistan = 92,
-    Philippines = 63,
-    Portugal = 351,
-    Russia = 7,
-    SouthAfrica = 27,
-    SouthKorea = 82,
-    Spain = 34,
-    Sweden = 46,
-    Switzerland = 41,
-    Turkey = 90,
-    UnitedKingdom = 44,
-    UnitedStates = 1,
+        public enum PhoneCountryCode
+    {
+        [Description("Australia")]
+        Australia = 61,
+
+        [Description("Brazil")]
+        Brazil = 55,
+
+        [Description("China")]
+        China = 86,
+
+        [Description("Denmark")]
+        Denmark = 45,
+
+        [Description("Finland")]
+        Finland = 358,
+
+        [Description("France")]
+        France = 33,
+
+        [Description("Germany")]
+        Germany = 49,
+
+        [Description("India")]
+        India = 91,
+
+        [Description("Ireland")]
+        Ireland = 353,
+
+        [Description("Italy")]
+        Italy = 39,
+
+        [Description("Japan")]
+        Japan = 81,
+
+        [Description("Mexico")]
+        Mexico = 52,
+
+        [Description("Netherlands")]
+        Netherlands = 31,
+
+        [Description("New Zealand")]
+        NewZealand = 64,
+
+        [Description("Nigeria")]
+        Nigeria = 234,
+
+        [Description("Norway")]
+        Norway = 47,
+
+        [Description("Pakistan")]
+        Pakistan = 92,
+
+        [Description("Philippines")]
+        Philippines = 63,
+
+        [Description("Portugal")]
+        Portugal = 351,
+
+        [Description("Russia")]
+        Russia = 7,
+
+        [Description("South Africa")]
+        SouthAfrica = 27,
+
+        [Description("South Korea")]
+        SouthKorea = 82,
+
+        [Description("Spain")]
+        Spain = 34,
+
+        [Description("Sweden")]
+        Sweden = 46,
+
+        [Description("Switzerland")]
+        Switzerland = 41,
+
+        [Description("Turkey")]
+        Turkey = 90,
+
+        [Description("United Kingdom")]
+        UnitedKingdom = 44,
+
+        [Description("United States")]
+        UnitedStates = 1,
+        
+        [Description("Canada")]
+        Canada = 1321,
+
+        [Description("Bahamas")]
+        Bahamas = 1224, // Bahamas shares the same country code as US and Canada
+    }
 }

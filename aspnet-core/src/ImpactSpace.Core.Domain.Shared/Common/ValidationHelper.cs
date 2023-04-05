@@ -40,11 +40,29 @@ public static class ValidationHelper
         try
         {
             var phoneNumberUtil = PhoneNumberUtil.GetInstance();
-            var parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, countryCode.ToString());
+
+            PhoneNumber parsedPhoneNumber;
+
+            if (countryCode == PhoneCountryCode.Canada)
+            {
+                // Use the area code for Alberta, Canada
+                parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, "CA");
+            }
+            else if (countryCode == PhoneCountryCode.Bahamas)
+            {
+                // Use the default region code for the United States (US) and Canada (CA) and the Bahamas (BS)
+                parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, "BS");
+            }
+            else
+            {
+                // Use the region code corresponding to the given PhoneCountryCode enum value
+                parsedPhoneNumber = phoneNumberUtil.Parse(phoneNumber, 
+                    phoneNumberUtil.GetRegionCodeForCountryCode((int)countryCode));
+            }
 
             return phoneNumberUtil.IsValidNumber(parsedPhoneNumber);
         }
-        catch (NumberParseException)
+        catch (NumberParseException ex)
         {
             return false;
         }

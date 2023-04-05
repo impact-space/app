@@ -40,9 +40,4 @@ public class PhoneNumber : ValueObject
 
         NationalNumber = FormatHelper.FormatNationalPhoneNumber(number, CountryCode);
     }
-    
-    public string ToE164Format()
-    {
-        return $"+{(int)CountryCode}{NationalNumber}";
-    }
 }
