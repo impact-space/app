@@ -9,7 +9,7 @@ public class PhoneNumber : ValueObject
     public PhoneCountryCode CountryCode { get; private set;}
     public string NationalNumber { get; private set; }
 
-    private PhoneNumber()
+    protected PhoneNumber()
     {
         
     }
