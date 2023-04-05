@@ -36,12 +36,12 @@ jobs:
 
     - name: Test Application Layer with Coverage
       run: |
-        coverlet aspnet-core/test/ImpactSpace.Core.Application.Tests/bin/Release/net7.0/ImpactSpace.Core.Application.Tests.dll --target "dotnet" --targetargs "test --no-build --configuration Release aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj" --exclude-by-attribute "xunit.*" --format opencover --output ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/coverage.opencover.xml
+        coverlet aspnet-core/test/ImpactSpace.Core.Application.Tests/bin/Release/net7.0/ImpactSpace.Core.Application.Tests.dll --target "dotnet" --targetargs "test --no-build --configuration Release aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj" --exclude-by-attribute "xunit.*" --exclude "ImpactSpace.Core.Migrations.*" --format opencover --output ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/coverage.opencover.xml
         ls -la aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/
 
     - name: Test Domain Layer with Coverage
       run: |
-        coverlet aspnet-core/test/ImpactSpace.Core.Domain.Tests/bin/Release/net7.0/ImpactSpace.Core.Domain.Tests.dll --target "dotnet" --targetargs "test --no-build --configuration Release aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj" --exclude-by-attribute "xunit.*" --format opencover --output ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/coverage.opencover.xml
+        coverlet aspnet-core/test/ImpactSpace.Core.Domain.Tests/bin/Release/net7.0/ImpactSpace.Core.Domain.Tests.dll --target "dotnet" --targetargs "test --no-build --configuration Release aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj" --exclude-by-attribute "xunit.*" --exclude "ImpactSpace.Core.Migrations.*" --format opencover --output ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/coverage.opencover.xml
         ls -la aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/
 
 
