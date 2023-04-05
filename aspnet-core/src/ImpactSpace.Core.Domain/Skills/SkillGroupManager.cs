@@ -73,11 +73,6 @@ public class SkillGroupManager : DomainService
     {
         var skillGroup = await _skillGroupRepository.GetAsync(id);
 
-        if (skillGroup == null)
-        {
-            throw new SkillGroupNotFoundException(id);
-        }
-        
         var skillCount = await _skillRepository.CountAsync(x => x.SkillGroupId == skillGroup.Id);
         
         if (skillCount > 0)
@@ -85,6 +80,6 @@ public class SkillGroupManager : DomainService
             throw new SkillGroupHasSkillsException(skillGroup.Id, skillGroup.Name);
         }
 
-        await _skillGroupRepository.DeleteAsync(skillGroup);
+        await _skillGroupRepository.DeleteAsync(skillGroup, true);
     }
 }
