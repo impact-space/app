@@ -43,22 +43,18 @@ public class SkillAppService_Tests : CoreApplicationTestBase
     {
         var result = await _skillAppService.GetListAsync(new GetSkillListDto());
       
-        result.Items.Count.ShouldBeGreaterThanOrEqualTo(10);
+        result.Items.Count.ShouldBeGreaterThanOrEqualTo(1);
         result.Items.ShouldContain(x => x.Name == ".NET");
-        result.Items.ShouldContain(x => x.Name == "3D Modeling");
-        result.Items.ShouldContain(x => x.Name == "API");
-        result.Items.ShouldContain(x => x.Name == "API Documentation");
     }
     
     [Fact]
     public async Task Should_Get_Filtered_Skills()
     {
-        var result = await _skillAppService.GetListAsync(new GetSkillListDto { Filter = "API" });
+        var result = await _skillAppService.GetListAsync(new GetSkillListDto { Filter = ".NE" });
       
-        result.Items.Count.ShouldBe(2);
+        result.Items.Count.ShouldBe(1);
         
-        result.Items.ShouldContain(x => x.Name == "API");
-        result.Items.ShouldContain(x => x.Name == "API Documentation");
+        result.Items.ShouldContain(x => x.Name == ".NET");
     }
     
     [Fact]
@@ -76,11 +72,11 @@ public class SkillAppService_Tests : CoreApplicationTestBase
     [Fact]
     public async Task Should_Get_Filtered_Skills_With_SkillGroup()
     {
-        var skillGroup = (await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Activism" } )).Items.First();
-        var result = await _skillAppService.GetListAsync(new GetSkillListDto { SkillGroupId = skillGroup.Id, Filter = "Community" });
+        var skillGroup = (await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Non" } )).Items.First();
+        var result = await _skillAppService.GetListAsync(new GetSkillListDto { SkillGroupId = skillGroup.Id, Filter = "Activ" });
       
         result.Items.Count.ShouldBe(1);
-        result.Items.ShouldContain(x => x.Name == "Community Engagement");
+        result.Items.ShouldContain(x => x.Name == "Activist");
     }
 
     [Fact]
@@ -129,7 +125,7 @@ public class SkillAppService_Tests : CoreApplicationTestBase
     {
         var skill = (await _skillAppService.GetListAsync(new GetSkillListDto())).Items.First(); 
         
-        var skillGroup = (await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Strategy" } )).Items.First();
+        var skillGroup = (await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Non-Tech Skills" } )).Items.First();
         
         await _skillAppService.UpdateAsync(skill.Id, new SkillUpdateDto
         {
@@ -149,13 +145,13 @@ public class SkillAppService_Tests : CoreApplicationTestBase
     {
         var skill = (await _skillAppService.GetListAsync(new GetSkillListDto())).Items.First(); 
         
-        var skillGroup = (await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Strategy" } )).Items.First();
+        var skillGroup = (await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Non-Tech Skills" } )).Items.First();
         
         await Should.ThrowAsync<SkillAlreadyExistsException>(async () =>
         {
             await _skillAppService.UpdateAsync(skill.Id, new SkillUpdateDto
             {
-                Name = "Political Operative",
+                Name = "Elected Official",
                 SkillGroupId = skillGroup.Id
             });
         });

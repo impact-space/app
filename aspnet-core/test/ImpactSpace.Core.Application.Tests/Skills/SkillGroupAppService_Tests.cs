@@ -41,20 +41,18 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
     {
         var result = await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto());
 
-        result.TotalCount.ShouldBeGreaterThanOrEqualTo(4);
-        result.Items.ShouldContain(x => x.Name == "Activism");
-        result.Items.ShouldContain(x => x.Name == "Communication");
-        result.Items.ShouldContain(x => x.Name == "Consulting");
-        result.Items.ShouldContain(x => x.Name == "Creative");
+        result.TotalCount.ShouldBeGreaterThanOrEqualTo(2);
+        result.Items.ShouldContain(x => x.Name == "Tech Skills");
+        result.Items.ShouldContain(x => x.Name == "Non-Tech Skills");
     }
 
     [Fact]
     public async Task Should_Get_Filtered_SkillGroups()
     {
-        var result = await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Communication" });
+        var result = await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { Filter = "Non" });
 
         result.TotalCount.ShouldBe(1);
-        result.Items.ShouldContain(x => x.Name == "Communication");
+        result.Items.ShouldContain(x => x.Name == "Non-Tech Skills");
     }
 
     [Fact]
@@ -62,8 +60,8 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
     {
         var result = await _skillGroupAppService.GetListAsync(new GetSkillGroupListDto { IncludeSkills = true });
 
-        result.TotalCount.ShouldBeGreaterThanOrEqualTo(4);
-        result.Items.ShouldContain(x => x.Name == "Activism" && x.Skills.Count > 0);
+        result.TotalCount.ShouldBeGreaterThanOrEqualTo(2);
+        result.Items.ShouldContain(x => x.Name == "Tech Skills" && x.Skills.Count > 0);
     }
 
     [Fact]
@@ -88,7 +86,7 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
         {
             await _skillGroupAppService.CreateAsync(new SkillGroupCreateDto
             {
-                Name = "Activism",
+                Name = "Non-Tech Skills",
                 Description = "Test Skill Group Description"
             });
         });
@@ -130,7 +128,7 @@ public class SkillGroupAppService_Tests : CoreApplicationTestBase
         {
             await _skillGroupAppService.UpdateAsync(result.Id, new SkillGroupUpdateDto
             {
-                Name = "Activism",
+                Name = "Non-Tech Skills",
                 Description = "Test Skill Group Description Updated"
             });
         });
