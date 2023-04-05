@@ -64,6 +64,6 @@ public class TagManager : DomainService
 
         await _projectTagRepository.DeleteAsync(pt => pt.TagId == tag.Id);
         
-        await _tagRepository.DeleteAsync(tag);
+        await _tagRepository.DeleteAsync(tag, true);
     }
 }
