@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Skills;
 
-public class SkillTests: CoreDomainTestBase
+public class SkillTests
 {
     [Fact]
     public Task Can_Create_Skill()

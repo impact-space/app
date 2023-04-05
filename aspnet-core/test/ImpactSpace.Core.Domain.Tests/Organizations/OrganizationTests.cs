@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Organizations
 {
-    public class OrganizationTests : CoreDomainTestBase
+    public class OrganizationTests
     {
         [Fact]
         public void Create_Organization_Should_Set_Name_And_TenantId()

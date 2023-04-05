@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Challenges;
 
-public class ChallengeTests : CoreDomainTestBase
+public class ChallengeTests
 {
     [Fact]
     public void Should_Create_Challenge()

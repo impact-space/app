@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Samples;
 
-public class TagTests : CoreDomainTestBase
+public class TagTests
 {
     [Fact]
     public void Should_Create_Tag()

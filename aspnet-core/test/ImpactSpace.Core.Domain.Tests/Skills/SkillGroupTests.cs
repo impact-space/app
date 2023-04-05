@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Skills
 {
-    public class SkillGroupTests : CoreDomainTestBase
+    public class SkillGroupTests
     {
         [Fact]
         public Task Should_Create_SkillGroup_With_Correct_Name()

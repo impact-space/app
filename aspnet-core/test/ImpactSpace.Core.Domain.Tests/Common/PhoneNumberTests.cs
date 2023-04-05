@@ -1,11 +1,10 @@
 using System;
-using System.Linq;
 using Shouldly;
 using Xunit;
 
 namespace ImpactSpace.Core.Common;
 
-public class PhoneNumberTests : CoreDomainTestBase
+public class PhoneNumberTests
 {
     [Fact]
     public void Should_Throw_Exception_When_Phone_Number_Is_Invalid()

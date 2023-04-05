@@ -3,7 +3,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Common;
 
-public class ValidationHelperTests : CoreDomainTestBase
+public class ValidationHelperTests
 {
     [Theory]
     [InlineData("https://www.google.com", true)]

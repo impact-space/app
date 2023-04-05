@@ -3,7 +3,7 @@ using Xunit;
 
 namespace ImpactSpace.Core.Common;
 
-public class FormatHelperTests : CoreDomainTestBase
+public class FormatHelperTests
 {
     [Theory]
     [InlineData("6505550199", PhoneCountryCode.UnitedStates, "+16505550199")]

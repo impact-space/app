@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
-using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Organizations;
 using Shouldly;
-using Volo.Abp.Validation;
 using Xunit;
 
 namespace ImpactSpace.Core.Common
 {
-    public class SocialMediaLinkTests : CoreDomainTestBase
+    public class SocialMediaLinkTests
     {
         [Fact]
         public void Should_Create_SocialMediaLink()

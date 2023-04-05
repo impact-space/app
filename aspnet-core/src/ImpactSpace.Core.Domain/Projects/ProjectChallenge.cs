@@ -15,6 +15,17 @@ public class ProjectChallenge: Entity, IMultiTenant, IHasConcurrencyStamp
     public Guid? TenantId { get; set; }
     
     public string ConcurrencyStamp { get; set; }
+    
+    public ProjectChallenge()
+    {
+        
+    }
+    
+    public ProjectChallenge(Guid projectId, Guid challengeId)
+    {
+        ProjectId = projectId;
+        ChallengeId = challengeId;
+    }
 
     public override object[] GetKeys()
     {
