@@ -14,22 +14,22 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// <summary>
     /// The ID of the organization member who possesses the skill.
     /// </summary>
-    public Guid OrganizationMemberId { get; private set; }
+    public Guid OrganizationMemberId { get; protected set; }
 
     /// <summary>
     /// The organization member who possesses the skill.
     /// </summary>
-    public virtual OrganizationMember OrganizationMember { get; private set; }
+    public virtual OrganizationMember OrganizationMember { get; protected set; }
 
     /// <summary>
     /// The ID of the skill possessed by the organization member.
     /// </summary>
-    public Guid SkillId { get; private set; }
+    public Guid SkillId { get; protected set; }
 
     /// <summary>
     /// The skill possessed by the organization member.
     /// </summary>
-    public virtual Skill Skill { get; private set; }
+    public virtual Skill Skill { get; protected set; }
 
     /// <summary>
     /// The proficiency level of the organization member in the skill.
@@ -39,7 +39,7 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// <summary>
     /// The ID of the tenant to which this organization member skill belongs.
     /// </summary>
-    public Guid? TenantId { get; private set; }
+    public Guid? TenantId { get; }
 
     /// <summary>
     /// Private constructor for deserialization / ORM purposes.
@@ -55,14 +55,12 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// <param name="organizationMemberId">The ID of the organization member who possesses the skill.</param>
     /// <param name="skillId">The ID of the skill possessed by the organization member.</param>
     /// <param name="proficiencyLevel">The proficiency level of the organization member in the skill.</param>
-    /// <param name="tenantId">The ID of the tenant to which this organization member skill belongs.</param>
     internal OrganizationMemberSkill(Guid organizationMemberId, Guid skillId,
-        ProficiencyLevel proficiencyLevel, Guid? tenantId)
+        ProficiencyLevel proficiencyLevel)
     {
         OrganizationMemberId = organizationMemberId;
         SkillId = skillId;
         SetProficiencyLevel(proficiencyLevel);
-        TenantId = tenantId;
     }
 
     /// <summary>

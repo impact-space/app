@@ -23,6 +23,14 @@ public class OrganizationMemberAction : Entity, IMultiTenant
         
     }
     
+    internal OrganizationMemberAction(
+        Guid organizationMemberId, 
+        Guid actionId)
+    {
+        OrganizationMemberId = organizationMemberId;
+        ActionId = actionId;
+    }
+    
     public override object[] GetKeys()
     {
         return new object[] { OrganizationMemberId, ActionId };

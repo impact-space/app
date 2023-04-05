@@ -20,15 +20,15 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public PhoneNumber PhoneNumber { get; private set; }
 
-    public Guid? IdentityUserId { get; private set; }
+    public Guid? IdentityUserId { get; protected set; }
     
-    public virtual IdentityUser IdentityUser { get; private set; }
+    public virtual IdentityUser IdentityUser { get; protected set; }
 
     public Guid OrganizationId { get; private set; }
     
-    public virtual Organization Organization { get; private set; }
+    public virtual Organization Organization { get; protected set; }
     
-    public Guid? TenantId { get; private set; }
+    public Guid? TenantId { get; }
 
     public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; }
     

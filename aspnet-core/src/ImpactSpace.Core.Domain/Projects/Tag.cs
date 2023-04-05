@@ -14,14 +14,14 @@ public class Tag : Entity<Guid>, IMultiTenant, IHasConcurrencyStamp
 
     public Guid? TenantId { get; }
     
-    public virtual ICollection<ProjectTag> ProjectTags { get; private set; }
+    public virtual ICollection<ProjectTag> ProjectTags { get; protected set; }
 
-    public Tag()
+    protected Tag()
     {
         
     }
     
-    public Tag(
+    internal Tag(
         Guid id, 
         [NotNull] string name) : base(id)
     {
