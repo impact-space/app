@@ -10,7 +10,7 @@ namespace ImpactSpace.Core.Projects;
 
 public class Tag : Entity<Guid>, IMultiTenant
 {
-    public string Name { get; set; }
+    public string Name { get; private set; }
 
     public Guid? TenantId { get; }
     

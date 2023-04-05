@@ -29,6 +29,4 @@ public class ProjectTag : Entity, IMultiTenant
     {
         return new object[] {ProjectId, TagId};
     }
-
-    
 }
