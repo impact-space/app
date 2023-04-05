@@ -28,5 +28,7 @@ jobs:
       run: dotnet restore aspnet-core/ImpactSpace.Core.sln
     - name: Build
       run: dotnet build --configuration Release aspnet-core/ImpactSpace.Core.sln
-    - name: Test
+    - name: Test Application Layer
       run: dotnet test --configuration Release --verbosity normal aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj
+    - name: Test Domain Layer
+      run: dotnet test --configuration Release --verbosity normal aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj
