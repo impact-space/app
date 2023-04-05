@@ -14,7 +14,7 @@ on:
       - 'aspnet-core/**'
 
 jobs:
-  build:
+  build-test:
 
     runs-on: ubuntu-latest
 
