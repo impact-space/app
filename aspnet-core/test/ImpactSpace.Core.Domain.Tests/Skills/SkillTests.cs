@@ -8,7 +8,7 @@ namespace ImpactSpace.Core.Skills;
 public class SkillTests: CoreDomainTestBase
 {
     [Fact]
-    public async Task Can_Create_Skill()
+    public Task Can_Create_Skill()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -24,10 +24,11 @@ public class SkillTests: CoreDomainTestBase
         skill.SkillGroupId.ShouldBe(skillGroupId);
         skill.OrganizationMemberSkills.ShouldNotBeNull();
         skill.ProjectSkills.ShouldNotBeNull();
+        return Task.CompletedTask;
     }
 
     [Fact]
-    public async Task  Can_Change_Skill_Name()
+    public Task Can_Change_Skill_Name()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -41,10 +42,11 @@ public class SkillTests: CoreDomainTestBase
 
         // Assert
         skill.Name.ShouldBe(newName);
+        return Task.CompletedTask;
     }
 
     [Fact]
-    public async Task  Can_Change_Skill_Group()
+    public Task Can_Change_Skill_Group()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -58,5 +60,6 @@ public class SkillTests: CoreDomainTestBase
 
         // Assert
         skill.SkillGroupId.ShouldBe(newSkillGroupId);
+        return Task.CompletedTask;
     }
 }
