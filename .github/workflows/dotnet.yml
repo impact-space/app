@@ -37,17 +37,14 @@ jobs:
     - name: Test Solution with Coverage
       working-directory: aspnet-core
       run: |
-        dotnet test --configuration Release --no-build --settings coverage.runsettings --blame ImpactSpace.Core.sln
-        mkdir -p TestResults
-        find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
-        ls -la ./TestResults/
+        dotnet test --configuration Release --no-build --settings coverage.runsettings --blame --collect:"XPlat Code Coverage" ImpactSpace.Core.sln
         
     - name: Install ReportGenerator
       run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
     - name: Merge Coverage Reports
       run: |
-        reportgenerator "-reports:./aspnet-core/TestResults/coverage*.opencover.xml" "-targetdir:./aspnet-core/TestResults/merged" -reporttypes:Cobertura
+        reportgenerator "-reports:**/coverage.opencover.xml" "-targetdir:./aspnet-core/TestResults/merged" -reporttypes:Cobertura
         ls -la ./aspnet-core/TestResults/merged
 
     - name: Upload coverage report - Solution Tests
