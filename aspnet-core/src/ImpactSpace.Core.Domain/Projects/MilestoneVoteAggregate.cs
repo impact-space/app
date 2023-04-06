@@ -49,12 +49,10 @@ namespace ImpactSpace.Core.Projects
         /// </summary>
         /// <param name="id">The ID of the aggregate.</param>
         /// <param name="milestoneId">The ID of the associated milestone.</param>
-        /// <param name="tenantId">The tenant ID for multi-tenancy support.</param>
-        public MilestoneVoteAggregate(Guid id, Guid milestoneId, Guid? tenantId)
+        public MilestoneVoteAggregate(Guid id, Guid milestoneId)
             : base(id)
         {
             MilestoneId = milestoneId;
-            TenantId = tenantId;
             VoteScore = 0;
 
             Votes = new Collection<MilestoneVote>();
