@@ -55,6 +55,11 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         Guid organizationId)
         : base(id)
     {
+        if (organizationId == Guid.Empty)
+        {
+            throw new ArgumentException("OrganizationId cannot be empty.");
+        }
+        
         SetName(name);
         SetEmail(email);
         SetPhoneNumber(phone);
