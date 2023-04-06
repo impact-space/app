@@ -42,9 +42,14 @@ jobs:
         find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
         ls -la ./TestResults/
 
+    - name: Merge Coverage Reports
+      run: |
+        coverlet.console merge "./aspnet-core/TestResults/coverage*.opencover.xml" --target-directory "./aspnet-core/TestResults/" --format opencover
+        ls -la ./aspnet-core/TestResults/
+
     - name: Upload coverage report - Solution Tests
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./aspnet-core/TestResults/coverage.opencover.xml
+        files: ./aspnet-core/TestResults/merged.coverage.opencover.xml
 
