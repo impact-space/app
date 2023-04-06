@@ -65,14 +65,12 @@ public class MilestoneVote : AuditedEntity, IMultiTenant
     /// <param name="organizationMemberId">The ID of the organization member who cast the vote.</param>
     /// <param name="milestoneVoteAggregateId">The ID of the MilestoneVoteAggregate this vote belongs to.</param>
     /// <param name="voteType">The type of vote (UpVote or DownVote).</param>
-    /// <param name="tenantId">The Tenant ID for multi-tenancy support.</param>
-    public MilestoneVote(Guid milestoneId, Guid organizationMemberId, Guid milestoneVoteAggregateId, VoteType voteType, Guid? tenantId)
+    public MilestoneVote(Guid milestoneId, Guid organizationMemberId, Guid milestoneVoteAggregateId, VoteType voteType)
     {
         MilestoneId = milestoneId;
         OrganizationMemberId = organizationMemberId;
         MilestoneVoteAggregateId = milestoneVoteAggregateId;
         VoteType = voteType;
-        TenantId = tenantId;
     }
 
     /// <summary>
