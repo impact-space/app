@@ -35,10 +35,11 @@ jobs:
       run: dotnet build --configuration Release aspnet-core/ImpactSpace.Core.sln
 
     - name: Test Solution with Coverage
+      working-directory: aspnet-core
       run: |
-        dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover aspnet-core/ImpactSpace.Core.sln
-        find . -name coverage.opencover.xml -exec cp {} ./aspnet-core/TestResults/ \;
-        ls -la aspnet-core/TestResults/
+        dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover ImpactSpace.Core.sln
+        find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
+        ls -la ./TestResults/
 
     - name: Upload coverage report - Solution Tests
       uses: codecov/codecov-action@v3
