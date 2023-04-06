@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
+  <MaxRetryCount>1</MaxRetryCount>
   <DataCollectionRunSettings>
     <DataCollectors>
       <DataCollector friendlyName="XPlat Code Coverage">
