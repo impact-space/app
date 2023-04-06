@@ -43,6 +43,11 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         [CanBeNull] string logoUrl)
         : base(id)
     {
+        if (organizationId == Guid.Empty)
+        {
+            throw new ArgumentException("Organization Id cannot be empty", nameof(organizationId));
+        }
+        
         OrganizationId = organizationId;
         SetMissionStatement(missionStatement);
         SetWebsite(websiteUrl);
