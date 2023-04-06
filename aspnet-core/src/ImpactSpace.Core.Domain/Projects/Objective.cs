@@ -77,13 +77,11 @@ public class Objective : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <param name="id">The ID of the objective.</param>
     /// <param name="name">The name of the objective.</param>
     /// <param name="milestoneId">The ID of the milestone to which the objective belongs.</param>
-    /// <param name="tenantId">The tenant ID for multi-tenancy support.</param>
-    internal Objective(Guid id, [NotNull] string name, Guid milestoneId, Guid? tenantId)
+    internal Objective(Guid id, [NotNull] string name, Guid milestoneId)
         : base(id)
     {
         SetName(name);
         MilestoneId = milestoneId;
-        TenantId = tenantId;
 
         Actions = new Collection<Action>();
     }
