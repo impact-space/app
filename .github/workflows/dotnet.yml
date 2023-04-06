@@ -34,21 +34,13 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release aspnet-core/ImpactSpace.Core.sln
       
-    - name: Install ReportGenerator
-      run: dotnet tool install --global dotnet-reportgenerator-globaltool
-
     - name: Test Solution with Coverage
       working-directory: aspnet-core
       run: |
-        dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --blame --max-retries 1 ImpactSpace.Core.sln
+        coverlet console --target "dotnet" --targetargs "test --configuration Release --no-build --blame --max-retries 1 ImpactSpace.Core.sln" --format opencover --exclude-by-attribute "GeneratedCodeAttribute" --exclude "ImpactSpace.Core.Migrations.*"
         mkdir -p TestResults
         find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
-        
-    - name: Filter coverage report
-      working-directory: aspnet-core
-      run: |
-        reportgenerator "-reports:./TestResults/coverage.opencover.xml" "-targetdir:./TestResults/filtered" "-reporttypes:HtmlInline_AzurePipelines" "-assemblyfilters:-ImpactSpace.Core.EntityFrameworkCore.Migrations"
-        mv ./TestResults/filtered/coverage.opencover.xml ./TestResults/coverage.opencover.xml.filtered
+        ls -la ./TestResults/
 
     - name: Upload coverage report - Solution Tests
       uses: codecov/codecov-action@v3
