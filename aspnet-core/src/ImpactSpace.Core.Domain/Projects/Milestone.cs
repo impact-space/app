@@ -94,15 +94,13 @@ public class Milestone : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <param name="description">The description of the milestone.</param>
     /// <param name="priorityLevel">The priority level of the milestone.</param>
     /// <param name="statusType">The status type of the milestone.</param>
-    /// <param name="tenantId">The tenant ID associated with the milestone.</param>
-    public Milestone(Guid id, [NotNull] string name, string description, PriorityLevel priorityLevel, StatusType statusType, Guid? tenantId)
+    public Milestone(Guid id, [NotNull] string name, string description, PriorityLevel priorityLevel, StatusType statusType)
         : base(id)
     {
         SetName(name);
         SetDescription(description);
         PriorityLevel = priorityLevel;
         StatusType = statusType;
-        TenantId = tenantId;
 
         Objectives = new Collection<Objective>();
     }
