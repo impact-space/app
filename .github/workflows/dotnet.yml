@@ -38,6 +38,7 @@ jobs:
       working-directory: aspnet-core
       run: |
         dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover ImpactSpace.Core.sln
+        mkdir -p TestResults
         find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
         ls -la ./TestResults/
 
