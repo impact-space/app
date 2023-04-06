@@ -44,7 +44,7 @@ jobs:
 
     - name: Merge Coverage Reports
       run: |
-        coverlet.console merge "./aspnet-core/TestResults/coverage*.opencover.xml" --target-directory "./aspnet-core/TestResults/" --format opencover
+        coverlet merge "./aspnet-core/TestResults/coverage*.opencover.xml" --target-directory "./aspnet-core/TestResults/" --format opencover
         ls -la ./aspnet-core/TestResults/
 
     - name: Upload coverage report - Solution Tests
