@@ -37,7 +37,7 @@ jobs:
     - name: Test Solution with Coverage
       working-directory: aspnet-core
       run: |
-        dotnet test --configuration Release --no-build --settings coverage.runsettings --blame --max-retries 1 ImpactSpace.Core.sln
+        dotnet test --configuration Release --no-build --settings coverage.runsettings --blame ImpactSpace.Core.sln
         mkdir -p TestResults
         find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
         ls -la ./TestResults/
