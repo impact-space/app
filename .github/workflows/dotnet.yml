@@ -55,5 +55,6 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ./aspnet-core/TestResults/merged/Cobertura.xml
-
+        commit: ${{ github.sha }}
+        slug: ${{ github.repository }}
 
