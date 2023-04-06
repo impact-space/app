@@ -56,13 +56,11 @@ namespace ImpactSpace.Core.Projects;
         /// <param name="projectId">The associated Project's Id.</param>
         /// <param name="skillId">The associated Skill's Id.</param>
         /// <param name="proficiencyLevel">The proficiency level for the skill in the project.</param>
-        /// <param name="tenantId">The Tenant Id for multi-tenancy support.</param>
-        public ProjectSkill(Guid projectId, Guid skillId, ProficiencyLevel proficiencyLevel, Guid? tenantId = null)
+        public ProjectSkill(Guid projectId, Guid skillId, ProficiencyLevel proficiencyLevel)
         {
             ProjectId = projectId;
             SkillId = skillId;
             ProficiencyLevel = proficiencyLevel;
-            TenantId = tenantId;
         }
 
         /// <summary>
