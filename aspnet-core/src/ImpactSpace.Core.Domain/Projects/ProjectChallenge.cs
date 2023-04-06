@@ -23,6 +23,16 @@ public class ProjectChallenge: Entity, IMultiTenant, IHasConcurrencyStamp
     
     public ProjectChallenge(Guid projectId, Guid challengeId)
     {
+        if (projectId == Guid.Empty)
+        {
+            throw new ArgumentException("Project Id cannot be empty.", nameof(projectId));
+        }
+
+        if (challengeId == Guid.Empty)
+        {
+            throw new ArgumentException("Challenge Id cannot be empty.", nameof(challengeId));
+        }
+        
         ProjectId = projectId;
         ChallengeId = challengeId;
     }
