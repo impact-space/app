@@ -37,7 +37,7 @@ jobs:
     - name: Test Solution with Coverage
       working-directory: aspnet-core
       run: |
-        coverlet console --target "dotnet" --targetargs "test --configuration Release --no-build --blame --max-retries 1 ImpactSpace.Core.sln" --format opencover --exclude-by-attribute "GeneratedCodeAttribute" --exclude "ImpactSpace.Core.Migrations.*"
+        dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage;exclude=ImpactSpace.Core.Migrations.*" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover --blame --max-retries 1 ImpactSpace.Core.sln
         mkdir -p TestResults
         find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
         ls -la ./TestResults/
