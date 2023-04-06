@@ -37,7 +37,7 @@ jobs:
     - name: Test Solution with Coverage
       run: |
         dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover aspnet-core/src/ImpactSpace.Core.sln
-        find . -name coverage.opencover.xml -exec cp {} ./aspnet-core/TestResults/ \;
+        find . -name coverage.opencover.xml -exec cp {} ./aspnet-core/src/TestResults/ \;
         ls -la aspnet-core/src/TestResults/
 
     - name: Upload coverage report - Solution Tests
