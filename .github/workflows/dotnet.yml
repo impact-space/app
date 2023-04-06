@@ -34,22 +34,11 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release aspnet-core/ImpactSpace.Core.sln
 
-    - name: Test Application Layer with Coverage
-      run: |
-        coverlet aspnet-core/test/ImpactSpace.Core.Application.Tests/bin/Release/net7.0/ImpactSpace.Core.Application.Tests.dll --target "dotnet" --targetargs "test --no-build --configuration Release aspnet-core/test/ImpactSpace.Core.Application.Tests/ImpactSpace.Core.Application.Tests.csproj" --exclude-by-attribute "xunit.*" --exclude "ImpactSpace.Core.Migrations.*" --format opencover --output ./aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/coverage.opencover.xml
-        ls -la aspnet-core/test/ImpactSpace.Core.Application.Tests/TestResults/
-
-    - name: Test Domain Layer with Coverage
-      run: |
-        coverlet aspnet-core/test/ImpactSpace.Core.Domain.Tests/bin/Release/net7.0/ImpactSpace.Core.Domain.Tests.dll --target "dotnet" --targetargs "test --no-build --configuration Release aspnet-core/test/ImpactSpace.Core.Domain.Tests/ImpactSpace.Core.Domain.Tests.csproj" --exclude-by-attribute "xunit.*" --exclude "ImpactSpace.Core.Migrations.*" --format opencover --output ./aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/coverage.opencover.xml
-        ls -la aspnet-core/test/ImpactSpace.Core.Domain.Tests/TestResults/
-
-
     - name: Test Solution with Coverage
       run: |
-        dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover aspnet-core/ImpactSpace.Core.sln
+        dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover aspnet-core/src/ImpactSpace.Core.sln
         find . -name coverage.opencover.xml -exec cp {} ./aspnet-core/TestResults/ \;
-        ls -la aspnet-core/TestResults/
+        ls -la aspnet-core/src/TestResults/
 
     - name: Upload coverage report - Solution Tests
       uses: codecov/codecov-action@v3
