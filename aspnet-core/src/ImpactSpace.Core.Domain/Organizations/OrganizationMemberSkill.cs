@@ -58,6 +58,16 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     internal OrganizationMemberSkill(Guid organizationMemberId, Guid skillId,
         ProficiencyLevel proficiencyLevel)
     {
+        if (organizationMemberId == Guid.Empty)
+        {
+            throw new ArgumentException("Organization member ID cannot be empty.", nameof(organizationMemberId));
+        }
+        
+        if (skillId == Guid.Empty)
+        {
+            throw new ArgumentException("Skill ID cannot be empty.", nameof(skillId));
+        }
+        
         OrganizationMemberId = organizationMemberId;
         SkillId = skillId;
         SetProficiencyLevel(proficiencyLevel);
