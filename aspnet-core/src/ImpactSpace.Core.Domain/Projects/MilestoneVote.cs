@@ -67,6 +67,21 @@ public class MilestoneVote : AuditedEntity, IMultiTenant
     /// <param name="voteType">The type of vote (UpVote or DownVote).</param>
     public MilestoneVote(Guid milestoneId, Guid organizationMemberId, Guid milestoneVoteAggregateId, VoteType voteType)
     {
+        if (milestoneId == Guid.Empty)
+        {
+            throw new ArgumentException("Milestone Id cannot be empty.", nameof(milestoneId));
+        }
+
+        if (organizationMemberId == Guid.Empty)
+        {
+            throw new ArgumentException("Organization Member Id cannot be empty.", nameof(organizationMemberId));
+        }
+
+        if (milestoneVoteAggregateId == Guid.Empty)
+        {
+            throw new ArgumentException("Milestone Vote Aggregate Id cannot be empty.", nameof(milestoneVoteAggregateId));
+        }
+        
         MilestoneId = milestoneId;
         OrganizationMemberId = organizationMemberId;
         MilestoneVoteAggregateId = milestoneVoteAggregateId;
