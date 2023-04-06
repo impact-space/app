@@ -41,15 +41,19 @@ jobs:
         mkdir -p TestResults
         find . -name coverage.opencover.xml -exec cp {} ./TestResults/ \;
         ls -la ./TestResults/
+        
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
     - name: Merge Coverage Reports
       run: |
-        coverlet merge "./aspnet-core/TestResults/coverage*.opencover.xml" --target-directory "./aspnet-core/TestResults/" --format opencover
-        ls -la ./aspnet-core/TestResults/
+        reportgenerator "-reports:./aspnet-core/TestResults/coverage*.opencover.xml" "-targetdir:./aspnet-core/TestResults/merged" -reporttypes:Cobertura
+        ls -la ./aspnet-core/TestResults/merged
 
     - name: Upload coverage report - Solution Tests
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./aspnet-core/TestResults/merged.coverage.opencover.xml
+        files: ./aspnet-core/TestResults/merged/Cobertura.xml
+
 
