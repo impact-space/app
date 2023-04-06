@@ -48,7 +48,7 @@ namespace ImpactSpace.Core.Projects
         }
 
         public Action(Guid id, [NotNull] string name, string description, StatusType statusType, DateTime? dueDate,
-            PriorityLevel priorityLevel, Guid objectiveId, decimal budget, int estimatedEffort, Guid? tenantId)
+            PriorityLevel priorityLevel, Guid objectiveId, decimal budget, int estimatedEffort)
             : base(id)
         {
             SetName(name);
@@ -59,7 +59,6 @@ namespace ImpactSpace.Core.Projects
             ObjectiveId = objectiveId;
             Budget = budget;
             EstimatedEffort = estimatedEffort;
-            TenantId = tenantId;
 
             OrganizationMemberActions = new Collection<OrganizationMemberAction>();
         }
