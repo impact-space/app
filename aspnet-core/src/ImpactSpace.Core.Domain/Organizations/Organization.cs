@@ -28,12 +28,12 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// <summary>
     /// The list of projects owned by the organization.
     /// </summary>
-    public virtual ICollection<Project> Projects { get; private set; }
+    public virtual ICollection<Project> Projects { get; }
     
     /// <summary>
     /// A list of the members of the organization
     /// </summary>
-    public virtual ICollection<OrganizationMember> OrganizationMembers { get; private set; }
+    public virtual ICollection<OrganizationMember> OrganizationMembers { get; }
     
     public virtual OrganizationProfile OrganizationProfile { get; protected set; }
 
