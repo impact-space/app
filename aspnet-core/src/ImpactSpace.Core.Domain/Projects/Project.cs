@@ -18,27 +18,27 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
 {
     #region Properties
 
-    public virtual string Name { get; private set; }
+    public string Name { get; private set; }
 
-    public virtual string Description { get; private set; }
+    public string Description { get; private set; }
 
-    public virtual DateTime? StartDate { get; private set; }
+    public DateTime? StartDate { get; private set; }
 
-    public virtual DateTime? ActualEndDate { get; private set; }
+    public DateTime? ActualEndDate { get; private set; }
 
-    public virtual string Purpose { get; private set; }
+    public string Purpose { get; private set; }
 
-    public virtual decimal? FundingAllocated { get; private set; }
+    public decimal? FundingAllocated { get; private set; }
 
-    public virtual decimal? FundraisingTarget { get; private set; }
+    public decimal? FundraisingTarget { get; private set; }
 
-    public virtual decimal TotalBudget { get; private set; }
+    public decimal TotalBudget { get; private set; }
 
-    public virtual decimal RemainingBudget { get; private set; }
+    public decimal RemainingBudget { get; private set; }
 
-    public virtual bool IsFeatured { get; private set; }
+    public bool IsFeatured { get; private set; }
 
-    public virtual StatusType StatusType { get; private set; }
+    public StatusType StatusType { get; private set; }
     
     public Guid ProjectCategoryId { get; private set; }
 
@@ -48,9 +48,9 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual OrganizationMember Owner { get; private set; }
 
-    public virtual string ProjectImageUrl { get; private set; }
+    public string ProjectImageUrl { get; private set; }
 
-    public virtual int Progress { get; private set; }
+    public int Progress { get; private set; }
 
     public virtual ICollection<Milestone> Milestones { get; private set; }
 
@@ -64,7 +64,7 @@ public class Project : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual Organization Organization { get; private set; }
 
-    public virtual Guid? TenantId { get; set; }
+    public Guid? TenantId { get; set; }
     public ICollection<ProjectChallenge> ProjectChallenges { get; private set; }
 
     #endregion
