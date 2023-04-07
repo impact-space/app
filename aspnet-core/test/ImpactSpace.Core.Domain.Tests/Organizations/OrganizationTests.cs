@@ -15,7 +15,7 @@ namespace ImpactSpace.Core.Organizations
             var tenantId = Guid.NewGuid();
 
             // Act
-            var organization = new Organization(organizationId, name, tenantId);
+            var organization = new Organization(organizationId, name, tenantId, null);
 
             // Assert
             organization.Name.ShouldBe(name);
@@ -26,7 +26,7 @@ namespace ImpactSpace.Core.Organizations
         public void Change_Name_Should_Update_Name()
         {
             // Arrange
-            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid());
+            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid(), null);
             var newName = "New Test Organization Name";
 
             // Act
@@ -40,7 +40,7 @@ namespace ImpactSpace.Core.Organizations
         public void Change_Description_Should_Update_Description()
         {
             // Arrange
-            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid());
+            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid(), null);
             var newDescription = "New test description.";
 
             // Act
@@ -54,7 +54,7 @@ namespace ImpactSpace.Core.Organizations
         public void Set_Name_Should_Throw_Exception_When_Null_Or_Whitespace()
         {
             // Arrange
-            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid());
+            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid(), null);
 
             // Act & Assert
             
@@ -68,7 +68,7 @@ namespace ImpactSpace.Core.Organizations
         public void Set_Name_Should_Throw_Exception_When_Exceed_Max_Length()
         {
             // Arrange
-            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid());
+            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid(), null);
             var tooLongName = new string('a', OrganizationConstants.MaxNameLength + 1);
 
             // Act & Assert
@@ -79,7 +79,7 @@ namespace ImpactSpace.Core.Organizations
         public void Set_Description_Should_Set_Null_When_Null()
         {
             // Arrange
-            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid());
+            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid(), null);
 
             // Act
             organization.ChangeDescription(null);
@@ -92,7 +92,7 @@ namespace ImpactSpace.Core.Organizations
         public void Set_Description_Should_Throw_Exception_When_Exceed_Max_Length()
         {
             // Arrange
-            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid());
+            var organization = new Organization(Guid.NewGuid(), "Test Organization", Guid.NewGuid(), null);
             var tooLongDescription = new string('a', OrganizationConstants.MaxDescriptionLength + 1);
 
             // Act & Assert

@@ -65,7 +65,7 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
         Guid id, 
         [NotNull] string name, 
         Guid tenantId,
-        [CanBeNull] string description = null)
+        [CanBeNull] string description)
         : base(id)
     {
         SetName(name);
