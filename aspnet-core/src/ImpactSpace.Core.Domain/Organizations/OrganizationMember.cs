@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
@@ -92,14 +93,28 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         return this;
     }
 
-    internal void AddSkill(OrganizationMemberSkill skill)
+    internal void AddOrEditSkill(Guid skillId, ProficiencyLevel proficiencyLevel)
     {
-        OrganizationMemberSkills.Add(Check.NotNull(skill, nameof(skill)));
+        var existingSkill = OrganizationMemberSkills.FirstOrDefault(x => x.SkillId == skillId);
+
+        if (existingSkill != null)
+        {
+            existingSkill.ChangeProficiencyLevel(proficiencyLevel);
+        }
+        else
+        {
+            var skill = new OrganizationMemberSkill(Id, skillId, proficiencyLevel);
+            OrganizationMemberSkills.Add(skill);
+        }
     }
-    
-    internal void RemoveSkill(OrganizationMemberSkill skill)
+
+    internal void RemoveSkill(Guid skillId)
     {
-        OrganizationMemberSkills.Remove(Check.NotNull(skill, nameof(skill)));
+        var skill = OrganizationMemberSkills.FirstOrDefault(x => x.SkillId == skillId);
+        if (skill != null)
+        {
+            OrganizationMemberSkills.Remove(skill);
+        }
     }
     
     private void SetName([NotNull] string name)
