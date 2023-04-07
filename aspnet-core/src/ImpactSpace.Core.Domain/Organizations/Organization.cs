@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using ImpactSpace.Core.Projects;
 using JetBrains.Annotations;
 using Volo.Abp;
@@ -36,7 +35,7 @@ public class Organization : AuditedAggregateRoot<Guid>, IMultiTenant
     /// </summary>
     public virtual ICollection<OrganizationMember> OrganizationMembers { get; private set; }
     
-    public virtual OrganizationProfile OrganizationProfile { get; private set; }
+    public virtual OrganizationProfile OrganizationProfile { get; protected set; }
 
     /// <summary>
     /// Gets or sets the ID of the tenant to which the organization belongs.
