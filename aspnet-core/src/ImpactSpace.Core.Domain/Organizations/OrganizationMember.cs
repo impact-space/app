@@ -28,6 +28,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual Organization Organization { get; protected set; }
     
+    // ReSharper disable once UnassignedGetOnlyAutoProperty
     public Guid? TenantId { get; }
 
     public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; }
