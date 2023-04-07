@@ -13,7 +13,6 @@ namespace ImpactSpace.Core.Organizations;
 
 public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
 {
-    
     public string Name { get; private set; }
     
     public string Email { get; private set; }
@@ -55,15 +54,10 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         Guid organizationId)
         : base(id)
     {
-        if (organizationId == Guid.Empty)
-        {
-            throw new ArgumentException("OrganizationId cannot be empty.");
-        }
-        
         SetName(name);
         SetEmail(email);
         SetPhoneNumber(phone);
-        OrganizationId = organizationId;
+        SetOrganizationId(organizationId);
 
         OrganizationMemberActions = new Collection<OrganizationMemberAction>();
         OrganizationMemberProjects = new Collection<OrganizationMemberProject>();
@@ -130,5 +124,15 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     private void SetPhoneNumber([CanBeNull] PhoneNumber phoneNumber)
     {
         PhoneNumber = phoneNumber;
+    }
+    
+    private void SetOrganizationId(Guid organizationId)
+    {
+        if (organizationId == Guid.Empty)
+        {
+            throw new ArgumentException("OrganizationId cannot be empty.");
+        }
+        
+        OrganizationId = organizationId;
     }
 }
