@@ -20,11 +20,7 @@ public sealed class OrganizationManager : DomainService
         _tenantRepository = tenantRepository;
     }
     
-    public async Task<bool> ExistsForTenantAsync(Guid tenantId)
-    {
-        return await _organizationRepository.FindByTenantIdAsync(tenantId) != null;
-    }
-    
+    #region Crud Operations
     
     public async Task<Organization> CreateAsync(
         [NotNull] string name,
@@ -35,40 +31,65 @@ public sealed class OrganizationManager : DomainService
 
         var existingOrganization = await _organizationRepository.FindByNameAsync(name);
 
-        if (existingOrganization != null)
+        if (existingOrganization != null || await ExistsForTenantAsync(tenantId))
         {
             throw new OrganizationAlreadyExistsException(name);
         }
 
         await _tenantRepository.GetAsync(tenantId);
-
-        return new Organization(
+        
+        var organization = new Organization(
             GuidGenerator.Create(),
             name,
             tenantId,
             description
         );
+
+        return await _organizationRepository.InsertAsync(organization);
     }
 
-    public async Task ChangeNameAsync(
-        [NotNull] Organization organization,
-        [NotNull] string newName)
+    public async Task UpdateAsync(Guid id, string newName, string newDescription)
+    {
+        var organization = await _organizationRepository.GetAsync(id);
+
+        if (organization.Name != newName)
+        {
+            await ChangeNameAsync(organization, newName);
+        }
+
+        organization.ChangeDescription(newDescription);
+
+        await _organizationRepository.UpdateAsync(organization);
+    }
+    
+    public async Task DeleteAsync(Guid id)
+    {
+        await _organizationRepository.GetAsync(id);
+        await _organizationRepository.DeleteAsync(id);
+    }
+    
+    #endregion
+
+    private async Task ChangeNameAsync(Organization organization, string newName)
     {
         Check.NotNull(organization, nameof(organization));
         Check.NotNullOrWhiteSpace(newName, nameof(newName));
 
+        await EnsureNameIsUniqueAsync(newName, organization.Id);
+        organization.ChangeName(newName);
+    }
+    
+    private async Task EnsureNameIsUniqueAsync(string newName, Guid? currentOrganizationId = null)
+    {
         var existingOrganization = await _organizationRepository.FindByNameAsync(newName);
-        if (existingOrganization != null && existingOrganization.Id != organization.Id)
+        if (existingOrganization != null && existingOrganization.Id != currentOrganizationId)
         {
             throw new OrganizationAlreadyExistsException(newName);
         }
-
-        organization.ChangeName(newName);
     }
-
-    public void ChangeDescription([NotNull] Organization organization, [CanBeNull] string description)
+    
+    public async Task<bool> ExistsForTenantAsync(Guid tenantId)
     {
-        Check.NotNull(organization, nameof(organization));
-        organization.ChangeDescription(description);
+        return await _organizationRepository.FindByTenantIdAsync(tenantId) != null;
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImpactSpace.Core.Permissions;
 using Microsoft.AspNetCore.Authorization;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Repositories;
 
@@ -55,38 +54,30 @@ public class OrganizationAppService : CoreAppService, IOrganizationAppService
     
     public async Task<OrganizationDto> CreateAsync(CreateOrganizationDto input)
     {
-        var tenantId = CurrentTenant.Id;
-        Check.NotNull(tenantId, nameof(tenantId));
+        var tenantId = CurrentTenant.Id!.Value;
         
         var organization = await _organizationManager.CreateAsync(
             input.Name,
-            tenantId!.Value,
+            tenantId,
             input.Description
         );
-        
-        await _organizationRepository.InsertAsync(organization);
-        
+
         return ObjectMapper.Map<Organization, OrganizationDto>(organization);
     }
     
     public async Task UpdateAsync(Guid id, UpdateOrganizationDto input)
     {
-        var organization = await _organizationRepository.GetAsync(id);
-        
-        if(organization.Name != input.Name)
-        {
-            await _organizationManager.ChangeNameAsync(organization, input.Name);
-        }
-
-        _organizationManager.ChangeDescription(organization, input.Description);
-
-        await _organizationRepository.UpdateAsync(organization);
+        await _organizationManager.UpdateAsync(id, input.Name, input.Description);
     }
 
     [Authorize(CorePermissions.Organizations.Delete)]
     public async Task DeleteAsync(Guid id)
     {
-        await _organizationRepository.GetAsync(id);
-        await _organizationRepository.DeleteAsync(id);
+        await _organizationManager.DeleteAsync(id);
+    }
+
+    public Task<bool> ExistsForTenantAsync(Guid tenantId)
+    {
+        return _organizationManager.ExistsForTenantAsync(tenantId);
     }
 }

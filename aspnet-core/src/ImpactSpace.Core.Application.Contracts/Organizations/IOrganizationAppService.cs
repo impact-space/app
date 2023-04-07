@@ -16,4 +16,6 @@ public interface IOrganizationAppService : IApplicationService
     Task UpdateAsync(Guid id, UpdateOrganizationDto input);
     
     Task DeleteAsync(Guid id);
+    
+    Task<bool> ExistsForTenantAsync(Guid tenantId);
 }
