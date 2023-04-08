@@ -11,4 +11,5 @@ public static class CoreDomainErrorCodes
     public const string TagAlreadyExists = "Core:00007";
     public const string ProjectAlreadyExists = "Core:00008";
     public const string ChallengeAlreadyExists = "Core:00009";
+    public const string TenantNotAvailable = "Core:00010";
 }
