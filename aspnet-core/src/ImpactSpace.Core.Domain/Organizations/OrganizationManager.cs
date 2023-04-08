@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Volo.Abp;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 using Volo.Abp.TenantManagement;
 
@@ -90,6 +91,6 @@ public sealed class OrganizationManager : DomainService
     
     public async Task<bool> ExistsForTenantAsync(Guid tenantId)
     {
-        return await _organizationRepository.FindByTenantIdAsync(tenantId) != null;
+        return await _organizationRepository.CountAsync(x=>x.TenantId == tenantId) > 0;
     }
 }

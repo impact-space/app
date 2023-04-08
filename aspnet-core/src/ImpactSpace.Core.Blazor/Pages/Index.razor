@@ -1,11 +1,20 @@
 ﻿@page "/"
 @inherits CoreComponentBase
-@if (!CurrentUser.IsAuthenticated)
-{
-    <WelcomeComponent />
-}
-else
-{
-    <Heading Size="HeadingSize.Is4">Dashboard</Heading>
-}
+@inject NavigationManager NavigationManager
+@inject Organizations.IOrganizationAppService OrganizationAppService
+
+<AuthorizeView>
+    <Authorized>
+        <Heading Size="HeadingSize.Is4">Dashboard</Heading>
+        @if (IsSetupWizardRequired)
+        {
+            
+        }
+    </Authorized>
+    <NotAuthorized>
+        <WelcomeComponent />    
+    </NotAuthorized>
+</AuthorizeView>
+    
+
 

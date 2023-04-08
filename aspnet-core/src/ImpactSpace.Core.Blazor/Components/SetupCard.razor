@@ -1,0 +1,77 @@
+@attribute [Authorize]
+@using ImpactSpace.Core.Setup
+@using Volo.Abp.AspNetCore.Components.Web
+@using ImpactSpace.Core.Localization
+@inject ISetupAppService SetupAppService
+@inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+@inherits Volo.Abp.AspNetCore.Components.AbpComponentBase
+<Card>
+    <CardHeader>
+        <CardTitle>@L["OrganizationSetup"]</CardTitle>
+    </CardHeader>
+    <CardBody>
+        <p>@L["SetUpOrganizationPrompt"]</p>
+        <Button Color="Color.Primary" @onclick="() => SetupModal.Show()">@L["SetUpOrganization"]</Button>
+    </CardBody>
+</Card>
+
+<Modal @ref="SetupModal">
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@L["SetUpOrganization"]</ModalTitle>
+                <CloseButton Clicked="CloseSetupModalAsync" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="SetupValidationsRef" Model="@_setupDto" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["OrganizationName"]</FieldLabel>
+                            <TextEdit @bind-Text="@_setupDto.OrganizationName" Autofocus="true">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                        <Field>
+                            <FieldLabel>@L["OrganizationDescription"]</FieldLabel>
+                            <MemoEdit @bind-Text="@_setupDto.OrganizationDescription">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </MemoEdit>
+                        </Field>
+                        <Field>
+                            <FieldLabel>@L["MemberName"]</FieldLabel>
+                            <TextEdit @bind-Text="@_setupDto.MemberName">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                        <Field>
+                            <FieldLabel>@L["MemberEmail"]</FieldLabel>
+                            <TextEdit @bind-Text="@_setupDto.MemberEmail" InputType="InputType.Email">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseSetupModalAsync">
+                    @L["Cancel"]
+                </Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="SubmitSetupAsync">
+                    @L["Save"]
+                </Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
