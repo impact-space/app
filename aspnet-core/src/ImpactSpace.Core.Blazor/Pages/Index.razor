@@ -6,15 +6,12 @@
 <AuthorizeView>
     <Authorized>
         <Heading Size="HeadingSize.Is4">Dashboard</Heading>
-        @if (IsSetupWizardRequired)
+        @if (IsSetupRequired)
         {
-            
+            <SetupCard OnSetupCompleted="OnSetupCompleted" />  
         }
     </Authorized>
     <NotAuthorized>
         <WelcomeComponent />    
     </NotAuthorized>
 </AuthorizeView>
-    
-
-

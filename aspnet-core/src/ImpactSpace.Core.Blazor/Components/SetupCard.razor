@@ -4,7 +4,9 @@
 @using ImpactSpace.Core.Localization
 @inject ISetupAppService SetupAppService
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
-@inherits Volo.Abp.AspNetCore.Components.AbpComponentBase
+
+@inherits CoreComponentBase
+
 <Card>
     <CardHeader>
         <CardTitle>@L["OrganizationSetup"]</CardTitle>
@@ -33,6 +35,8 @@
                                 </Feedback>
                             </TextEdit>
                         </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["OrganizationDescription"]</FieldLabel>
                             <MemoEdit @bind-Text="@_setupDto.OrganizationDescription">
@@ -41,6 +45,8 @@
                                 </Feedback>
                             </MemoEdit>
                         </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["MemberName"]</FieldLabel>
                             <TextEdit @bind-Text="@_setupDto.MemberName">
@@ -49,6 +55,8 @@
                                 </Feedback>
                             </TextEdit>
                         </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["MemberEmail"]</FieldLabel>
                             <TextEdit @bind-Text="@_setupDto.MemberEmail" InputType="InputType.Email">

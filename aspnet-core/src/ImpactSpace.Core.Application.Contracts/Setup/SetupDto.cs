@@ -17,6 +17,7 @@ namespace ImpactSpace.Core.Setup
         public string MemberName { get; set; }
         
         [Required]
+        [EmailAddress]
         [StringLength(OrganizationMemberConsts.MaxEmailLength)]
         public string MemberEmail { get; set; }
     }
