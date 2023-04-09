@@ -8,7 +8,9 @@
         <Heading Size="HeadingSize.Is4">Dashboard</Heading>
         @if (IsSetupRequired)
         {
-            <SetupCard OnSetupCompleted="OnSetupCompleted" />  
+            <CardDeck>
+                <SetupCard OnSetupCompleted="OnSetupCompleted" /> 
+            </CardDeck>
         }
     </Authorized>
     <NotAuthorized>

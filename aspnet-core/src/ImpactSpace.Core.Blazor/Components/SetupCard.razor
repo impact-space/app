@@ -9,11 +9,18 @@
 
 <Card>
     <CardHeader>
-        <CardTitle>@L["OrganizationSetup"]</CardTitle>
+        <CardHeader TextAlignment="TextAlignment.Center">
+            <Icon Name="IconName.HandsHelping" IconSize="@IconSize.x8"/>
+        </CardHeader>
     </CardHeader>
-    <CardBody>
-        <p>@L["SetUpOrganizationPrompt"]</p>
-        <Button Color="Color.Primary" @onclick="() => SetupModal.Show()">@L["SetUpOrganization"]</Button>
+    <CardBody TextAlignment="TextAlignment.Center">
+        <CardTitle>@L["OrganizationSetup"]</CardTitle>
+        <CardText>@L["SetupOrganizationPrompt"]</CardText>
+        <CardActions >
+            <Button Color="Color.Primary" @onclick="() => SetupModal.Show()">
+                @L["SetupOrganization"]
+            </Button>
+        </CardActions>
     </CardBody>
 </Card>
 
@@ -21,7 +28,7 @@
     <ModalContent IsCentered="true">
         <Form>
             <ModalHeader>
-                <ModalTitle>@L["SetUpOrganization"]</ModalTitle>
+                <ModalTitle>@L["SetupOrganization"]</ModalTitle>
                 <CloseButton Clicked="CloseSetupModalAsync" />
             </ModalHeader>
             <ModalBody>
