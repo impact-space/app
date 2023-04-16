@@ -28,6 +28,7 @@ using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.BlobStoring;
+using Volo.Abp.BlobStoring.FileSystem;
 using Volo.Abp.Identity.Blazor.Server;
 using Volo.Abp.Modularity;
 using Volo.Abp.OpenIddict;
@@ -123,7 +124,7 @@ public class CoreBlazorModule : AbpModule
         ConfigureUrls(configuration);
         ConfigureBundles();
         ConfigureAutoMapper();
-        ConfigureBlobStorage();
+        ConfigureBlobStorage(configuration);
         ConfigureVirtualFileSystem(hostingEnvironment);
         ConfigureSwaggerServices(context.Services);
         ConfigureAutoApiControllers();
@@ -132,13 +133,16 @@ public class CoreBlazorModule : AbpModule
         ConfigureMenu(context);
     }
 
-    private void ConfigureBlobStorage()
+    private void ConfigureBlobStorage(IConfiguration configuration)
     {
         Configure<AbpBlobStoringOptions>(options =>
         {
             options.Containers.ConfigureDefault(container =>
             {
-                
+                container.UseFileSystem(fileSystem =>
+                {
+                    fileSystem.BasePath = configuration["BlobStoring:FileSystem:BasePath"];
+                });
             });
         });
     }
