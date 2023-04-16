@@ -1,0 +1,78 @@
+@page "/organization-profile"
+@attribute [Authorize]
+@* @inject IBlobContainer<OrganizationProfileLogoContainer> LogoBlobContainer *@
+@using ImpactSpace.Core.Localization
+@using ImpactSpace.Core.Organizations
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using Volo.Abp.AspNetCore.Components.Web
+@inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+@inject IOrganizationProfileAppService OrganizationProfileAppService
+@inherits CoreComponentBase
+
+<PageTitle>@L["OrganizationProfile"]</PageTitle>
+
+<Validations @ref="OrganizationProfileValidations" Model="@OrganizationProfileDto" ValidateOnLoad="false">
+    <Validation MessageLocalizer="@LH.Localize">
+        <Field>
+            <FieldLabel>@L["MissionStatement"]</FieldLabel>
+            <TextEdit @bind-Text="@OrganizationProfileDto.MissionStatement" >
+                <Feedback>
+                    <ValidationError />
+                </Feedback>
+            </TextEdit>
+        </Field>
+    </Validation>
+
+    <Validation MessageLocalizer="@LH.Localize">
+        <Field>
+            <FieldLabel>@L["Website"]</FieldLabel>
+            <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="TextRole.Url">
+                <Feedback>
+                    <ValidationError />
+                </Feedback>
+            </TextEdit>
+        </Field>
+    </Validation>
+
+    <Validation MessageLocalizer="@LH.Localize">
+        <Field>
+            <FieldLabel>@L["PhoneNumber"]</FieldLabel>
+            <TextEdit @bind-Phone="@OrganizationProfileDto.PhoneNumber" Role="TextRole.Telephone">
+                <Feedback>
+                    <ValidationError />
+                </Feedback>
+            </TextEdit>
+        </Field>
+    </Validation>
+
+    <Validation MessageLocalizer="@LH.Localize">
+        <Field>
+            <FieldLabel>@L["Email"]</FieldLabel>
+            <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="TextRole.Email">
+                <Feedback>
+                    <ValidationError />
+                </Feedback>
+            </TextEdit>
+        </Field>
+    </Validation>
+
+    <!-- Add components for managing social media links following the same validation pattern -->
+
+    <Validation MessageLocalizer="@LH.Localize">
+        <Field>
+            <FieldLabel>@L["Logo"]</FieldLabel>
+            <FileEdit Name="Logo" OnChange="UpdateLogo" >
+                <Feedback>
+                    <ValidationError />
+                </Feedback>
+            </FileEdit>
+        </Field>
+    </Validation>
+
+    <Field>
+        <Button Color="Color.Primary" Type="@ButtonType.Submit" PreventDefaultOnSubmit="true" Clicked="SubmitAsync">
+            @L["Save"]
+        </Button>
+    </Field>
+</Validations>

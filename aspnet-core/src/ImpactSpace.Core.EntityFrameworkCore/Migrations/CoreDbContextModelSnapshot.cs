@@ -2538,7 +2538,7 @@ namespace ImpactSpace.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ImpactSpace.Core.Common.PhoneNumber", "PhoneNumber", b1 =>
+                    b.OwnsOne("ImpactSpace.Core.Organizations.OrganizationMember.PhoneNumber#ImpactSpace.Core.Common.PhoneNumber", "PhoneNumber", b1 =>
                         {
                             b1.Property<Guid>("OrganizationMemberId")
                                 .HasColumnType("uuid");
@@ -2553,13 +2553,13 @@ namespace ImpactSpace.Core.Migrations
 
                             b1.HasKey("OrganizationMemberId");
 
-                            b1.ToTable("AppOrganizationMembers");
+                            b1.ToTable("AppOrganizationMembers", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrganizationMemberId");
                         });
 
-                    b.OwnsMany("ImpactSpace.Core.Organizations.SocialMediaLink", "SocialMediaLinks", b1 =>
+                    b.OwnsMany("ImpactSpace.Core.Organizations.OrganizationMember.SocialMediaLinks#ImpactSpace.Core.Organizations.SocialMediaLink", "SocialMediaLinks", b1 =>
                         {
                             b1.Property<Guid>("OrganizationMemberId")
                                 .HasColumnType("uuid");
@@ -2678,7 +2678,7 @@ namespace ImpactSpace.Core.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("ImpactSpace.Core.Common.PhoneNumber", "PhoneNumber", b1 =>
+                    b.OwnsOne("ImpactSpace.Core.Organizations.OrganizationProfile.PhoneNumber#ImpactSpace.Core.Common.PhoneNumber", "PhoneNumber", b1 =>
                         {
                             b1.Property<Guid>("OrganizationProfileId")
                                 .HasColumnType("uuid");
@@ -2693,13 +2693,13 @@ namespace ImpactSpace.Core.Migrations
 
                             b1.HasKey("OrganizationProfileId");
 
-                            b1.ToTable("AppOrganizationProfiles");
+                            b1.ToTable("AppOrganizationProfiles", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("OrganizationProfileId");
                         });
 
-                    b.OwnsMany("ImpactSpace.Core.Organizations.SocialMediaLink", "SocialMediaLinks", b1 =>
+                    b.OwnsMany("ImpactSpace.Core.Organizations.OrganizationProfile.SocialMediaLinks#ImpactSpace.Core.Organizations.SocialMediaLink", "SocialMediaLinks", b1 =>
                         {
                             b1.Property<Guid>("OrganizationProfileId")
                                 .HasColumnType("uuid");

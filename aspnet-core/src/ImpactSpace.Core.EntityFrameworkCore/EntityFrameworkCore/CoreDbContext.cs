@@ -1,4 +1,4 @@
-﻿using ImpactSpace.Core.Challenges;
+using ImpactSpace.Core.Challenges;
 using ImpactSpace.Core.Organizations;
 using ImpactSpace.Core.Projects;
 using ImpactSpace.Core.Skills;
