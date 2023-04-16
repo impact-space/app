@@ -28,7 +28,7 @@ using Volo.Abp.AspNetCore.Serilog;
 using Volo.Abp.Autofac;
 using Volo.Abp.AutoMapper;
 using Volo.Abp.BlobStoring;
-using Volo.Abp.BlobStoring.FileSystem;
+using Volo.Abp.BlobStoring.Minio;
 using Volo.Abp.Identity.Blazor.Server;
 using Volo.Abp.Modularity;
 using Volo.Abp.OpenIddict;
@@ -139,9 +139,12 @@ public class CoreBlazorModule : AbpModule
         {
             options.Containers.ConfigureDefault(container =>
             {
-                container.UseFileSystem(fileSystem =>
+                container.UseMinio(minio =>
                 {
-                    fileSystem.BasePath = configuration["BlobStoring:FileSystem:BasePath"];
+                    minio.EndPoint = configuration["BlobStoring:Minio:EndPoint"];
+                    minio.AccessKey = configuration["BlobStoring:Minio:AccessKey"];
+                    minio.SecretKey = configuration["BlobStoring:Minio:SecretKey"];
+                    minio.BucketName = configuration["BlobStoring:Minio:BucketName"];
                 });
             });
         });

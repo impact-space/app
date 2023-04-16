@@ -29,7 +29,7 @@
     <ProjectReference Include="..\ImpactSpace.Core.HttpApi\ImpactSpace.Core.HttpApi.csproj" />
     <ProjectReference Include="..\ImpactSpace.Core.EntityFrameworkCore\ImpactSpace.Core.EntityFrameworkCore.csproj" />
     <PackageReference Include="Volo.Abp.Autofac" Version="7.1.0" />
-    <PackageReference Include="Volo.Abp.BlobStoring.FileSystem" Version="7.1.1" />
+    <PackageReference Include="Volo.Abp.BlobStoring.Minio" Version="7.1.1" />
     <PackageReference Include="Volo.Abp.Swashbuckle" Version="7.1.0" />
     <PackageReference Include="Volo.Abp.AspNetCore.Serilog" Version="7.1.0" />
     <PackageReference Include="Volo.Abp.Account.Web.OpenIddict" Version="7.1.0" />
