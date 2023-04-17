@@ -13,6 +13,7 @@ using ImpactSpace.Core.Blazor.Menus;
 using ImpactSpace.Core.EntityFrameworkCore;
 using ImpactSpace.Core.Localization;
 using ImpactSpace.Core.MultiTenancy;
+using ImpactSpace.Core.Organizations;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
@@ -145,7 +146,13 @@ public class CoreBlazorModule : AbpModule
                     minio.AccessKey = configuration["BlobStoring:Minio:AccessKey"];
                     minio.SecretKey = configuration["BlobStoring:Minio:SecretKey"];
                     minio.BucketName = configuration["BlobStoring:Minio:BucketName"];
+                    minio.CreateBucketIfNotExists = true;
                 });
+            });
+            
+            options.Containers.Configure<OrganizationProfileLogoContainer>(logoContainer =>
+            {
+                logoContainer.IsMultiTenant = false;
             });
         });
     }

@@ -21,8 +21,27 @@ services:
     volumes:
       - minio_storage:/data
     environment:
-      MINIO_ROOT_USER: minio
-      MINIO_ROOT_PASSWORD: minio#password
+      MINIO_ROOT_USER: VOP0SlJugcnCkIjB
+      MINIO_ROOT_PASSWORD: nem1ySovw1YTaPpg0VK1kMKSVYkTeXyW
     command: server --console-address ":9001" /data
+  minio_client:
+    image: minio/mc
+    depends_on:
+      - minio
+    environment:
+      MINIO_SERVER: minio:9000
+      MINIO_ACCESS_KEY: VOP0SlJugcnCkIjB
+      MINIO_SECRET_KEY: nem1ySovw1YTaPpg0VK1kMKSVYkTeXyW
+      MINIO_BUCKET_NAME: impactspace.io
+    entrypoint: /bin/sh -c "
+      echo Waiting for minio server to start...;
+      while ! curl -sSf http://minio:9000/minio/health/ready; do sleep 1; done;
+      echo Connected to minio server, configuring...;
+      /usr/bin/mc alias set minio http://minio:9000 $$MINIO_ACCESS_KEY $$MINIO_SECRET_KEY;
+      echo Creating the bucket...;
+      /usr/bin/mc mb --ignore-existing minio/$$MINIO_BUCKET_NAME;
+      echo Bucket created.;
+      tail -f /dev/null;
+      "
 volumes:
   minio_storage: {}

@@ -11,17 +11,15 @@ namespace ImpactSpace.Core.Blazor.Pages;
 
 public partial class OrganizationProfile
 {
-    protected UpdateOrganizationProfileDto OrganizationProfileDto = new();
+    protected OrganizationProfileCreateUpdateDto OrganizationProfileDto = new();
     private Validations OrganizationProfileValidations;
     [Inject] protected NavigationManager NavigationManager { get; set; }
-    [Inject] protected ILogoFileAppService LogoFileAppService { get; set; }
     
-    private readonly IList<string> _imageDataUrls = new List<string>();
     private string _getLogoImage;
 
     protected override async Task OnInitializedAsync()
     {
-        OrganizationProfileDto = ObjectMapper.Map<OrganizationProfileDto, UpdateOrganizationProfileDto>(await OrganizationProfileAppService.GetAsync());
+        OrganizationProfileDto = ObjectMapper.Map<OrganizationProfileDto, OrganizationProfileCreateUpdateDto>(await OrganizationProfileAppService.GetAsync());
         // Load the logo and set it to the file edit component.
     }
 
@@ -32,7 +30,7 @@ public partial class OrganizationProfile
             return;
         }
 
-        await OrganizationProfileAppService.UpdateAsync(OrganizationProfileDto);
+        //await OrganizationProfileAppService.UpdateAsync(OrganizationProfileDto);
         
         /*if (_organizationProfileDto.Logo != null)
         {
@@ -48,32 +46,4 @@ public partial class OrganizationProfile
     {
         _organizationProfileDto.Logo = e.File;
     }*/
-    
-    private async Task OnInputFileChange(InputFileChangeEventArgs e)
-    {
-        var maxAllowedFiles = 1;
-        var format = "image/jpeg";
-
-        foreach (var imageFile in e.GetMultipleFiles(maxAllowedFiles))
-        {
-            var resizedImageFile = await imageFile.RequestImageFileAsync(format, 100, 100);
-            var buffer = new byte[resizedImageFile.Size];
-            await resizedImageFile.OpenReadStream().ReadAsync(buffer);
-
-            // await FileAppService.SaveBlobAsync(new SaveBlobInputDto { Name = imageFile.Name, Content = buffer });
-            await LogoFileAppService.SaveLogoBlobAsync(new SaveLogoBlobInputDto { Name = "MyImageNme.jpeg", Content = buffer });
-
-            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-            _imageDataUrls.Add(imageDataUrl);
-        }
-    }
-
-    private async Task GetImageFromDb()
-    {
-        var format = "image/jpeg";
-        var blob = await LogoFileAppService.GetLogoBlobAsync(new GetLogoBlobRequestDto { Name = "MyImageNme.jpeg" });
-
-        _getLogoImage = $"data:{format};base64,{Convert.ToBase64String(blob.Content)}";
-
-    }
 }
