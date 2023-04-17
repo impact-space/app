@@ -1,13 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using ImpactSpace.Core.Common;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Configuration;
 using Volo.Abp.BlobStoring;
 using Volo.Abp.Domain.Services;
 
 namespace ImpactSpace.Core.Organizations;
 
-public class OrganizationProfileManager : DomainService
+public sealed class OrganizationProfileManager : DomainService
 {
     private readonly IOrganizationProfileRepository _organizationProfileRepository;
     private readonly IBlobContainer<OrganizationProfileLogoContainer> _blobContainer;
@@ -26,41 +27,61 @@ public class OrganizationProfileManager : DomainService
 
     public async Task<OrganizationProfile> CreateAsync(
         Guid organizationId, 
-        string missionStatement, 
-        string website, 
-        PhoneCountryCode phoneNumberCountryCode,
-        string phoneNumber,
-        string email, 
-        string logoBase64)
+        [CanBeNull] string missionStatement, 
+        [CanBeNull] string website, 
+        [CanBeNull] PhoneCountryCode? phoneNumberCountryCode,
+        [CanBeNull] string phoneNumber,
+        [CanBeNull] string email, 
+        [CanBeNull] string logoBase64)
     {
-        var logoUrl = await UploadLogoAsync(organizationId, logoBase64);
-
+        string logoUrl = null;
+        
+        if (!logoBase64.IsNullOrEmpty())
+        {
+            logoUrl = await UploadLogoAsync(organizationId, logoBase64);
+        }
+        
         var organizationProfile = new OrganizationProfile(
-            id: GuidGenerator.Create(),
-            organizationId: organizationId,
-            missionStatement: missionStatement,
-            websiteUrl: website,
-            phoneNumber: new PhoneNumber(phoneNumberCountryCode, phoneNumber),
-            email: email,
-            logoUrl: logoUrl
+            GuidGenerator.Create(),
+            organizationId,
+            missionStatement,
+            website,
+            phoneNumberCountryCode,
+            phoneNumber,
+            email,
+            logoUrl
         );
+        
+        organizationProfile.ChangePhoneNumber(phoneNumberCountryCode, phoneNumber);
 
         return await _organizationProfileRepository.InsertAsync(organizationProfile);
     }
     
-    public async Task UpdateAsync(Guid organizationId, string missionStatement, string website, PhoneCountryCode phoneCountryCode, string nationalNumber, string email, string logoBase64)
+    public async Task UpdateAsync(
+        Guid organizationId, 
+        [CanBeNull] string missionStatement, 
+        [CanBeNull] string website, 
+        [CanBeNull] PhoneCountryCode? phoneCountryCode, 
+        [CanBeNull] string nationalNumber, 
+        [CanBeNull] string email, 
+        [CanBeNull] string logoBase64)
     {
         var organizationProfile = await _organizationProfileRepository.GetByOrganizationIdAsync(organizationId);
 
         organizationProfile.ChangeMissionStatement(missionStatement);
         organizationProfile.ChangeWebsite(website);
-        organizationProfile.ChangePhoneNumber(new PhoneNumber(phoneCountryCode, nationalNumber));
+        organizationProfile.ChangePhoneNumber(phoneCountryCode, nationalNumber);
         organizationProfile.ChangeEmail(email);
 
         if (!string.IsNullOrEmpty(logoBase64))
         {
             var newLogoUrl = await UploadLogoAsync(organizationId, logoBase64);
             organizationProfile.ChangeLogoUrl(newLogoUrl);
+        }
+        else
+        {
+            await DeleteLogoAsync(organizationId);
+            organizationProfile.ChangeLogoUrl(null);
         }
 
         await _organizationProfileRepository.UpdateAsync(organizationProfile);
@@ -69,17 +90,23 @@ public class OrganizationProfileManager : DomainService
     private async Task<string> UploadLogoAsync(Guid organizationId, string logoBase64)
     {
         var bytes = Convert.FromBase64String(logoBase64);
-        var fileName = $"{organizationId}.png";
+        var fileName = $"{organizationId}";
 
         await _blobContainer.SaveAsync(fileName, bytes, true);
         
         return GenerateLogoUrl(fileName);
     }
     
+    private async Task DeleteLogoAsync(Guid organizationId)
+    {
+        var fileName = $"{organizationId}";
+        await _blobContainer.DeleteAsync(fileName);
+    }
+    
     private string GenerateLogoUrl(string fileName)
     {
-        var minioEndpoint = _configuration["Minio:EndPoint"]; // Get the Minio endpoint from the configuration
-        var bucketName = OrganizationProfileLogoContainer.GetContainerName(); // Get the container name from the IBlobContainer instance
+        var minioEndpoint = _configuration["Minio:EndPoint"]; 
+        var bucketName = OrganizationProfileLogoContainer.GetContainerName(); 
         return $"{minioEndpoint}/{bucketName}/{fileName}";
     }
 }

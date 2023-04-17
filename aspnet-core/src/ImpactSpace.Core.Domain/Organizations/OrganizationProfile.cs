@@ -38,7 +38,8 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         Guid organizationId, 
         [CanBeNull] string missionStatement, 
         [CanBeNull] string websiteUrl,
-        [CanBeNull] PhoneNumber phoneNumber,
+        [CanBeNull] PhoneCountryCode? countryCode,
+        [CanBeNull] string nationalNumber,
         [CanBeNull] string email,
         [CanBeNull] string logoUrl)
         : base(id)
@@ -52,7 +53,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         SetMissionStatement(missionStatement);
         SetWebsite(websiteUrl);
         SetLogoUrl(logoUrl);
-        SetPhoneNumber(phoneNumber);
+        SetPhoneNumber(countryCode, nationalNumber);
         SetEmail(email);
         SocialMediaLinks = new Collection<SocialMediaLink>();
     }
@@ -66,6 +67,18 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
     internal OrganizationProfile ChangeWebsite([CanBeNull] string websiteUrl)
     {
         SetWebsite(websiteUrl);
+        return this;
+    }
+    
+    internal OrganizationProfile ChangePhoneNumber([CanBeNull] PhoneCountryCode? phoneCountryCode, [CanBeNull] string nationalNumber)
+    {
+        if (phoneCountryCode == null && nationalNumber == null)
+        {
+            SetPhoneNumber(null);
+            return this;
+        }
+        
+        SetPhoneNumber(phoneCountryCode, nationalNumber);
         return this;
     }
     
@@ -109,6 +122,17 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         Website = websiteUrl;
     }
     
+    private void SetPhoneNumber([CanBeNull] PhoneCountryCode? countryCode, [CanBeNull] string nationalNumber)
+    {
+        if (countryCode == null || nationalNumber == null)
+        {
+            SetPhoneNumber(null);
+            return;
+        }
+        
+        SetPhoneNumber(new PhoneNumber(countryCode.Value, nationalNumber));
+    }
+
     private void SetPhoneNumber([CanBeNull] PhoneNumber phoneNumber)
     {
         PhoneNumber = phoneNumber;

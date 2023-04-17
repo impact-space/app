@@ -12,10 +12,8 @@ namespace ImpactSpace.Core.Blazor.Pages;
 public partial class OrganizationProfile
 {
     protected OrganizationProfileCreateUpdateDto OrganizationProfileDto = new();
-    private Validations OrganizationProfileValidations;
+    protected Validations OrganizationProfileValidations;
     [Inject] protected NavigationManager NavigationManager { get; set; }
-    
-    private string _getLogoImage;
 
     protected override async Task OnInitializedAsync()
     {
