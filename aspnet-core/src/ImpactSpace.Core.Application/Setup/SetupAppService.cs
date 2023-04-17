@@ -5,7 +5,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Setup;
 
-public sealed class SetupAppService : CoreAppService, ISetupAppService
+public class SetupAppService : CoreAppService, ISetupAppService
 {
     private readonly SetupManager _setupManager;
     private readonly ICurrentTenant _currentTenant;
