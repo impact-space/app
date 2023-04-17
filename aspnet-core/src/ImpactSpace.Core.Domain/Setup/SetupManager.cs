@@ -12,16 +12,19 @@ namespace ImpactSpace.Core.Setup;
 public class SetupManager : DomainService
 {
     private readonly IOrganizationRepository _organizationRepository;
+    private readonly IOrganizationProfileRepository _organizationProfileRepository;
     private readonly IRepository<OrganizationMember, Guid> _organizationMemberRepository;
     private readonly IDataFilter _dataFilter;
     
     public SetupManager(
         IOrganizationRepository organizationRepository,
         IRepository<OrganizationMember, Guid> organizationMemberRepository, 
+        IOrganizationProfileRepository organizationProfileRepository,
         IDataFilter dataFilter)
     {
         _organizationRepository = organizationRepository;
         _organizationMemberRepository = organizationMemberRepository;
+        _organizationProfileRepository = organizationProfileRepository;
         _dataFilter = dataFilter;
     }
 
@@ -74,5 +77,23 @@ public class SetupManager : DomainService
         await _organizationMemberRepository.InsertAsync(organizationMember);
         
         return organizationMember;
+    }
+
+    public async Task<OrganizationProfile> CreateOrganizationProfileAsync(Guid organizationId)
+    {
+        var organizationProfile = new OrganizationProfile(
+            id: GuidGenerator.Create(),
+            organizationId,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
+        await _organizationProfileRepository.InsertAsync(organizationProfile);
+
+        return organizationProfile;
     }
 }

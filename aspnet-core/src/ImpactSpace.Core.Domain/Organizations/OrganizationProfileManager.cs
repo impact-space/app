@@ -13,7 +13,6 @@ public sealed class OrganizationProfileManager : DomainService
     private readonly IOrganizationProfileRepository _organizationProfileRepository;
     private readonly IBlobContainer<OrganizationProfileLogoContainer> _blobContainer;
     private readonly IConfiguration _configuration;
-    
 
     public OrganizationProfileManager(
         IOrganizationProfileRepository organizationProfileRepository, 

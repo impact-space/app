@@ -5,7 +5,7 @@ using Volo.Abp.MultiTenancy;
 
 namespace ImpactSpace.Core.Setup;
 
-public class SetupAppService : CoreAppService, ISetupAppService
+public sealed class SetupAppService : CoreAppService, ISetupAppService
 {
     private readonly SetupManager _setupManager;
     private readonly ICurrentTenant _currentTenant;
@@ -26,15 +26,21 @@ public class SetupAppService : CoreAppService, ISetupAppService
         {
             throw new TenantNotAvailableException();
         }
+        
         var organization = await _setupManager.CreateOrganizationAsync(
             input.OrganizationName,
             input.OrganizationDescription,
             tenantId.Value
         );
 
-        var organizationMember = await _setupManager.CreateOrganizationMemberAsync(
+        await _setupManager.CreateOrganizationMemberAsync(
             input.MemberName,
             input.MemberEmail,
+            organization.Id
+        );
+
+        // set up a blank organization profile
+        await _setupManager.CreateOrganizationProfileAsync(
             organization.Id
         );
 
