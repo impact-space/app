@@ -3,13 +3,13 @@ namespace ImpactSpace.Core.Blazor.Pages;
 
 public partial class Index
 {
-    public bool IsSetupRequired { get; set; }
+    public bool IsOrganizationSetupRequired { get; set; }
     
     protected override async Task OnInitializedAsync()
     {
         if (CurrentUser.IsAuthenticated && CurrentTenant.Id.HasValue)
         {
-            IsSetupRequired = await CheckIfSetupIsRequiredAsync();
+            IsOrganizationSetupRequired = await CheckIfSetupIsRequiredAsync();
         }
     }
     
@@ -17,7 +17,7 @@ public partial class Index
     {
         // Refresh the dashboard or update the IsSetupRequired property as needed.
         // For example, you can call a method to check if the setup is still required:
-        IsSetupRequired = await CheckIfSetupIsRequiredAsync();
+        IsOrganizationSetupRequired = await CheckIfSetupIsRequiredAsync();
     }
     
     private async Task<bool> CheckIfSetupIsRequiredAsync()

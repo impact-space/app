@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace ImpactSpace.Core.Blazor.Components;
 
-public partial class SetupCard
+public partial class OrganizationSetupCard
 {
     private SetupDto _setupDto = new();
     private Modal SetupModal { get; set; }
