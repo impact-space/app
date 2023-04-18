@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Blazorise;
 using ImpactSpace.Core.Blobs;
+using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Organizations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -17,8 +20,13 @@ public partial class OrganizationProfile
 
     protected override async Task OnInitializedAsync()
     {
-        OrganizationProfileDto = ObjectMapper.Map<OrganizationProfileDto, OrganizationProfileCreateUpdateDto>(await OrganizationProfileAppService.GetAsync());
-        // Load the logo and set it to the file edit component.
+        var organizationProfileDto = await OrganizationProfileAppService.GetAsync();
+        
+        OrganizationProfileDto = organizationProfileDto != null 
+            ? ObjectMapper.Map<OrganizationProfileDto, OrganizationProfileCreateUpdateDto>(organizationProfileDto) 
+            : new OrganizationProfileCreateUpdateDto();
+        
+        OrganizationProfileDto.SocialMediaLinks = organizationProfileDto?.SocialMediaLinks ?? new List<SocialMediaLinkDto>();
     }
 
     private async Task SubmitAsync()
@@ -28,20 +36,40 @@ public partial class OrganizationProfile
             return;
         }
 
-        //await OrganizationProfileAppService.UpdateAsync(OrganizationProfileDto);
-        
-        /*if (_organizationProfileDto.Logo != null)
+        try
         {
-            await OrganizationProfileAppService.SaveLogoAsync(_organizationProfileDto.Id, _organizationProfileDto.Logo.Content);
-        }*/
-
-        // Save the social media links and any other additional fields.
-
-        NavigationManager.NavigateTo("/");
+            await OrganizationProfileAppService.UpdateAsync(OrganizationProfileDto.OrganizationId, OrganizationProfileDto);
+        }
+        catch (Exception ex)
+        {
+            await HandleErrorAsync(ex);
+        }
+        
     }
 
-    /*private void UpdateLogo(FileChangedEventArgs e)
+    private async Task OnLogoChanged(FileChangedEventArgs e)
     {
-        _organizationProfileDto.Logo = e.File;
-    }*/
+        var file = e.Files.FirstOrDefault();
+        if (file != null)
+        {
+            using var streamReader = new MemoryStream();
+            await file.WriteToStreamAsync(streamReader);
+            OrganizationProfileDto.LogoBase64 = Convert.ToBase64String(streamReader.ToArray());
+        }
+        else
+        {
+            OrganizationProfileDto.LogoBase64 = null;
+        }
+    }
+    
+    private SocialMediaLinkDto GetSocialMediaLink(SocialMediaPlatform platform)
+    {
+        var link = OrganizationProfileDto.SocialMediaLinks.FirstOrDefault(x => x.Platform == platform);
+        if (link == null)
+        {
+            link = new SocialMediaLinkDto { Platform = platform, Url = null };
+            OrganizationProfileDto.SocialMediaLinks.Add(link);
+        }
+        return link;
+    }
 }

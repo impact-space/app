@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Components
 @using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
 @using Volo.Abp.AspNetCore.Components.Web
+@using ImpactSpace.Core.Common
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
 @inject IOrganizationProfileAppService OrganizationProfileAppService
 @inherits CoreComponentBase
@@ -57,16 +58,28 @@
         </Field>
     </Validation>
 
-    <!-- Add components for managing social media links following the same validation pattern -->
+    @foreach (SocialMediaPlatform platform in Enum.GetValues(typeof(SocialMediaPlatform)))
+    {
+        <Validation MessageLocalizer="@LH.Localize">
+            <Field>
+                <FieldLabel>@platform</FieldLabel>
+                <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="TextRole.Url">
+                    <Feedback>
+                        <ValidationError />
+                    </Feedback>
+                </TextEdit>
+            </Field>
+        </Validation>
+    }
 
     <Validation MessageLocalizer="@LH.Localize">
         <Field>
             <FieldLabel>@L["Logo"]</FieldLabel>
-            <FileEdit Name="Logo" OnChange="UpdateLogo" >
+            <FilePicker Filter="image/*" Changed="OnLogoChanged" >
                 <Feedback>
                     <ValidationError />
                 </Feedback>
-            </FileEdit>
+            </FilePicker>
         </Field>
     </Validation>
 
