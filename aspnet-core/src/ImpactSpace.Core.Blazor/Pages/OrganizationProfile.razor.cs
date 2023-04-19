@@ -4,18 +4,23 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazorise;
-using ImpactSpace.Core.Blobs;
 using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Organizations;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
+using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
 
 namespace ImpactSpace.Core.Blazor.Pages;
 
 public partial class OrganizationProfile
 {
     protected OrganizationProfileCreateUpdateDto OrganizationProfileDto = new();
+    
     protected Validations OrganizationProfileValidations;
+    
+    protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems = new(2);
+    
+    protected PageToolbar Toolbar { get; } = new();
+    
     [Inject] protected NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -27,6 +32,22 @@ public partial class OrganizationProfile
             : new OrganizationProfileCreateUpdateDto();
         
         OrganizationProfileDto.SocialMediaLinks = organizationProfileDto?.SocialMediaLinks ?? new List<SocialMediaLinkDto>();
+    }
+    
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await SetBreadcrumbItemsAsync();
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    private ValueTask SetBreadcrumbItemsAsync()
+    {
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem(L["Menu:OrganizationManagement"].Value));
+        BreadcrumbItems.Add(new Volo.Abp.BlazoriseUI.BreadcrumbItem(L["Menu:Profile"].Value));
+        return ValueTask.CompletedTask;
     }
 
     private async Task SubmitAsync()
