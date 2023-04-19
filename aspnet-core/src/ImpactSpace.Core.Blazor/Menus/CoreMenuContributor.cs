@@ -36,6 +36,39 @@ public class CoreMenuContributor : IMenuContributor
                 order: 0
             )
         );
+        
+        context.Menu.Items.Add(
+            new ApplicationMenuItem(
+                CoreMenus.OrganizationManagement,
+                l["Menu:OrganizationManagement"],
+                icon: "fas fa-building",
+                order: 1
+            ).AddItem(
+                new ApplicationMenuItem(
+                    CoreMenus.Organization,
+                    l["Menu:Organization"],
+                    url: "/organization",
+                    icon: "fas fa-building",
+                    requiredPermissionName: CorePermissions.OrganizationManagement.Organization
+                )
+            ).AddItem(
+                new ApplicationMenuItem(
+                    CoreMenus.Profile,
+                    l["Menu:Profile"],
+                    url: "/organization-profile",
+                    icon: "fas fa-user-tie",
+                    requiredPermissionName: CorePermissions.OrganizationManagement.Profile
+                )
+            ).AddItem(
+                new ApplicationMenuItem(
+                    CoreMenus.Members,
+                    l["Menu:Members"],
+                    url: "/organization-members",
+                    icon: "fas fa-users",
+                    requiredPermissionName: CorePermissions.OrganizationManagement.Members
+                )
+            )
+        );
 
         // Add SkillManagement menu items to the Administration area
         administration.AddItem(

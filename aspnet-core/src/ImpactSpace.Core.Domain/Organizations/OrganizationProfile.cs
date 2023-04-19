@@ -18,7 +18,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public string Website { get; private set; }
     
-    public PhoneNumber PhoneNumber { get; private set; }
+    public string PhoneNumber { get; private set; }
     
     public string Email { get; private set; }
     
@@ -38,8 +38,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         Guid organizationId, 
         [CanBeNull] string missionStatement, 
         [CanBeNull] string websiteUrl,
-        [CanBeNull] PhoneCountryCode? countryCode,
-        [CanBeNull] string nationalNumber,
+        [CanBeNull] string phoneNumber,
         [CanBeNull] string email,
         [CanBeNull] string logoUrl)
         : base(id)
@@ -53,7 +52,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         SetMissionStatement(missionStatement);
         SetWebsite(websiteUrl);
         SetLogoUrl(logoUrl);
-        SetPhoneNumber(countryCode, nationalNumber);
+        SetPhoneNumber(phoneNumber);
         SetEmail(email);
         SocialMediaLinks = new Collection<SocialMediaLink>();
     }
@@ -70,19 +69,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         return this;
     }
     
-    internal OrganizationProfile ChangePhoneNumber([CanBeNull] PhoneCountryCode? phoneCountryCode, [CanBeNull] string nationalNumber)
-    {
-        if (phoneCountryCode == null && nationalNumber == null)
-        {
-            SetPhoneNumber(null);
-            return this;
-        }
-        
-        SetPhoneNumber(phoneCountryCode, nationalNumber);
-        return this;
-    }
-    
-    internal OrganizationProfile ChangePhoneNumber([CanBeNull] PhoneNumber phoneNumber)
+    internal OrganizationProfile ChangePhoneNumber([CanBeNull] string phoneNumber)
     {
         SetPhoneNumber(phoneNumber);
         return this;
@@ -122,18 +109,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         Website = websiteUrl;
     }
     
-    private void SetPhoneNumber([CanBeNull] PhoneCountryCode? countryCode, [CanBeNull] string nationalNumber)
-    {
-        if (countryCode == null || nationalNumber == null)
-        {
-            SetPhoneNumber(null);
-            return;
-        }
-        
-        SetPhoneNumber(new PhoneNumber(countryCode.Value, nationalNumber));
-    }
-
-    private void SetPhoneNumber([CanBeNull] PhoneNumber phoneNumber)
+    private void SetPhoneNumber([CanBeNull] string phoneNumber)
     {
         PhoneNumber = phoneNumber;
     }

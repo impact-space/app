@@ -16,7 +16,8 @@ public class OrganizationProfileDto
     [StringLength(CommonConstants.MaxWebsiteLength)]
     public string Website { get; set; }
     
-    public PhoneNumberDto PhoneNumber { get; set; }
+    [Phone]
+    public string PhoneNumber { get; set; }
     
     [EmailAddress]
     public string Email { get; set; }

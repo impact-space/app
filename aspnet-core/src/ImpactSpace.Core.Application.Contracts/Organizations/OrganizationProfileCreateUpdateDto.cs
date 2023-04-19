@@ -13,10 +13,13 @@ public class OrganizationProfileCreateUpdateDto
 
     public string MissionStatement { get; set; }
 
+    [Url]
     public string Website { get; set; }
 
-    public PhoneNumberDto PhoneNumber { get; set; }
+    [Phone]
+    public string PhoneNumber { get; set; }
 
+    [EmailAddress]
     public string Email { get; set; }
 
     public string LogoBase64 { get; set; }

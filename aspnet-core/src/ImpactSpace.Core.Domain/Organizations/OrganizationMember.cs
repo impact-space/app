@@ -18,7 +18,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public string Email { get; private set; }
     
-    public PhoneNumber PhoneNumber { get; private set; }
+    public string PhoneNumber { get; private set; }
 
     public Guid? IdentityUserId { get; protected set; }
     
@@ -52,7 +52,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         Guid id, 
         [NotNull] string name, 
         [NotNull] string email, 
-        PhoneNumber phone,
+        [CanBeNull] string phone,
         Guid organizationId)
         : base(id)
     {
@@ -82,7 +82,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         return this;
     }
     
-    internal OrganizationMember ChangePhoneNumber([CanBeNull] PhoneNumber phoneNumber)
+    internal OrganizationMember ChangePhoneNumber([CanBeNull] string phoneNumber)
     {
         SetPhoneNumber(phoneNumber);
         return this;
@@ -137,7 +137,7 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
         Email = email;
     }
     
-    private void SetPhoneNumber([CanBeNull] PhoneNumber phoneNumber)
+    private void SetPhoneNumber([CanBeNull] string phoneNumber)
     {
         PhoneNumber = phoneNumber;
     }

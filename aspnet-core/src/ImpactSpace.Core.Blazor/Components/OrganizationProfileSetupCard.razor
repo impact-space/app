@@ -1,0 +1,24 @@
+@attribute [Authorize]
+@using Volo.Abp.AspNetCore.Components.Web
+@using ImpactSpace.Core.Localization
+@inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+@inject NavigationManager NavigationManager
+
+@inherits CoreComponentBase
+
+<Card>
+    <CardHeader>
+        <CardHeader TextAlignment="TextAlignment.Center">
+            <Icon Name="IconName.Image" IconSize="@IconSize.x8"/>
+        </CardHeader>
+    </CardHeader>
+    <CardBody TextAlignment="TextAlignment.Center">
+        <CardTitle>@L["OrganizationProfileSetup"]</CardTitle>
+        <CardText>@L["SetupOrganizationProfilePrompt"]</CardText>
+        <CardActions >
+            <Button Color="Color.Primary" @onclick="NavigateToOrganizationProfile">
+                @L["Setup"]
+            </Button>
+        </CardActions>
+    </CardBody>
+</Card>

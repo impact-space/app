@@ -54,8 +54,7 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
             input.OrganizationId,
             input.MissionStatement,
             input.Website,
-            input.PhoneNumber.CountryCode,
-            input.PhoneNumber.NationalNumber,
+            input.PhoneNumber,
             input.Email,
             input.LogoBase64
         );
@@ -70,10 +69,14 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
             organizationId,
             input.MissionStatement,
             input.Website,
-            input.PhoneNumber.CountryCode,
-            input.PhoneNumber.NationalNumber,
+            input.PhoneNumber,
             input.Email,
             input.LogoBase64
         );
+    }
+
+    public Task<bool> ExistsForTenantAsync(Guid tenantId)
+    {
+        return _organizationProfileManager.ExistsForTenantAsync(tenantId);
     }
 }

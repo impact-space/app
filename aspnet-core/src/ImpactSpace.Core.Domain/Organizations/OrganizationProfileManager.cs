@@ -27,8 +27,7 @@ public sealed class OrganizationProfileManager : DomainService
     public async Task<OrganizationProfile> CreateAsync(
         Guid organizationId, 
         [CanBeNull] string missionStatement, 
-        [CanBeNull] string website, 
-        [CanBeNull] PhoneCountryCode? phoneNumberCountryCode,
+        [CanBeNull] string website,
         [CanBeNull] string phoneNumber,
         [CanBeNull] string email, 
         [CanBeNull] string logoBase64)
@@ -45,13 +44,12 @@ public sealed class OrganizationProfileManager : DomainService
             organizationId,
             missionStatement,
             website,
-            phoneNumberCountryCode,
             phoneNumber,
             email,
             logoUrl
         );
         
-        organizationProfile.ChangePhoneNumber(phoneNumberCountryCode, phoneNumber);
+        organizationProfile.ChangePhoneNumber(phoneNumber);
 
         return await _organizationProfileRepository.InsertAsync(organizationProfile);
     }
@@ -59,9 +57,8 @@ public sealed class OrganizationProfileManager : DomainService
     public async Task UpdateAsync(
         Guid organizationId, 
         [CanBeNull] string missionStatement, 
-        [CanBeNull] string website, 
-        [CanBeNull] PhoneCountryCode? phoneCountryCode, 
-        [CanBeNull] string nationalNumber, 
+        [CanBeNull] string website,
+        [CanBeNull] string phoneNumber, 
         [CanBeNull] string email, 
         [CanBeNull] string logoBase64)
     {
@@ -69,7 +66,7 @@ public sealed class OrganizationProfileManager : DomainService
 
         organizationProfile.ChangeMissionStatement(missionStatement);
         organizationProfile.ChangeWebsite(website);
-        organizationProfile.ChangePhoneNumber(phoneCountryCode, nationalNumber);
+        organizationProfile.ChangePhoneNumber(phoneNumber);
         organizationProfile.ChangeEmail(email);
 
         if (!string.IsNullOrEmpty(logoBase64))
@@ -107,5 +104,10 @@ public sealed class OrganizationProfileManager : DomainService
         var minioEndpoint = _configuration["Minio:EndPoint"]; 
         var bucketName = OrganizationProfileLogoContainer.GetContainerName(); 
         return $"{minioEndpoint}/{bucketName}/{fileName}";
+    }
+
+    public async Task<bool> ExistsForTenantAsync(Guid tenantId)
+    {
+        return await _organizationProfileRepository.ExistsForTenantAsync(tenantId);
     }
 }

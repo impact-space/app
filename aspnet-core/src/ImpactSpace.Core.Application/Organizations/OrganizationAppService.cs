@@ -77,7 +77,7 @@ public class OrganizationAppService : CoreAppService, IOrganizationAppService
         await _organizationManager.UpdateAsync(id, input.Name, input.Description);
     }
 
-    [Authorize(CorePermissions.Organizations.Delete)]
+    [Authorize(CorePermissions.OrganizationManagement.Delete)]
     public async Task DeleteAsync(Guid id)
     {
         await _organizationManager.DeleteAsync(id);

@@ -54,7 +54,8 @@ namespace ImpactSpace.Core.Blazor;
     typeof(AbpAspNetCoreMvcUiLeptonXLiteThemeModule),
     typeof(AbpIdentityBlazorServerModule),
     typeof(AbpTenantManagementBlazorServerModule),
-    typeof(AbpSettingManagementBlazorServerModule)
+    typeof(AbpSettingManagementBlazorServerModule),
+    typeof(AbpBlobStoringMinioModule)
    )]
 public class CoreBlazorModule : AbpModule
 {
@@ -148,11 +149,6 @@ public class CoreBlazorModule : AbpModule
                     minio.BucketName = configuration["BlobStoring:Minio:BucketName"];
                     minio.CreateBucketIfNotExists = true;
                 });
-            });
-            
-            options.Containers.Configure<OrganizationProfileLogoContainer>(logoContainer =>
-            {
-                logoContainer.IsMultiTenant = false;
             });
         });
     }

@@ -88,7 +88,6 @@ public class SetupManager : DomainService
             null,
             null,
             null,
-            null,
             null
         );
 

@@ -1,15 +1,25 @@
 ﻿@page "/"
+@using ImpactSpace.Core.Organizations
+
 @inherits CoreComponentBase
 @inject NavigationManager NavigationManager
-@inject Organizations.IOrganizationAppService OrganizationAppService
+@inject IOrganizationAppService OrganizationAppService
+@inject IOrganizationProfileAppService OrganizationProfileAppService
 
 <AuthorizeView>
     <Authorized>
         <Heading Size="HeadingSize.Is4">Dashboard</Heading>
-        @if (IsOrganizationSetupRequired)
+        @if (IsOrganizationSetupRequired || IsOrganizationProfileSetupRequired)
         {
             <CardDeck>
-                <OrganizationSetupCard OnSetupCompleted="OnSetupCompleted" /> 
+                @if (IsOrganizationSetupRequired)
+                {
+                    <OrganizationSetupCard OnSetupCompleted="OnSetupCompleted"/>    
+                }
+                else if (IsOrganizationProfileSetupRequired)
+                {
+                    <OrganizationProfileSetupCard />    
+                }        
             </CardDeck>
         }
     </Authorized>

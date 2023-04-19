@@ -25,7 +25,15 @@ public class CorePermissionDefinitionProvider : PermissionDefinitionProvider
         challengesGroup.AddChild(CorePermissions.GlobalTypes.Challenges.Create, L("Permission:GlobalTypes.Challenges.Create"), MultiTenancySides.Host);
         challengesGroup.AddChild(CorePermissions.GlobalTypes.Challenges.Edit, L("Permission:GlobalTypes.Challenges.Edit"), MultiTenancySides.Host);
         challengesGroup.AddChild(CorePermissions.GlobalTypes.Challenges.Delete, L("Permission:GlobalTypes.Challenges.Delete"), MultiTenancySides.Host);
-    
+        
+        var organizationGroup = context.AddGroup(CorePermissions.OrganizationManagement.Default, L("Permission:OrganizationManagement"));
+        organizationGroup.AddPermission(CorePermissions.OrganizationManagement.Create, L("Permission:OrganizationManagement.Create"), MultiTenancySides.Tenant);
+        organizationGroup.AddPermission(CorePermissions.OrganizationManagement.Edit, L("Permission:OrganizationManagement.Edit"), MultiTenancySides.Tenant);
+        organizationGroup.AddPermission(CorePermissions.OrganizationManagement.Delete, L("Permission:OrganizationManagement.Delete"), MultiTenancySides.Tenant);
+        organizationGroup.AddPermission(CorePermissions.OrganizationManagement.Organization, L("Permission:OrganizationManagement.Organization"), MultiTenancySides.Tenant);
+        organizationGroup.AddPermission(CorePermissions.OrganizationManagement.Profile, L("Permission:OrganizationManagement.Profile"), MultiTenancySides.Tenant);
+        organizationGroup.AddPermission(CorePermissions.OrganizationManagement.Members, L("Permission:OrganizationManagement.Members"), MultiTenancySides.Tenant);
+
     }
 
     private static LocalizableString L(string name)

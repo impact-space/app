@@ -1,10 +1,8 @@
 @page "/organization-profile"
 @attribute [Authorize]
-@* @inject IBlobContainer<OrganizationProfileLogoContainer> LogoBlobContainer *@
 @using ImpactSpace.Core.Localization
 @using ImpactSpace.Core.Organizations
 @using Microsoft.AspNetCore.Components
-@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
 @using Volo.Abp.AspNetCore.Components.Web
 @using ImpactSpace.Core.Common
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
@@ -28,7 +26,7 @@
     <Validation MessageLocalizer="@LH.Localize">
         <Field>
             <FieldLabel>@L["Website"]</FieldLabel>
-            <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="TextRole.Url">
+            <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="@TextRole.Url">
                 <Feedback>
                     <ValidationError />
                 </Feedback>
@@ -38,8 +36,8 @@
 
     <Validation MessageLocalizer="@LH.Localize">
         <Field>
-            <FieldLabel>@L["PhoneNumber"]</FieldLabel>
-            <TextEdit @bind-Phone="@OrganizationProfileDto.PhoneNumber" Role="TextRole.Telephone">
+            <FieldLabel>@L["Phone"]</FieldLabel>
+            <TextEdit @bind-Text="@OrganizationProfileDto.PhoneNumber" Role="@TextRole.Telephone">
                 <Feedback>
                     <ValidationError />
                 </Feedback>
@@ -50,7 +48,7 @@
     <Validation MessageLocalizer="@LH.Localize">
         <Field>
             <FieldLabel>@L["Email"]</FieldLabel>
-            <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="TextRole.Email">
+            <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="@TextRole.Email">
                 <Feedback>
                     <ValidationError />
                 </Feedback>
@@ -63,7 +61,7 @@
         <Validation MessageLocalizer="@LH.Localize">
             <Field>
                 <FieldLabel>@platform</FieldLabel>
-                <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="TextRole.Url">
+                <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="@TextRole.Url">
                     <Feedback>
                         <ValidationError />
                     </Feedback>

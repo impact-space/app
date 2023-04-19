@@ -12,4 +12,9 @@ public class CoreMenus
     public const string Skills = GlobalTypes + ".Skills";
     public const string ChallengeManagement = GlobalTypes + ".ChallengeManagement";
 
+    // Add Organization Management menu constants
+    public const string OrganizationManagement = Prefix + ".OrganizationManagement";
+    public const string Organization = OrganizationManagement + ".Organization";
+    public const string Profile = OrganizationManagement + ".Profile";
+    public const string Members = OrganizationManagement + ".Members";
 }

@@ -42,10 +42,11 @@ public static class OrganizationsConfigurationExtensions
                 .HasMaxLength(CommonConstants.MaxWebsiteLength);
             b.Property(x => x.Email)
                 .HasMaxLength(CommonConstants.MaxEmailLength);
+            b.Property(x => x.PhoneNumber)
+                .HasMaxLength(CommonConstants.MaxNationalNumberLength);
             b.Property(x => x.LogoUrl)
                 .HasMaxLength(OrganizationProfileConstants.MaxLogoUrlLength);
-
-            b.OwnsOne(x => x.PhoneNumber, PhoneNumberConfiguration);
+            
             b.OwnsMany(x => x.SocialMediaLinks, sm =>
             {
                 sm.WithOwner().HasForeignKey("OrganizationProfileId");
@@ -69,6 +70,8 @@ public static class OrganizationsConfigurationExtensions
             b.Property(x => x.Email)
                 .IsRequired()
                 .HasMaxLength(CommonConstants.MaxEmailLength);
+            b.Property(x => x.PhoneNumber)
+                .HasMaxLength(CommonConstants.MaxNationalNumberLength);
 
             b.HasOne(x => x.Organization)
                 .WithMany(x => x.OrganizationMembers)
@@ -94,7 +97,6 @@ public static class OrganizationsConfigurationExtensions
                 .HasForeignKey(x => x.OwnerId)
                 .IsRequired(false);
             
-            b.OwnsOne(x => x.PhoneNumber, PhoneNumberConfiguration);
             b.OwnsMany(x => x.SocialMediaLinks, sm =>
             {
                 sm.WithOwner().HasForeignKey("OrganizationMemberId");
@@ -168,21 +170,5 @@ public static class OrganizationsConfigurationExtensions
                 .WithMany(x => x.OrganizationMemberProjects)
                 .HasForeignKey(x => x.ProjectId);
         });
-    }
-    
-    private static void PhoneNumberConfiguration(OwnedNavigationBuilder<OrganizationProfile, PhoneNumber> builder)
-    {
-        builder.Property(x => x.CountryCode).IsRequired();
-        builder.Property(x => x.NationalNumber)
-            .IsRequired()
-            .HasMaxLength(CommonConstants.MaxNationalNumberLength);
-    }
-    
-    private static void PhoneNumberConfiguration(OwnedNavigationBuilder<OrganizationMember, PhoneNumber> builder)
-    {
-        builder.Property(x => x.CountryCode).IsRequired();
-        builder.Property(x => x.NationalNumber)
-            .IsRequired()
-            .HasMaxLength(CommonConstants.MaxNationalNumberLength);
     }
 }

@@ -13,4 +13,6 @@ public interface IOrganizationProfileAppService : IApplicationService
     Task<Guid> CreateAsync(OrganizationProfileCreateUpdateDto input);
     
     Task UpdateAsync(Guid organizationId, OrganizationProfileCreateUpdateDto input);
+    
+    Task<bool> ExistsForTenantAsync(Guid currentTenantId);
 }

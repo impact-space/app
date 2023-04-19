@@ -35,15 +35,14 @@ public static class CorePermissions
         }
     }
 
-    public static class Organizations
+    public static class OrganizationManagement
     {
-        public const string Default = OrganizationGroupName + ".Default";
-        public const string Manage = Default + ".Manage";
+        public const string Default = OrganizationGroupName + ".OrganizationManagement";
+        public const string Organization = Default + ".Organization";
+        public const string Profile = Default + ".Profile";
+        public const string Members = Default + ".Members";
         public const string Create = Default + ".Create";
         public const string Edit = Default + ".Edit";
         public const string Delete = Default + ".Delete";
-
     }
-    
-
 }
