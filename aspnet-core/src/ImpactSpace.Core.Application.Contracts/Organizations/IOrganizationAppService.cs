@@ -18,4 +18,6 @@ public interface IOrganizationAppService : IApplicationService
     Task DeleteAsync(Guid id);
     
     Task<bool> ExistsForTenantAsync(Guid tenantId);
+    
+    Task<OrganizationDto> GetForTenantAsync(Guid tenantId);
 }

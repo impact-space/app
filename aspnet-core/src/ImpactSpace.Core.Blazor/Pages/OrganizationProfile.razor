@@ -8,6 +8,7 @@
 @using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
 @inject IOrganizationProfileAppService OrganizationProfileAppService
+@inject IOrganizationAppService OrganizationAppService
 @inherits CoreComponentBase
 
 <PageHeader Title="@L["OrganizationProfile"]" 
@@ -15,79 +16,97 @@
             Toolbar="@Toolbar">
 </PageHeader>
 
-<Validations @ref="OrganizationProfileValidations" Model="@OrganizationProfileDto" ValidateOnLoad="false">
-    <Validation MessageLocalizer="@LH.Localize">
-        <Field>
-            <FieldLabel>@L["MissionStatement"]</FieldLabel>
-            <TextEdit @bind-Text="@OrganizationProfileDto.MissionStatement" >
-                <Feedback>
-                    <ValidationError />
-                </Feedback>
-            </TextEdit>
-        </Field>
-    </Validation>
-
-    <Validation MessageLocalizer="@LH.Localize">
-        <Field>
-            <FieldLabel>@L["Website"]</FieldLabel>
-            <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="@TextRole.Url">
-                <Feedback>
-                    <ValidationError />
-                </Feedback>
-            </TextEdit>
-        </Field>
-    </Validation>
-
-    <Validation MessageLocalizer="@LH.Localize">
-        <Field>
-            <FieldLabel>@L["Phone"]</FieldLabel>
-            <TextEdit @bind-Text="@OrganizationProfileDto.PhoneNumber" Role="@TextRole.Telephone">
-                <Feedback>
-                    <ValidationError />
-                </Feedback>
-            </TextEdit>
-        </Field>
-    </Validation>
-
-    <Validation MessageLocalizer="@LH.Localize">
-        <Field>
-            <FieldLabel>@L["Email"]</FieldLabel>
-            <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="@TextRole.Email">
-                <Feedback>
-                    <ValidationError />
-                </Feedback>
-            </TextEdit>
-        </Field>
-    </Validation>
-
-    @foreach (SocialMediaPlatform platform in Enum.GetValues(typeof(SocialMediaPlatform)))
-    {
-        <Validation MessageLocalizer="@LH.Localize">
-            <Field>
-                <FieldLabel>@platform</FieldLabel>
-                <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="@TextRole.Url">
-                    <Feedback>
-                        <ValidationError />
-                    </Feedback>
-                </TextEdit>
-            </Field>
-        </Validation>
-    }
-
-    <Validation MessageLocalizer="@LH.Localize">
-        <Field>
-            <FieldLabel>@L["Logo"]</FieldLabel>
-            <FilePicker Filter="image/*" Changed="OnLogoChanged" >
-                <Feedback>
-                    <ValidationError />
-                </Feedback>
-            </FilePicker>
-        </Field>
-    </Validation>
-
-    <Field>
-        <Button Color="Color.Primary" Type="@ButtonType.Submit" PreventDefaultOnSubmit="true" Clicked="SubmitAsync">
-            @L["Save"]
-        </Button>
-    </Field>
-</Validations>
+<Container>
+    <Row>
+        <Column ColumnSize="ColumnSize.Is12">
+            <Card>
+                <CardBody>
+                    <Validations @ref="OrganizationProfileValidations" Mode="ValidationMode.Auto" Model="@OrganizationProfileDto" ValidateOnLoad="false">
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is12">
+                                <Validation MessageLocalizer="@LH.Localize">
+                                    <Field>
+                                        <FieldLabel>@L["MissionStatement"]</FieldLabel>
+                                        <MemoEdit @bind-Text="@OrganizationProfileDto.MissionStatement" Rows="5">
+                                            <Feedback>
+                                                <ValidationError />
+                                            </Feedback>
+                                        </MemoEdit>
+                                    </Field>
+                                </Validation>
+                            </Column>
+                        </Row>
+                    <Row>
+                        <Column ColumnSize="ColumnSize.Is4">
+                            <h5>@L["ContactInfo"]</h5>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>@L["Website"]</FieldLabel>
+                                    <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="@TextRole.Url">
+                                        <Feedback>
+                                            <ValidationError/>
+                                        </Feedback>
+                                    </TextEdit>
+                                </Field>
+                            </Validation>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>@L["Phone"]</FieldLabel>
+                                    <TextEdit @bind-Text="@OrganizationProfileDto.PhoneNumber" Role="@TextRole.Telephone">
+                                        <Feedback>
+                                            <ValidationError/>
+                                        </Feedback>
+                                    </TextEdit>
+                                </Field>
+                            </Validation>
+                            <Validation MessageLocalizer="@LH.Localize">
+                                <Field>
+                                    <FieldLabel>@L["Email"]</FieldLabel>
+                                    <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="@TextRole.Email">
+                                        <Feedback>
+                                            <ValidationError/>
+                                        </Feedback>
+                                    </TextEdit>
+                                </Field>
+                            </Validation>
+                        </Column>
+                        <Column ColumnSize="ColumnSize.Is8">
+                            <h5>@L["SocialMediaLinks"]</h5>
+                            @foreach (SocialMediaPlatform platform in Enum.GetValues(typeof(SocialMediaPlatform)))
+                            {
+                                <Validation MessageLocalizer="@LH.Localize">
+                                    <Field>
+                                        <FieldLabel>@platform</FieldLabel>
+                                        <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="@TextRole.Url">
+                                            <Feedback>
+                                                <ValidationError />
+                                            </Feedback>
+                                        </TextEdit>
+                                    </Field>
+                                </Validation>
+                            }
+                        </Column>
+                    </Row>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is12">
+                                <Field>
+                                    <FieldLabel>@L["Logo"]</FieldLabel>
+                                    <FileEdit Filter="image/*" Changed="OnLogoChanged" />
+                                </Field>
+                            </Column>
+                        </Row>
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is4">
+                                <Field>
+                                    <Button Color="Color.Primary" Type="@ButtonType.Submit" PreventDefaultOnSubmit="true" Clicked="SubmitAsync">
+                                        @L["Save"]
+                                    </Button>
+                                </Field>
+                            </Column>
+                        </Row>
+                    </Validations>
+                </CardBody>
+            </Card>
+        </Column>
+    </Row>
+</Container>

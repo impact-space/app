@@ -87,4 +87,11 @@ public class OrganizationAppService : CoreAppService, IOrganizationAppService
     {
         return _organizationManager.ExistsForTenantAsync(tenantId);
     }
+
+    public async Task<OrganizationDto> GetForTenantAsync(Guid tenantId)
+    {
+        var organization = await _organizationRepository.FindByTenantIdAsync(tenantId);
+        
+        return ObjectMapper.Map<Organization, OrganizationDto>(organization);
+    }
 }

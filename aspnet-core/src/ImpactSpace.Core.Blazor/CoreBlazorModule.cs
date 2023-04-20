@@ -14,6 +14,7 @@ using ImpactSpace.Core.EntityFrameworkCore;
 using ImpactSpace.Core.Localization;
 using ImpactSpace.Core.MultiTenancy;
 using ImpactSpace.Core.Organizations;
+using Microsoft.AspNetCore.SignalR;
 using OpenIddict.Validation.AspNetCore;
 using Volo.Abp;
 using Volo.Abp.Account.Web;
@@ -133,6 +134,12 @@ public class CoreBlazorModule : AbpModule
         ConfigureBlazorise(context);
         ConfigureRouter(context);
         ConfigureMenu(context);
+        ConfigureHubOptions();
+    }
+
+    private void ConfigureHubOptions()
+    {
+        Configure<HubOptions>(options => { options.DisableImplicitFromServicesParameters = true; });
     }
 
     private void ConfigureBlobStorage(IConfiguration configuration)
@@ -248,6 +255,7 @@ public class CoreBlazorModule : AbpModule
         Configure<AbpAspNetCoreMvcOptions>(options =>
         {
             options.ConventionalControllers.Create(typeof(CoreApplicationModule).Assembly);
+            options.ConventionalControllers.FormBodyBindingIgnoredTypes.Add(typeof(OrganizationProfileCreateUpdateDto));
         });
     }
 

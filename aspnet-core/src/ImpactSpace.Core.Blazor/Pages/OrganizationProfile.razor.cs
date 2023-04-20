@@ -8,6 +8,7 @@ using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Organizations;
 using Microsoft.AspNetCore.Components;
 using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
+using Volo.Abp.Content;
 
 namespace ImpactSpace.Core.Blazor.Pages;
 
@@ -19,18 +20,36 @@ public partial class OrganizationProfile
     
     protected List<Volo.Abp.BlazoriseUI.BreadcrumbItem> BreadcrumbItems = new(2);
     
+    protected bool IsNew { get; set; }
+    
     protected PageToolbar Toolbar { get; } = new();
+    
+    private string logoContent;
     
     [Inject] protected NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         var organizationProfileDto = await OrganizationProfileAppService.GetAsync();
-        
-        OrganizationProfileDto = organizationProfileDto != null 
-            ? ObjectMapper.Map<OrganizationProfileDto, OrganizationProfileCreateUpdateDto>(organizationProfileDto) 
-            : new OrganizationProfileCreateUpdateDto();
-        
+
+        if (organizationProfileDto != null)
+        {
+            OrganizationProfileDto =
+                ObjectMapper.Map<OrganizationProfileDto, OrganizationProfileCreateUpdateDto>(organizationProfileDto);
+
+            IsNew = false;
+        }
+        else
+        {
+            OrganizationProfileDto = new OrganizationProfileCreateUpdateDto();
+
+            var organizationDto = await OrganizationAppService.GetForTenantAsync(CurrentTenant.Id!.Value);
+            
+            OrganizationProfileDto.OrganizationId = organizationDto.Id;
+
+            IsNew = true;
+        }
+
         OrganizationProfileDto.SocialMediaLinks = organizationProfileDto?.SocialMediaLinks ?? new List<SocialMediaLinkDto>();
     }
     
@@ -56,10 +75,19 @@ public partial class OrganizationProfile
         {
             return;
         }
-
+        
         try
         {
-            await OrganizationProfileAppService.UpdateAsync(OrganizationProfileDto.OrganizationId, OrganizationProfileDto);
+            if (IsNew)
+            {
+                await OrganizationProfileAppService.CreateAsync(OrganizationProfileDto);
+                IsNew = false;
+            }
+            else
+            {
+                await OrganizationProfileAppService.UpdateAsync(OrganizationProfileDto.OrganizationId, OrganizationProfileDto);    
+            }
+            
         }
         catch (Exception ex)
         {
@@ -68,21 +96,6 @@ public partial class OrganizationProfile
         
     }
 
-    private async Task OnLogoChanged(FileChangedEventArgs e)
-    {
-        var file = e.Files.FirstOrDefault();
-        if (file != null)
-        {
-            using var streamReader = new MemoryStream();
-            await file.WriteToStreamAsync(streamReader);
-            OrganizationProfileDto.LogoBase64 = Convert.ToBase64String(streamReader.ToArray());
-        }
-        else
-        {
-            OrganizationProfileDto.LogoBase64 = null;
-        }
-    }
-    
     private SocialMediaLinkDto GetSocialMediaLink(SocialMediaPlatform platform)
     {
         var link = OrganizationProfileDto.SocialMediaLinks.FirstOrDefault(x => x.Platform == platform);
@@ -92,5 +105,34 @@ public partial class OrganizationProfile
             OrganizationProfileDto.SocialMediaLinks.Add(link);
         }
         return link;
+    }
+
+    private async Task OnLogoChanged(FileChangedEventArgs e)
+    {
+        try
+        {
+            var file = e.Files.FirstOrDefault();
+            if (file != null)
+            {
+                using var stream = new MemoryStream();
+                await file.WriteToStreamAsync(stream);
+                stream.Position = 0; // Reset the position of the stream
+
+                byte[] fileBytes = stream.ToArray();
+                OrganizationProfileDto.Logo = Convert.ToBase64String(fileBytes);
+            }
+            else
+            {
+                OrganizationProfileDto.Logo = null;
+            }
+        }
+        catch ( Exception exc )
+        {
+            Console.WriteLine( exc.Message );
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
 }

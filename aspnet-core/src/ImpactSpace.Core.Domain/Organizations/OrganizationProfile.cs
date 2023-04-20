@@ -27,7 +27,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
     public virtual ICollection<SocialMediaLink> SocialMediaLinks { get; private set; }
     
     // ReSharper disable once UnassignedGetOnlyAutoProperty
-    public Guid? TenantId { get; }
+    public Guid? TenantId { get; set; }
 
     protected OrganizationProfile()
     {

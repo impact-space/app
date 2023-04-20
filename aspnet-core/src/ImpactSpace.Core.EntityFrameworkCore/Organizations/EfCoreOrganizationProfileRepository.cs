@@ -16,7 +16,8 @@ public class EfCoreOrganizationProfileRepository : EfCoreRepository<CoreDbContex
     public async Task<OrganizationProfile> GetByOrganizationIdAsync(Guid organizationId)
     {
         var dbSet = await GetDbSetAsync();
-        return await dbSet.FirstOrDefaultAsync(organizationProfile => organizationProfile.OrganizationId == organizationId);
+        
+        return await dbSet.SingleOrDefaultAsync(organizationProfile => organizationProfile.OrganizationId == organizationId);
     }
 
     public async Task<bool> ExistsForTenantAsync(Guid tenantId)

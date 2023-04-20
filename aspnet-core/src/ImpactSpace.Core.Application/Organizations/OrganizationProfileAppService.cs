@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
+using Volo.Abp.Content;
 
 namespace ImpactSpace.Core.Organizations;
 
@@ -56,7 +57,7 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
             input.Website,
             input.PhoneNumber,
             input.Email,
-            input.LogoBase64
+            input.Logo
         );
 
         return organizationProfile.Id;
@@ -64,6 +65,7 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
 
     public async Task UpdateAsync(Guid organizationId, OrganizationProfileCreateUpdateDto input)
     {
+       
         // Get the existing organization profile
         await _organizationProfileManager.UpdateAsync(
             organizationId,
@@ -71,12 +73,25 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
             input.Website,
             input.PhoneNumber,
             input.Email,
-            input.LogoBase64
+            input.Logo
         );
     }
 
     public Task<bool> ExistsForTenantAsync(Guid tenantId)
     {
         return _organizationProfileManager.ExistsForTenantAsync(tenantId);
+    }
+    
+    private async Task<string> GetLogoBase64(IRemoteStreamContent logoStreamContent)
+    {
+        if (logoStreamContent == null)
+        {
+            return null;
+        }
+
+        await using var logoStream = logoStreamContent.GetStream();
+        byte[] logoBytes = new byte[logoStream.Length];
+        await logoStream.ReadAsync(logoBytes, 0, (int)logoStream.Length);
+        return Convert.ToBase64String(logoBytes);
     }
 }
