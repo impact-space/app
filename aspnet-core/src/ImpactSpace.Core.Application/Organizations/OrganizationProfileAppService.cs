@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
 using Volo.Abp.BlobStoring;
-using Volo.Abp.Content;
 
 namespace ImpactSpace.Core.Organizations;
 
@@ -51,16 +50,7 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
             
         var organizationProfileDto = ObjectMapper.Map<OrganizationProfile, OrganizationProfileDto>(organizationProfile);
         
-        var logoStream = await _logoBlobContainer.GetOrNullAsync(organizationProfile.OrganizationId.ToString());
-
-        if (logoStream == null)
-        {
-            return organizationProfileDto;
-        }
-
-        logoStream.Seek(0, SeekOrigin.Begin);
-        var logoBytes = await logoStream.GetAllBytesAsync();
-        organizationProfileDto.Logo = Convert.ToBase64String(logoBytes);
+        organizationProfileDto.Logo = await GetLogoBase64(organizationId);
 
         return organizationProfileDto;
     }
@@ -98,16 +88,17 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
         return _organizationProfileManager.ExistsForTenantAsync(tenantId);
     }
     
-    private async Task<string> GetLogoBase64(IRemoteStreamContent logoStreamContent)
+    private async Task<string> GetLogoBase64(Guid organizationId)
     {
-        if (logoStreamContent == null)
+        var logoStream = await _logoBlobContainer.GetOrNullAsync(organizationId.ToString());
+
+        if (logoStream == null)
         {
             return null;
         }
 
-        await using var logoStream = logoStreamContent.GetStream();
-        byte[] logoBytes = new byte[logoStream.Length];
-        await logoStream.ReadAsync(logoBytes, 0, (int)logoStream.Length);
+        logoStream.Seek(0, SeekOrigin.Begin);
+        var logoBytes = await logoStream.GetAllBytesAsync();
         return Convert.ToBase64String(logoBytes);
     }
 }
