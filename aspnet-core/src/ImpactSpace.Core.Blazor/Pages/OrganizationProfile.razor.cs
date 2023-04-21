@@ -7,6 +7,7 @@ using Blazorise;
 using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Organizations;
 using Microsoft.AspNetCore.Components;
+using Volo.Abp.AspNetCore.Components.Notifications;
 using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
 
 namespace ImpactSpace.Core.Blazor.Pages;
@@ -68,8 +69,10 @@ public partial class OrganizationProfile
 
     private async Task SubmitAsync()
     {
+        await OrganizationProfileValidations.ClearAll();
         if (!await OrganizationProfileValidations.ValidateAll())
         {
+            await Notify.Error(L["ValidationFailed"]);
             return;
         }
         
@@ -84,7 +87,8 @@ public partial class OrganizationProfile
             {
                 await OrganizationProfileAppService.UpdateAsync(OrganizationProfileDto.OrganizationId, OrganizationProfileDto);    
             }
-            
+            await Notify.Success(L["SavedSuccessfully"]);
+            await OrganizationProfileValidations.ClearAll();
         }
         catch (Exception ex)
         {

@@ -11,112 +11,98 @@
 @inject IOrganizationAppService OrganizationAppService
 @inherits CoreComponentBase
 
-<PageHeader Title="@L["OrganizationProfile"]" 
+<PageHeader Title="@L["OrganizationProfile"]"
             BreadcrumbItems="@BreadcrumbItems"
             Toolbar="@Toolbar">
 </PageHeader>
 
-<Container>
-    <Row>
-        <Column ColumnSize="ColumnSize.Is12">
-            <Card>
-                <CardBody>
-                    <Validations @ref="OrganizationProfileValidations" Mode="ValidationMode.Auto" Model="@OrganizationProfileDto" ValidateOnLoad="false">
-                        <Row>
-                            <Column ColumnSize="ColumnSize.Is12">
-                                <Validation MessageLocalizer="@LH.Localize">
-                                    <Field>
-                                        <FieldLabel>@L["MissionStatement"]</FieldLabel>
-                                        <MemoEdit @bind-Text="@OrganizationProfileDto.MissionStatement" Rows="5">
-                                            <Feedback>
-                                                <ValidationError />
-                                            </Feedback>
-                                        </MemoEdit>
-                                    </Field>
-                                </Validation>
-                            </Column>
-                        </Row>
-                        <Row>
-                            <Column ColumnSize="ColumnSize.Is4">
-                                <h5>@L["ContactInfo"]</h5>
-                                <Validation MessageLocalizer="@LH.Localize">
-                                    <Field>
-                                        <FieldLabel>@L["Website"]</FieldLabel>
-                                        <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="@TextRole.Url">
-                                            <Feedback>
-                                                <ValidationError/>
-                                            </Feedback>
-                                        </TextEdit>
-                                    </Field>
-                                </Validation>
-                                <Validation MessageLocalizer="@LH.Localize">
-                                    <Field>
-                                        <FieldLabel>@L["Phone"]</FieldLabel>
-                                        <TextEdit @bind-Text="@OrganizationProfileDto.PhoneNumber" Role="@TextRole.Telephone">
-                                            <Feedback>
-                                                <ValidationError/>
-                                            </Feedback>
-                                        </TextEdit>
-                                    </Field>
-                                </Validation>
-                                <Validation MessageLocalizer="@LH.Localize">
-                                    <Field>
-                                        <FieldLabel>@L["Email"]</FieldLabel>
-                                        <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="@TextRole.Email">
-                                            <Feedback>
-                                                <ValidationError/>
-                                            </Feedback>
-                                        </TextEdit>
-                                    </Field>
-                                </Validation>
-                            </Column>
-                            <Column ColumnSize="ColumnSize.Is8">
-                                <h5>@L["SocialMediaLinks"]</h5>
-                                @foreach (SocialMediaPlatform platform in Enum.GetValues(typeof(SocialMediaPlatform)))
-                                {
-                                    <Validation MessageLocalizer="@LH.Localize">
-                                        <Field>
-                                            <FieldLabel>@platform</FieldLabel>
-                                            <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="@TextRole.Url">
-                                                <Feedback>
-                                                    <ValidationError />
-                                                </Feedback>
-                                            </TextEdit>
-                                        </Field>
-                                    </Validation>
-                                }
-                            </Column>
-                        </Row>
+<Card>
+    <CardBody>
+        <Form>
+            <Validations @ref="@OrganizationProfileValidations" Model="@OrganizationProfileDto" ValidateOnLoad="false">
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is12">
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["MissionStatement"]</FieldLabel>
+                                <MemoEdit @bind-Text="@OrganizationProfileDto.MissionStatement" Rows="5">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </MemoEdit>
+                            </Field>
+                        </Validation>
+                    </Column>
+                </Row>
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is12">
                         @if (!string.IsNullOrEmpty(OrganizationProfileDto.Logo))
                         {
-                            <Row>
-                                <Column ColumnSize="ColumnSize.Is12">
-                                    <Field>
-                                        <img src="@($"data:image;base64,{OrganizationProfileDto.Logo}")" alt="Organization Logo" class="img-thumbnail" />
-                                    </Field>
-                                </Column>
-                            </Row>
+                            <img src="@($"data:image;base64,{OrganizationProfileDto.Logo}")" alt="Organization Logo" class="img-thumbnail"/>
                         }
-                        <Row>
-                            <Column ColumnSize="ColumnSize.Is12">
+                        <Field>
+                            <FieldLabel>@L["LogoFile"]</FieldLabel>
+                            <FileEdit Filter="image/*" Changed="OnLogoChanged"/>
+                        </Field>
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Website"]</FieldLabel>
+                                <TextEdit @bind-Text="@OrganizationProfileDto.Website">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                        <Validation MessageLocalizer="@LH.Localize">
+                            <Field>
+                                <FieldLabel>@L["Phone"]</FieldLabel>
+                                <TextEdit @bind-Text="@OrganizationProfileDto.PhoneNumber">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                        <Validation MessageLocalizer="@LH.Localize" >
+                            <Field>
+                                <FieldLabel>@L["Email"]</FieldLabel>
+                                <TextEdit @bind-Text="@OrganizationProfileDto.Email">
+                                    <Feedback>
+                                        <ValidationError/>
+                                    </Feedback>
+                                </TextEdit>
+                            </Field>
+                        </Validation>
+                    </Column>
+                </Row>
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is12">
+                        @foreach (SocialMediaPlatform platform in Enum.GetValues(typeof(SocialMediaPlatform)))
+                        {
+                            <Validation MessageLocalizer="@LH.Localize">
                                 <Field>
-                                    <FieldLabel>@L["Logo"]</FieldLabel>
-                                    <FileEdit Filter="image/*" Changed="OnLogoChanged" />
+                                    <FieldLabel>@platform</FieldLabel>
+                                    <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url">
+                                        <Feedback>
+                                            <ValidationError/>
+                                        </Feedback>
+                                    </TextEdit>
                                 </Field>
-                            </Column>
-                        </Row>
-                        <Row>
-                            <Column ColumnSize="ColumnSize.Is4">
-                                <Field>
-                                    <Button Color="Color.Primary" Type="@ButtonType.Submit" PreventDefaultOnSubmit="true" Clicked="SubmitAsync">
-                                        @L["Save"]
-                                    </Button>
-                                </Field>
-                            </Column>
-                        </Row>
-                    </Validations>
-                </CardBody>
-            </Card>
-        </Column>
-    </Row>
-</Container>
+                            </Validation>
+                        }
+                    </Column>
+                </Row>
+                <Row>
+                    <Column ColumnSize="ColumnSize.Is4">
+                        <Field>
+                            <Button Color="Color.Primary" Type="@ButtonType.Submit" PreventDefaultOnSubmit="true" Clicked="SubmitAsync">
+                                @L["Save"]
+                            </Button>
+                        </Field>
+                    </Column>
+                </Row>
+            </Validations>
+        </Form>
+    </CardBody>
+</Card>

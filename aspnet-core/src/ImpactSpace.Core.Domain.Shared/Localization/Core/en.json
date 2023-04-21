@@ -94,6 +94,8 @@
     "Phone": "Phone",
     "Email": "Email",
     "Logo": "Logo",
+    "SavedSuccessfully": "Saved Successfully!",
+    "ValidationFailed": "Validation failed!",
     "Core:00001" : "There is already a skill with the same name: {name}",
     "Core:00002" : "There is already a skill group with the same name: {name}",
     "Core:00003" : "The skill group {name} was not found",
