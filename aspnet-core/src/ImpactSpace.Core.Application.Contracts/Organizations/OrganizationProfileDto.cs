@@ -22,9 +22,7 @@ public class OrganizationProfileDto
     [EmailAddress]
     public string Email { get; set; }
     
-    [Url]
-    [StringLength(OrganizationProfileConstants.MaxLogoUrlLength)]
-    public string LogoUrl { get; set; }
-    
+    public string Logo { get; set; }
+
     public List<SocialMediaLinkDto> SocialMediaLinks { get; set; }
 }

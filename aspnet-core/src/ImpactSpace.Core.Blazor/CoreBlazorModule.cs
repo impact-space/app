@@ -157,6 +157,18 @@ public class CoreBlazorModule : AbpModule
                     minio.CreateBucketIfNotExists = true;
                 });
             });
+
+            options.Containers.Configure<OrganizationProfileLogoContainer>(container =>
+            {
+                container.UseMinio(minio =>
+                {
+                    minio.EndPoint = configuration["BlobStoring:Minio:EndPoint"];
+                    minio.AccessKey = configuration["BlobStoring:Minio:AccessKey"];
+                    minio.SecretKey = configuration["BlobStoring:Minio:SecretKey"];
+                    minio.BucketName = configuration["BlobStoring:Minio:LogoBucketName"];
+                    minio.CreateBucketIfNotExists = true;
+                });
+            });
         });
     }
 

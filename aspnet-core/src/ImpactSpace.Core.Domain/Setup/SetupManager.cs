@@ -87,12 +87,9 @@ public class SetupManager : DomainService
             null,
             null,
             null,
-            null,
             null
         );
 
-        await _organizationProfileRepository.InsertAsync(organizationProfile);
-
-        return organizationProfile;
+        return await _organizationProfileRepository.InsertAsync(organizationProfile);
     }
 }

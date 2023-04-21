@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.Application.Services;
@@ -12,15 +13,17 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
     private readonly OrganizationProfileManager _organizationProfileManager;
     private readonly IOrganizationProfileRepository _organizationProfileRepository;
     private readonly IOrganizationRepository _organizationRepository;
-
+    private readonly IBlobContainer _logoBlobContainer;
     public OrganizationProfileAppService(
         OrganizationProfileManager organizationProfileManager, 
         IOrganizationProfileRepository organizationProfileRepository, 
-        IOrganizationRepository organizationRepository)
+        IOrganizationRepository organizationRepository,
+        IBlobContainerFactory blobContainerFactory)
     {
         _organizationProfileManager = organizationProfileManager;
         _organizationProfileRepository = organizationProfileRepository;
         _organizationRepository = organizationRepository;
+        _logoBlobContainer = blobContainerFactory.Create<OrganizationProfileLogoContainer>();
     }
 
     public async Task<OrganizationProfileDto> GetAsync()
@@ -46,7 +49,20 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
     {
         var organizationProfile = await _organizationProfileRepository.GetByOrganizationIdAsync(organizationId);
             
-        return ObjectMapper.Map<OrganizationProfile, OrganizationProfileDto>(organizationProfile);
+        var organizationProfileDto = ObjectMapper.Map<OrganizationProfile, OrganizationProfileDto>(organizationProfile);
+        
+        var logoStream = await _logoBlobContainer.GetOrNullAsync(organizationProfile.OrganizationId.ToString());
+
+        if (logoStream == null)
+        {
+            return organizationProfileDto;
+        }
+
+        logoStream.Seek(0, SeekOrigin.Begin);
+        var logoBytes = await logoStream.GetAllBytesAsync();
+        organizationProfileDto.Logo = Convert.ToBase64String(logoBytes);
+
+        return organizationProfileDto;
     }
 
     public async Task<Guid> CreateAsync(OrganizationProfileCreateUpdateDto input)

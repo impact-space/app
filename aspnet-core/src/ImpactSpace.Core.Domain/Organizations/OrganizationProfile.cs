@@ -21,9 +21,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
     public string PhoneNumber { get; private set; }
     
     public string Email { get; private set; }
-    
-    public string LogoUrl { get; private set; }
-    
+
     public virtual ICollection<SocialMediaLink> SocialMediaLinks { get; private set; }
     
     // ReSharper disable once UnassignedGetOnlyAutoProperty
@@ -39,8 +37,7 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         [CanBeNull] string missionStatement, 
         [CanBeNull] string websiteUrl,
         [CanBeNull] string phoneNumber,
-        [CanBeNull] string email,
-        [CanBeNull] string logoUrl)
+        [CanBeNull] string email)
         : base(id)
     {
         if (organizationId == Guid.Empty)
@@ -51,7 +48,6 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         OrganizationId = organizationId;
         SetMissionStatement(missionStatement);
         SetWebsite(websiteUrl);
-        SetLogoUrl(logoUrl);
         SetPhoneNumber(phoneNumber);
         SetEmail(email);
         SocialMediaLinks = new Collection<SocialMediaLink>();
@@ -79,12 +75,6 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
     internal OrganizationProfile ChangeEmail([CanBeNull] string email)
     {
         SetEmail(email);
-        return this;
-    }
-
-    internal OrganizationProfile ChangeLogoUrl([CanBeNull] string logoUrl)
-    {
-        SetLogoUrl(logoUrl);
         return this;
     }
 
@@ -124,11 +114,6 @@ public class OrganizationProfile : AuditedAggregateRoot<Guid>, IMultiTenant
         Email = email;
     }
 
-    private void SetLogoUrl([CanBeNull] string logoUrl)
-    {
-        LogoUrl = logoUrl;
-    }
-    
     internal void AddSocialMediaLink(SocialMediaLink socialMediaLink)
     {
         SocialMediaLinks.Add(socialMediaLink);

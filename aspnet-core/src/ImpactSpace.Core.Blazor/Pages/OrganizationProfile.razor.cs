@@ -8,7 +8,6 @@ using ImpactSpace.Core.Common;
 using ImpactSpace.Core.Organizations;
 using Microsoft.AspNetCore.Components;
 using Volo.Abp.AspNetCore.Components.Web.Theming.PageToolbars;
-using Volo.Abp.Content;
 
 namespace ImpactSpace.Core.Blazor.Pages;
 
@@ -23,9 +22,7 @@ public partial class OrganizationProfile
     protected bool IsNew { get; set; }
     
     protected PageToolbar Toolbar { get; } = new();
-    
-    private string logoContent;
-    
+
     [Inject] protected NavigationManager NavigationManager { get; set; }
 
     protected override async Task OnInitializedAsync()

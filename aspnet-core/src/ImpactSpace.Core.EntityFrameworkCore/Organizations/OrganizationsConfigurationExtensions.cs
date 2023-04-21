@@ -44,8 +44,6 @@ public static class OrganizationsConfigurationExtensions
                 .HasMaxLength(CommonConstants.MaxEmailLength);
             b.Property(x => x.PhoneNumber)
                 .HasMaxLength(CommonConstants.MaxNationalNumberLength);
-            b.Property(x => x.LogoUrl)
-                .HasMaxLength(OrganizationProfileConstants.MaxLogoUrlLength);
             
             b.OwnsMany(x => x.SocialMediaLinks, sm =>
             {

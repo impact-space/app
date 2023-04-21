@@ -36,57 +36,67 @@
                                 </Validation>
                             </Column>
                         </Row>
-                    <Row>
-                        <Column ColumnSize="ColumnSize.Is4">
-                            <h5>@L["ContactInfo"]</h5>
-                            <Validation MessageLocalizer="@LH.Localize">
-                                <Field>
-                                    <FieldLabel>@L["Website"]</FieldLabel>
-                                    <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="@TextRole.Url">
-                                        <Feedback>
-                                            <ValidationError/>
-                                        </Feedback>
-                                    </TextEdit>
-                                </Field>
-                            </Validation>
-                            <Validation MessageLocalizer="@LH.Localize">
-                                <Field>
-                                    <FieldLabel>@L["Phone"]</FieldLabel>
-                                    <TextEdit @bind-Text="@OrganizationProfileDto.PhoneNumber" Role="@TextRole.Telephone">
-                                        <Feedback>
-                                            <ValidationError/>
-                                        </Feedback>
-                                    </TextEdit>
-                                </Field>
-                            </Validation>
-                            <Validation MessageLocalizer="@LH.Localize">
-                                <Field>
-                                    <FieldLabel>@L["Email"]</FieldLabel>
-                                    <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="@TextRole.Email">
-                                        <Feedback>
-                                            <ValidationError/>
-                                        </Feedback>
-                                    </TextEdit>
-                                </Field>
-                            </Validation>
-                        </Column>
-                        <Column ColumnSize="ColumnSize.Is8">
-                            <h5>@L["SocialMediaLinks"]</h5>
-                            @foreach (SocialMediaPlatform platform in Enum.GetValues(typeof(SocialMediaPlatform)))
-                            {
+                        <Row>
+                            <Column ColumnSize="ColumnSize.Is4">
+                                <h5>@L["ContactInfo"]</h5>
                                 <Validation MessageLocalizer="@LH.Localize">
                                     <Field>
-                                        <FieldLabel>@platform</FieldLabel>
-                                        <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="@TextRole.Url">
+                                        <FieldLabel>@L["Website"]</FieldLabel>
+                                        <TextEdit @bind-Text="@OrganizationProfileDto.Website" Role="@TextRole.Url">
                                             <Feedback>
-                                                <ValidationError />
+                                                <ValidationError/>
                                             </Feedback>
                                         </TextEdit>
                                     </Field>
                                 </Validation>
-                            }
-                        </Column>
-                    </Row>
+                                <Validation MessageLocalizer="@LH.Localize">
+                                    <Field>
+                                        <FieldLabel>@L["Phone"]</FieldLabel>
+                                        <TextEdit @bind-Text="@OrganizationProfileDto.PhoneNumber" Role="@TextRole.Telephone">
+                                            <Feedback>
+                                                <ValidationError/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </Field>
+                                </Validation>
+                                <Validation MessageLocalizer="@LH.Localize">
+                                    <Field>
+                                        <FieldLabel>@L["Email"]</FieldLabel>
+                                        <TextEdit @bind-Text="@OrganizationProfileDto.Email" Role="@TextRole.Email">
+                                            <Feedback>
+                                                <ValidationError/>
+                                            </Feedback>
+                                        </TextEdit>
+                                    </Field>
+                                </Validation>
+                            </Column>
+                            <Column ColumnSize="ColumnSize.Is8">
+                                <h5>@L["SocialMediaLinks"]</h5>
+                                @foreach (SocialMediaPlatform platform in Enum.GetValues(typeof(SocialMediaPlatform)))
+                                {
+                                    <Validation MessageLocalizer="@LH.Localize">
+                                        <Field>
+                                            <FieldLabel>@platform</FieldLabel>
+                                            <TextEdit @bind-Text="@GetSocialMediaLink(platform).Url" Role="@TextRole.Url">
+                                                <Feedback>
+                                                    <ValidationError />
+                                                </Feedback>
+                                            </TextEdit>
+                                        </Field>
+                                    </Validation>
+                                }
+                            </Column>
+                        </Row>
+                        @if (!string.IsNullOrEmpty(OrganizationProfileDto.Logo))
+                        {
+                            <Row>
+                                <Column ColumnSize="ColumnSize.Is12">
+                                    <Field>
+                                        <img src="@($"data:image;base64,{OrganizationProfileDto.Logo}")" alt="Organization Logo" class="img-thumbnail" />
+                                    </Field>
+                                </Column>
+                            </Row>
+                        }
                         <Row>
                             <Column ColumnSize="ColumnSize.Is12">
                                 <Field>

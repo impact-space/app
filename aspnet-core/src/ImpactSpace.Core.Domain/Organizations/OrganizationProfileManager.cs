@@ -32,11 +32,10 @@ public sealed class OrganizationProfileManager : DomainService
         [CanBeNull] string email, 
         [CanBeNull] string logoBase64)
     {
-        string logoUrl = null;
-        
+
         if (!logoBase64.IsNullOrEmpty())
         {
-            logoUrl = await UploadLogoAsync(organizationId, logoBase64);
+            await UploadLogoAsync(organizationId, logoBase64);
         }
         
         var organizationProfile = new OrganizationProfile(
@@ -45,8 +44,7 @@ public sealed class OrganizationProfileManager : DomainService
             missionStatement,
             website,
             phoneNumber,
-            email,
-            logoUrl
+            email
         );
         
         organizationProfile.ChangePhoneNumber(phoneNumber);
@@ -71,13 +69,7 @@ public sealed class OrganizationProfileManager : DomainService
 
         if (!string.IsNullOrEmpty(logoBase64))
         {
-            var newLogoUrl = await UploadLogoAsync(organizationId, logoBase64);
-            organizationProfile.ChangeLogoUrl(newLogoUrl);
-        }
-        else
-        {
-            await DeleteLogoAsync(organizationId);
-            organizationProfile.ChangeLogoUrl(null);
+            await UploadLogoAsync(organizationId, logoBase64);
         }
 
         await _organizationProfileRepository.UpdateAsync(organizationProfile);
