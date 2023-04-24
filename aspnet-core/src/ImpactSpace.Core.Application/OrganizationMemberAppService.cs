@@ -22,20 +22,23 @@ public class OrganizationMemberAppService: CrudAppService<
 
     public OrganizationMemberAppService(
         IRepository<OrganizationMember, Guid> repository,
-        OrganizationMemberManager organizationMemberManager,
-        IMapper mapper)
+        OrganizationMemberManager organizationMemberManager)
         : base(repository)
     {
         _organizationMemberManager = organizationMemberManager;
     }
-    
-    public Task<OrganizationMemberDto> AddOrEditSkillAsync(Guid memberId, Guid skillId, ProficiencyLevel proficiencyLevel)
+
+    public async Task<OrganizationMemberDto> AddOrEditSkillAsync(Guid memberId, Guid skillId, ProficiencyLevel proficiencyLevel)
     {
-        throw new NotImplementedException();
+        var organizationMember = await _organizationMemberManager.AddOrEditSkillAsync(memberId, skillId, proficiencyLevel);
+        await Repository.UpdateAsync(organizationMember);
+        return ObjectMapper.Map<OrganizationMember, OrganizationMemberDto>(organizationMember);
     }
 
-    public Task<OrganizationMemberDto> RemoveSkillAsync(Guid memberId, Guid skillId)
+    public async Task<OrganizationMemberDto> RemoveSkillAsync(Guid memberId, Guid skillId)
     {
-        throw new NotImplementedException();
+        var organizationMember = await _organizationMemberManager.RemoveSkillAsync(memberId, skillId);
+        await Repository.UpdateAsync(organizationMember);
+        return ObjectMapper.Map<OrganizationMember, OrganizationMemberDto>(organizationMember);
     }
 }
