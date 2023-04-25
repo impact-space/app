@@ -7,5 +7,11 @@ namespace ImpactSpace.Core.Organizations;
 
 public interface IOrganizationMemberRepository: IRepository<OrganizationMember, Guid>
 {
-    Task<List<OrganizationMember>> GetListAsync(Guid organizationId);
+    Task<List<OrganizationMember>> GetListAsync(
+        Guid organizationId,
+        int skipCount,
+        int maxResultCount,
+        string sorting,
+        string filter = null
+    );
 }

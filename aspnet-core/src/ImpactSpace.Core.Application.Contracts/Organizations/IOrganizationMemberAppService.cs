@@ -9,7 +9,7 @@ namespace ImpactSpace.Core.Organizations;
 public interface IOrganizationMemberAppService: ICrudAppService<
     OrganizationMemberDto, 
     Guid, 
-    PagedAndSortedResultRequestDto, 
+    GetOrganizationMemberListDto, 
     OrganizationMemberCreateUpdateDto, 
     OrganizationMemberCreateUpdateDto>
 {

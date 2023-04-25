@@ -28,20 +28,19 @@ public class OrganizationMember : AuditedAggregateRoot<Guid>, IMultiTenant
     
     public virtual Organization Organization { get; protected set; }
     
-    // ReSharper disable once UnassignedGetOnlyAutoProperty
-    public Guid? TenantId { get; }
+    public Guid? TenantId { get; set; }
 
-    public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; }
+    public virtual ICollection<OrganizationMemberChallenge> OrganizationMemberChallenges { get; private set; }
     
-    public virtual ICollection<OrganizationMemberAction> OrganizationMemberActions { get; }
+    public virtual ICollection<OrganizationMemberAction> OrganizationMemberActions { get; private set; }
     
-    public virtual ICollection<OrganizationMemberProject> OrganizationMemberProjects { get; }
+    public virtual ICollection<OrganizationMemberProject> OrganizationMemberProjects { get; private set; }
 
-    public virtual ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; }
+    public virtual ICollection<OrganizationMemberSkill> OrganizationMemberSkills { get; private set; }
     
-    public virtual ICollection<SocialMediaLink> SocialMediaLinks { get; }
+    public virtual ICollection<SocialMediaLink> SocialMediaLinks { get; private set; }
     
-    public virtual ICollection<Project> OwnedProjects { get; }
+    public virtual ICollection<Project> OwnedProjects { get; private set; }
 
     protected OrganizationMember()
     {
