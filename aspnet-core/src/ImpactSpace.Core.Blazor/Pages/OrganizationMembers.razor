@@ -6,6 +6,7 @@
 @using Volo.Abp.AspNetCore.Components.Web
 @using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+@inject NavigationManager NavigationManager
 @inherits AbpCrudPageBase<IOrganizationMemberAppService, OrganizationMemberDto, Guid, GetOrganizationMemberListDto, OrganizationMemberCreateUpdateDto, OrganizationMemberCreateUpdateDto>
 
 <Card>

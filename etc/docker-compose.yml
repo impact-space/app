@@ -27,8 +27,7 @@ services:
       MINIO_ROOT_PASSWORD: nem1ySovw1YTaPpg0VK1kMKSVYkTeXyW
     command: server --console-address ":9001" /data
     networks:
-      impactspace_network:
-        ipv4_address: 172.19.0.2
+      - impactspace_network
   minio_client:
     image: minio/mc
     depends_on:
@@ -48,6 +47,8 @@ services:
       echo Bucket created.;
       tail -f /dev/null;
       "
+    networks:
+        - impactspace_network
 volumes:
   minio_storage: {} 
 networks:

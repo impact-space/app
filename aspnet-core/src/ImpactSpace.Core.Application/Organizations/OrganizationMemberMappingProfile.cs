@@ -9,5 +9,8 @@ public class OrganizationMemberMappingProfile : Profile
         CreateMap<OrganizationMember, OrganizationMemberDto>();
         CreateMap<OrganizationMemberDto, OrganizationMemberCreateUpdateDto>();
         CreateMap<OrganizationMemberCreateUpdateDto, OrganizationMember>();
+        CreateMap<OrganizationMemberSkill, OrganizationMemberSkillDto>();
+        CreateMap<OrganizationMemberSkillDto, OrganizationMemberSkill>();
+        
     }
 }

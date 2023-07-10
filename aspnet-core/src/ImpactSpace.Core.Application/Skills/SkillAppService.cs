@@ -92,4 +92,15 @@ public class SkillAppService : CoreAppService, ISkillAppService
         await _skillRepository.GetAsync(id);
         await _skillRepository.DeleteAsync(id);
     }
+
+    public async Task<List<SkillDto>> SearchSkillsAsync(string searchTerm, int maxResultCount = 10)
+    {
+        var skills = await _skillRepository.GetListAsync(
+            0,
+            maxResultCount,
+            nameof(Skill.Name),
+            searchTerm
+        );
+        return ObjectMapper.Map<List<Skill>, List<SkillDto>>(skills);
+    }
 }

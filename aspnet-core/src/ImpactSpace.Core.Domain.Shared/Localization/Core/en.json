@@ -57,6 +57,7 @@
     "Skill": "Skill",
     "SkillGroupDeletionConfirmationMessage": "Are you sure you want to delete the skill group {0}?",
     "SkillDeletionConfirmationMessage": "Are you sure you want to delete the skill {0}?",
+    "SkillNotFound": "No skills were found.",
     "NewSkillGroup": "New Skill Group",
     "NewSkill": "New Skill",
     "Tags": "Tags",

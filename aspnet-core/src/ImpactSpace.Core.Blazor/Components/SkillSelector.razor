@@ -1,0 +1,22 @@
+@using ImpactSpace.Core.Skills
+@using Blazorise.Components
+@using ImpactSpace.Core.Localization
+@using Volo.Abp.AspNetCore.Components.Web
+@inherits CoreComponentBase
+@inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+<Autocomplete TItem="SkillDto"
+              TValue="Guid"
+              Data="@(MatchingSkills ?? new List<SkillDto>())"
+              @bind-SelectedValue="@SelectedSkill.Id"
+              @bind-SelectedText="@SelectedSkill.Name"
+              TextField="@(item => item.Name)"
+              ValueField="@(item => item.Id)"
+              SearchChanged="@OnSearchChanged"
+              MinLength="1"
+              Debounce="true"
+              DebounceInterval="600"
+              AutoPreSelect="false"
+              aria-label="Skill Selector">
+    <NotFoundContent> @L["SkillNotFound"] </NotFoundContent>
+
+</Autocomplete>

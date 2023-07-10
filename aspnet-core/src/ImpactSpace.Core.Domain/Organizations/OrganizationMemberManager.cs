@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ImpactSpace.Core.Common;
+using Volo.Abp.Domain.Repositories;
 using Volo.Abp.Domain.Services;
 
 namespace ImpactSpace.Core.Organizations;
@@ -8,23 +9,43 @@ namespace ImpactSpace.Core.Organizations;
 public class OrganizationMemberManager : DomainService
 {
     private readonly IOrganizationMemberRepository _organizationMemberRepository;
+    private readonly IRepository<OrganizationMemberSkill> _organizationMemberSkillRepository;
 
-    public OrganizationMemberManager(IOrganizationMemberRepository organizationMemberRepository)
+    public OrganizationMemberManager(IOrganizationMemberRepository organizationMemberRepository, IRepository<OrganizationMemberSkill> organizationMemberSkillRepository)
     {
         _organizationMemberRepository = organizationMemberRepository;
+        _organizationMemberSkillRepository = organizationMemberSkillRepository;
     }
     
-    public async Task<OrganizationMember> AddOrEditSkillAsync(Guid memberId, Guid skillId, ProficiencyLevel proficiencyLevel)
+    public OrganizationMember CreateAsync(
+        Guid id, 
+        string name, 
+        string email, 
+        string phone,
+        Guid organizationId)
     {
-        var organizationMember = await _organizationMemberRepository.GetAsync(memberId);
-        organizationMember.AddOrEditSkill(skillId, proficiencyLevel);
+        var organizationMember = new OrganizationMember(
+            id,
+            name,
+            email,
+            phone,
+            organizationId
+        );
+
         return organizationMember;
     }
-
-    public async Task<OrganizationMember> RemoveSkillAsync(Guid memberId, Guid skillId)
+    
+    public  OrganizationMemberSkill CreateSkill(
+        Guid organizationMemberId,
+        Guid skillId,
+        ProficiencyLevel level)
     {
-        var organizationMember = await _organizationMemberRepository.GetAsync(memberId);
-        organizationMember.RemoveSkill(skillId);
-        return organizationMember;
+        var organizationMemberSkill = new OrganizationMemberSkill(
+            organizationMemberId,
+            skillId,
+            level
+        );
+
+        return organizationMemberSkill;
     }
 }

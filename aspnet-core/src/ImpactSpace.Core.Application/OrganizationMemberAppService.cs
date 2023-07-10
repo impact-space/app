@@ -21,15 +21,18 @@ public class OrganizationMemberAppService: CrudAppService<
     private readonly OrganizationMemberManager _organizationMemberManager;
     private readonly IRepository<Organization, Guid> _organizationRepository;
     private readonly IOrganizationMemberRepository _organizationMemberRepository;
+    private readonly IRepository<OrganizationMemberSkill> _organizationMemberSkillRepository;
 
     public OrganizationMemberAppService(
         IOrganizationMemberRepository repository,
         OrganizationMemberManager organizationMemberManager, 
-        IRepository<Organization, Guid> organizationRepository)
+        IRepository<Organization, Guid> organizationRepository, 
+        IRepository<OrganizationMemberSkill> organizationMemberSkillRepository)
         : base(repository)
     {
         _organizationMemberManager = organizationMemberManager;
         _organizationRepository = organizationRepository;
+        _organizationMemberSkillRepository = organizationMemberSkillRepository;
         _organizationMemberRepository = repository;
     }
 
@@ -82,17 +85,49 @@ public class OrganizationMemberAppService: CrudAppService<
         return await base.UpdateAsync(id, input);
     }
 
-    public async Task<OrganizationMemberDto> AddOrEditSkillAsync(Guid memberId, Guid skillId, ProficiencyLevel proficiencyLevel)
+    public async Task<OrganizationMemberSkillDto> AddOrEditSkillAsync(Guid memberId, Guid skillId,
+        ProficiencyLevel proficiencyLevel)
     {
-        var organizationMember = await _organizationMemberManager.AddOrEditSkillAsync(memberId, skillId, proficiencyLevel);
-        await Repository.UpdateAsync(organizationMember);
-        return ObjectMapper.Map<OrganizationMember, OrganizationMemberDto>(organizationMember);
+        var skill = await _organizationMemberSkillRepository.FindAsync(x =>
+            x.OrganizationMemberId == memberId && x.SkillId == skillId);
+
+        if (skill == null)
+        {
+            skill = _organizationMemberManager.CreateSkill(memberId, skillId, proficiencyLevel);
+            
+            await _organizationMemberSkillRepository.InsertAsync(skill, true);
+        }
+        else
+        {
+            skill.ChangeProficiencyLevel(proficiencyLevel);
+            
+            await _organizationMemberSkillRepository.UpdateAsync(skill, true);
+        }
+        
+        return ObjectMapper.Map<OrganizationMemberSkill, OrganizationMemberSkillDto>(skill);
     }
 
-    public async Task<OrganizationMemberDto> RemoveSkillAsync(Guid memberId, Guid skillId)
+    public async Task RemoveSkillAsync(Guid memberId, Guid skillId)
     {
-        var organizationMember = await _organizationMemberManager.RemoveSkillAsync(memberId, skillId);
-        await Repository.UpdateAsync(organizationMember);
-        return ObjectMapper.Map<OrganizationMember, OrganizationMemberDto>(organizationMember);
+        await _organizationMemberSkillRepository.DeleteAsync(x => x.OrganizationMemberId == memberId && x.SkillId == skillId);
+    }
+
+    public async Task<OrganizationMemberDto> GetDetailsAsync(Guid memberId)
+    {
+        return ObjectMapper.Map<OrganizationMember,OrganizationMemberDto>(await _organizationMemberRepository.GetAsync(memberId));
+    }
+
+    public async Task<OrganizationMemberSkillDto> GetSkillAsync(Guid memberId, Guid skillId)
+    {
+        return ObjectMapper.Map<OrganizationMemberSkill, OrganizationMemberSkillDto>(
+            await _organizationMemberSkillRepository.GetAsync(x=>x.OrganizationMemberId == memberId && x.SkillId == skillId)
+        );
+    }
+    
+    public async Task<List<OrganizationMemberSkillDto>> GetSkillsAsync(Guid memberId)
+    {
+        return ObjectMapper.Map<List<OrganizationMemberSkill>, List<OrganizationMemberSkillDto>>(
+            await _organizationMemberSkillRepository.GetListAsync(x=>x.OrganizationMemberId == memberId)
+        );
     }
 }
