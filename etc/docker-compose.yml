@@ -48,6 +48,8 @@ services:
       echo Bucket created.;
       tail -f /dev/null;
       "
+    networks:
+      - impactspace_network
 volumes:
   minio_storage: {} 
 networks:
