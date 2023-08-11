@@ -390,9 +390,9 @@ public partial class MemberSkillsList
         }
     }
     
-    private async Task OnSkillSelected(SkillDto selectedSkill)
+    private async Task OnSkillSelected(Guid skillId)
     {
-        AddingSkillEntity.SkillId = selectedSkill.Id;
+        AddingSkillEntity.SkillId = skillId;
 
         await InvokeAsync(StateHasChanged);
     }
