@@ -24,6 +24,9 @@ public partial class SkillSelector : IValidationInput
     [Parameter]
     public EventCallback<Guid> ValueChanged { get; set; }
 
+    [Parameter]
+    public EventCallback<Guid> TextChanged { get; set; }
+
     public object ValidationValue => Value;
 
     [Parameter]
@@ -40,16 +43,14 @@ public partial class SkillSelector : IValidationInput
         await base.OnInitializedAsync();
     }
 
-    private async Task OnSelectedSkill(SkillDto skill)
+    private async Task OnValueChanged(Guid skillId)
     {
-        if (skill != null)
-        {
-            SelectedSkill = skill;
-            Value = skill.Id;
-            await ValueChanged.InvokeAsync(Value);
-            await OnSkillSelected.InvokeAsync(skill);
-            MatchingSkills = new(); // Clear the list as we've selected a skill
-        }
+        await ValueChanged.InvokeAsync(Value);
+    }
+
+    private async Task OnTextChanged(string skillText)
+    {
+        await TextChanged.InvokeAsync(Value);
     }
 
     private async Task OnSearchChanged(string searchTerm)
