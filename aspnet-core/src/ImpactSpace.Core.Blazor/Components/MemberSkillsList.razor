@@ -45,7 +45,7 @@
                     <Validation MessageLocalizer="@LH.Localize" Validator="ValidateSkill">
                         <Field>
                             <FieldLabel>@L["Skill"]</FieldLabel>
-                            <SkillSelector ValueChanged="OnSkillSelected"></SkillSelector>
+                            <SkillSelector OnSkillSelected="OnSkillSelected" @bind-Value="AddingSkillEntity.SkillId"></SkillSelector>
                         </Field>
                        
                            @if (ValidationStatus == ValidationStatus.Success)
