@@ -42,21 +42,10 @@
             </ModalHeader>
             <ModalBody>
                 <Validations @ref="AddSkillsValidationsRef" Model="AddingSkillEntity" ValidateOnLoad="false">
-                    <Validation MessageLocalizer="@LH.Localize" Validator="ValidateSkill">
-                        <Field>
-                            <FieldLabel>@L["Skill"]</FieldLabel>
-                            <SkillSelector ValueChanged="OnSkillSelected"></SkillSelector>
-                        </Field>
-                       
-                           @if (ValidationStatus == ValidationStatus.Success)
-                           {
-                               <ValidationSuccess>Skill is selected.</ValidationSuccess>
-                           }
-                           else if (ValidationStatus == ValidationStatus.Error)
-                           {
-                               <ValidationError>Please select a skill from the dropdown!</ValidationError>
-                           }
-                    </Validation>
+                    <Field>
+                        <FieldLabel>@L["Skill"]</FieldLabel>
+                        <SkillSelector ValueChanged="OnSkillSelected" />
+                    </Field>
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
                             <FieldLabel>@L["ProficiencyLevel"]</FieldLabel>
@@ -66,9 +55,6 @@
                                     <SelectItem Value="@(level)">@level.ToString()</SelectItem>
                                 }
                             </Select>
-                            <Feedback>
-                                <ValidationError />
-                            </Feedback>
                         </Field>
                     </Validation>
                 </Validations>

@@ -230,6 +230,7 @@ public partial class MemberSkillsList
         {
             await OrganizationMemberAppService.RemoveSkillAsync(MemberId, entity.SkillId);
             await FetchDataAsync();
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception ex)
         {

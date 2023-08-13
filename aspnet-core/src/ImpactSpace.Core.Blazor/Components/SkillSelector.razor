@@ -3,20 +3,27 @@
 @using ImpactSpace.Core.Localization
 @using Volo.Abp.AspNetCore.Components.Web
 @inherits CoreComponentBase
+
+@code {
+
+}
+
 @inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+
 <Autocomplete TItem="SkillDto"
               TValue="Guid"
               Data="@(MatchingSkills ?? new List<SkillDto>())"
               TextField="@(item => item.Name)"
               ValueField="@(item => item.Id)"
-              SearchChanged="@OnSearchChanged"
+              SearchChanged="OnSearchChanged"
               SelectedValueChanged="OnValueChanged"
               SelectedTextChanged="OnTextChanged"
               MinLength="1"
               Debounce="true"
               DebounceInterval="600"
               AutoPreSelect="false"
-              aria-label="Skill Selector">
+              aria-label="Skill Selector"
+              Validator="Validator">
     <NotFoundContent> @L["SkillNotFound"] </NotFoundContent>
 
 </Autocomplete>

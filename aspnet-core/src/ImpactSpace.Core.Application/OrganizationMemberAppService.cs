@@ -88,23 +88,23 @@ public class OrganizationMemberAppService: CrudAppService<
     public async Task<OrganizationMemberSkillDto> AddOrEditSkillAsync(Guid memberId, Guid skillId,
         ProficiencyLevel proficiencyLevel)
     {
-        var skill = await _organizationMemberSkillRepository.FindAsync(x =>
+        var memberSkill = await _organizationMemberSkillRepository.FindAsync(x =>
             x.OrganizationMemberId == memberId && x.SkillId == skillId);
 
-        if (skill == null)
+        if (memberSkill == null)
         {
-            skill = _organizationMemberManager.CreateSkill(memberId, skillId, proficiencyLevel);
+            memberSkill = _organizationMemberManager.CreateSkill(memberId, skillId, proficiencyLevel);
             
-            await _organizationMemberSkillRepository.InsertAsync(skill, true);
+            await _organizationMemberSkillRepository.InsertAsync(memberSkill, true);
         }
         else
         {
-            skill.ChangeProficiencyLevel(proficiencyLevel);
+            memberSkill.ChangeProficiencyLevel(proficiencyLevel);
             
-            await _organizationMemberSkillRepository.UpdateAsync(skill, true);
+            await _organizationMemberSkillRepository.UpdateAsync(memberSkill, true);
         }
         
-        return ObjectMapper.Map<OrganizationMemberSkill, OrganizationMemberSkillDto>(skill);
+        return ObjectMapper.Map<OrganizationMemberSkill, OrganizationMemberSkillDto>(memberSkill);
     }
 
     public async Task RemoveSkillAsync(Guid memberId, Guid skillId)

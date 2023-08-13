@@ -45,6 +45,7 @@ public partial class SkillSelector : IValidationInput
 
     private async Task OnValueChanged(Guid skillId)
     {
+        Value = skillId;
         await ValueChanged.InvokeAsync(Value);
     }
 
@@ -68,5 +69,10 @@ public partial class SkillSelector : IValidationInput
         {
             IsLoading = false;
         }
+    }
+    
+    private void Validator(ValidatorEventArgs obj)
+    {
+        obj.Status = Value != Guid.Empty ? ValidationStatus.Success : ValidationStatus.Error;
     }
 }
