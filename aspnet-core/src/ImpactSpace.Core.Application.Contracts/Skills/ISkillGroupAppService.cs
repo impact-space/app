@@ -7,5 +7,5 @@ namespace ImpactSpace.Core.Skills;
 
 public interface ISkillGroupAppService : ICrudAppService<SkillGroupDto, Guid, GetSkillGroupListDto, SkillGroupCreateDto, SkillGroupUpdateDto>
 {
-
+    
 }

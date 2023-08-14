@@ -39,7 +39,7 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// <summary>
     /// The ID of the tenant to which this organization member skill belongs.
     /// </summary>
-    public Guid? TenantId { get; }
+    public Guid? TenantId { get; set; }
 
     /// <summary>
     /// Private constructor for deserialization / ORM purposes.
@@ -78,7 +78,7 @@ public class OrganizationMemberSkill : Entity, IMultiTenant
     /// </summary>
     /// <param name="proficiencyLevel">The new proficiency level of the organization member in the skill.</param>
     /// <returns>The updated organization member skill.</returns>
-    internal OrganizationMemberSkill ChangeProficiencyLevel(ProficiencyLevel proficiencyLevel)
+    public OrganizationMemberSkill ChangeProficiencyLevel(ProficiencyLevel proficiencyLevel)
     {
         SetProficiencyLevel(proficiencyLevel);
         return this;

@@ -14,7 +14,8 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     networks:
-      - impactspace_network
+      impactspace_network:
+        ipv4_address: 172.19.0.3
   minio:
     image: minio/minio
     ports:
@@ -48,6 +49,9 @@ services:
       echo Bucket created.;
       tail -f /dev/null;
       "
+    networks:
+      impactspace_network:
+        ipv4_address: 172.19.0.4
 volumes:
   minio_storage: {} 
 networks:

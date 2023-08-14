@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+using AutoMapper;
 
 namespace ImpactSpace.Core.Organizations;
 
@@ -30,5 +31,19 @@ public class EfCoreOrganizationMemberRepository: EfCoreRepository<CoreDbContext,
             .Skip(skipCount)
             .Take(maxResultCount)
             .ToListAsync();
+    }
+
+    public async Task<OrganizationMember> GetAsync(Guid id, bool includeDetails = true)
+    {
+        var dbSet = await GetDbSetAsync();
+
+        var query = dbSet
+            .Where(organizationMember => organizationMember.Id == id)
+            .IncludeIf(includeDetails,x => x.OrganizationMemberSkills)
+            .IncludeIf(includeDetails,x => x.OrganizationMemberProjects)
+            .IncludeIf(includeDetails,x => x.OrganizationMemberActions)
+            .IncludeIf(includeDetails,x => x.OrganizationMemberChallenges);
+        
+        return await query.FirstOrDefaultAsync();
     }
 }

@@ -1,0 +1,103 @@
+@page "/member-profile/{MemberId:guid}"
+@attribute [Authorize(CorePermissions.OrganizationManagement.Members)]
+@inherits AbpCrudPageBase<IOrganizationMemberAppService, OrganizationMemberDto, Guid, GetOrganizationMemberListDto, OrganizationMemberCreateUpdateDto, OrganizationMemberCreateUpdateDto>
+
+@using ImpactSpace.Core.Localization
+@using ImpactSpace.Core.Organizations
+@using ImpactSpace.Core.Permissions
+@using Microsoft.AspNetCore.Components
+@using Volo.Abp.AspNetCore.Components.Web
+@using Volo.Abp.AspNetCore.Components.Web.Theming.Layout
+@using ImpactSpace.Core.Challenges
+@using ImpactSpace.Core.Skills
+@inject AbpBlazorMessageLocalizerHelper<CoreResource> LH
+@inject IOrganizationMemberAppService OrganizationMemberAppService
+@inject IChallengeAppService ChallengeAppService
+@inject ISkillAppService SkillAppService
+
+<PageHeader Title="@Member.Name"
+            BreadcrumbItems="@BreadcrumbItems"
+            Toolbar="@Toolbar">
+</PageHeader>
+
+<Card>
+    <CardBody>
+        <Form>
+            <Row>
+                <Column ColumnSize="ColumnSize.Is6">
+                    <Field>
+                        <FieldLabel>@L["Email"]</FieldLabel>
+                        <Text>@Member.Email</Text>
+                    </Field>
+                </Column>
+                <Column ColumnSize="ColumnSize.Is6">
+                    <Field>
+                        <FieldLabel>@L["Phone"]</FieldLabel>
+                        <Text>@Member.PhoneNumber</Text>
+                    </Field>
+                </Column>
+            </Row>
+        </Form>
+    </CardBody>
+</Card>
+
+<MemberSkillsList MemberId="@MemberId" />
+
+<!-- Edit Member Modal -->
+<Modal @ref="EditMemberModal">
+    <ModalContent IsCentered="true">
+        <Form>
+            <ModalHeader>
+                <ModalTitle>@L["EditMember"]</ModalTitle>
+                <CloseButton Clicked="CloseEditMemberModal" />
+            </ModalHeader>
+            <ModalBody>
+                <Validations @ref="EditValidationsRef" Model="EditMemberModal" ValidateOnLoad="false">
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Name"]</FieldLabel>
+                            <TextEdit @bind-Text="EditingEntity.Name">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["Email"]</FieldLabel>
+                            <TextEdit @bind-Text="EditingEntity.Email">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                    <Validation MessageLocalizer="@LH.Localize">
+                        <Field>
+                            <FieldLabel>@L["PhoneNumber"]</FieldLabel>
+                            <TextEdit @bind-Text="EditingEntity.PhoneNumber">
+                                <Feedback>
+                                    <ValidationError />
+                                </Feedback>
+                            </TextEdit>
+                        </Field>
+                    </Validation>
+                </Validations>
+            </ModalBody>
+            <ModalFooter>
+                <Button Color="Color.Secondary"
+                        Clicked="CloseEditMemberModal">
+                    @L["Cancel"]
+                </Button>
+                <Button Color="Color.Primary"
+                        Type="@ButtonType.Submit"
+                        PreventDefaultOnSubmit="true"
+                        Clicked="UpdateMemberAsync">
+                    @L["Save"]
+                </Button>
+            </ModalFooter>
+        </Form>
+    </ModalContent>
+</Modal>
+
