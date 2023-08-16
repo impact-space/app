@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Blazorise;
 using ImpactSpace.Core.Skills;
@@ -32,6 +33,9 @@ public partial class SkillSelector : IValidationInput
     [Parameter]
     public bool Disabled { get; set; }
     
+    [Parameter]
+    public List<Guid> ExcludeSkillIds { get; set; } = new();
+    
     private List<SkillDto> MatchingSkills { get; set; } = new();
     
     private bool IsLoading { get; set; }
@@ -59,8 +63,8 @@ public partial class SkillSelector : IValidationInput
         try
         {
             IsLoading = true;
-            MatchingSkills = await SkillAppService.SearchSkillsAsync(searchTerm);
-        }
+            var allMatchingSkills = await SkillAppService.SearchSkillsAsync(searchTerm);
+            MatchingSkills = allMatchingSkills.Where(skill => !ExcludeSkillIds.Contains(skill.Id)).ToList();        }
         catch (Exception ex)
         {
             await HandleErrorAsync(ex);
