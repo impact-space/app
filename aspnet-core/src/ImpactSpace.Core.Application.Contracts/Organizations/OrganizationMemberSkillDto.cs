@@ -11,4 +11,6 @@ public class OrganizationMemberSkillDto : EntityDto
     public Guid SkillId { get; set; }
 
     public ProficiencyLevel ProficiencyLevel { get; set; } = ProficiencyLevel.Beginner;
+    
+    public string SkillName { get; set; }
 }

@@ -12,6 +12,7 @@
 
 <Autocomplete TItem="SkillDto"
               TValue="Guid"
+              @ref="AutoCompleteRef"
               Data="@(MatchingSkills ?? new List<SkillDto>())"
               TextField="@(item => item.Name)"
               ValueField="@(item => item.Id)"

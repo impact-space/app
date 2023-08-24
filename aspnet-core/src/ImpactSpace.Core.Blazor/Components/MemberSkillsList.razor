@@ -44,7 +44,7 @@
                 <Validations @ref="AddSkillsValidationsRef" Model="AddingSkillEntity" ValidateOnLoad="false">
                     <Field>
                         <FieldLabel>@L["Skill"]</FieldLabel>
-                        <SkillSelector ValueChanged="OnSkillSelected" ExcludeSkillIds="MemberSkills.Select(skill => skill.SkillId).ToList()" />
+                        <SkillSelector @ref="SkillSelectorRef" ValueChanged="OnSkillSelected" ExcludeSkillIds="MemberSkills.Select(skill => skill.SkillId).ToList()" />
                     </Field>
                     <Validation MessageLocalizer="@LH.Localize">
                         <Field>
