@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Blazorise;
+using Blazorise.Components;
 using ImpactSpace.Core.Skills;
 using Microsoft.AspNetCore.Components;
 
@@ -32,12 +34,16 @@ public partial class SkillSelector : IValidationInput
     [Parameter]
     public bool Disabled { get; set; }
     
+    [Parameter]
+    public List<Guid> ExcludeSkillIds { get; set; } = new();
+    
     private List<SkillDto> MatchingSkills { get; set; } = new();
     
     private bool IsLoading { get; set; }
     
     private string ErrorMessage { get; set; }
-    
+    private Autocomplete<SkillDto,Guid> AutoCompleteRef { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
@@ -53,14 +59,19 @@ public partial class SkillSelector : IValidationInput
     {
         await TextChanged.InvokeAsync(Value);
     }
+    
+    public void ResetSelection()
+    {
+        AutoCompleteRef.Clear();
+    }
 
     private async Task OnSearchChanged(string searchTerm)
     {
         try
         {
             IsLoading = true;
-            MatchingSkills = await SkillAppService.SearchSkillsAsync(searchTerm);
-        }
+            var allMatchingSkills = await SkillAppService.SearchSkillsAsync(searchTerm);
+            MatchingSkills = allMatchingSkills.Where(skill => !ExcludeSkillIds.Contains(skill.Id)).ToList();        }
         catch (Exception ex)
         {
             await HandleErrorAsync(ex);

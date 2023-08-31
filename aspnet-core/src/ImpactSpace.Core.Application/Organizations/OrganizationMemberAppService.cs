@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ImpactSpace.Core.Common;
-using ImpactSpace.Core.Organizations;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 using Volo.Abp.Domain.Repositories;
 
-namespace ImpactSpace.Core;
+namespace ImpactSpace.Core.Organizations;
 
 public class OrganizationMemberAppService: CrudAppService<
         OrganizationMember, 
@@ -21,13 +20,13 @@ public class OrganizationMemberAppService: CrudAppService<
     private readonly OrganizationMemberManager _organizationMemberManager;
     private readonly IRepository<Organization, Guid> _organizationRepository;
     private readonly IOrganizationMemberRepository _organizationMemberRepository;
-    private readonly IRepository<OrganizationMemberSkill> _organizationMemberSkillRepository;
+    private readonly IOrganizationMemberSkillRepository _organizationMemberSkillRepository;
 
     public OrganizationMemberAppService(
         IOrganizationMemberRepository repository,
         OrganizationMemberManager organizationMemberManager, 
         IRepository<Organization, Guid> organizationRepository, 
-        IRepository<OrganizationMemberSkill> organizationMemberSkillRepository)
+        IOrganizationMemberSkillRepository organizationMemberSkillRepository)
         : base(repository)
     {
         _organizationMemberManager = organizationMemberManager;
@@ -126,8 +125,10 @@ public class OrganizationMemberAppService: CrudAppService<
     
     public async Task<List<OrganizationMemberSkillDto>> GetSkillsAsync(Guid memberId)
     {
-        return ObjectMapper.Map<List<OrganizationMemberSkill>, List<OrganizationMemberSkillDto>>(
-            await _organizationMemberSkillRepository.GetListAsync(x=>x.OrganizationMemberId == memberId)
-        );
+        // Fetching the OrganizationMemberSkill entities using the repository.
+        var memberSkills = await _organizationMemberSkillRepository.GetListWithSkillsAsync(memberId);
+
+        // Mapping the entities to OrganizationMemberSkillDto objects using AutoMapper.
+        return ObjectMapper.Map<List<OrganizationMemberSkill>, List<OrganizationMemberSkillDto>>(memberSkills);
     }
 }

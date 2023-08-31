@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Volo.Abp.Domain.Repositories.EntityFrameworkCore;
 using Volo.Abp.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
-using AutoMapper;
 
 namespace ImpactSpace.Core.Organizations;
 

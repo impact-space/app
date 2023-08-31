@@ -31,12 +31,13 @@ public partial class MemberSkillsList
     [Parameter]
     public ValidationStatus ValidationStatus { get; set; } = ValidationStatus.None;
     
-    private IReadOnlyList<SkillDto> AvailableSkills { get; set; } = Array.Empty<SkillDto>();
     private IReadOnlyList<OrganizationMemberSkillDto> MemberSkills { get; set; } = Array.Empty<OrganizationMemberSkillDto>();
     
     protected Modal EditSkillsModal;
     
     protected Validations EditSkillsValidationsRef;
+    
+    protected SkillSelector SkillSelectorRef;
     
     protected TableColumnDictionary SkillsTableColumns { get; set; }
     
@@ -136,36 +137,8 @@ public partial class MemberSkillsList
     
     private async Task FetchDataAsync()
     {
-        await FetchSkillsAsync();
-        await FetchMemberSkillsAsync();
-    }
-    
-    private async Task FetchSkillsAsync()
-    {
-        try
-        {
-            AvailableSkills = (await SkillAppService.GetListAsync(new GetSkillListDto
-            {
-                Sorting = "Name",
-                MaxResultCount = 1000
-            })).Items;
-        }
-        catch (Exception ex)
-        {
-            await HandleErrorAsync(ex);
-        }
-    }
-
-    private async Task FetchMemberSkillsAsync()
-    {
-        try
-        {
-            MemberSkills = await OrganizationMemberAppService.GetSkillsAsync(MemberId);
-        }
-        catch (Exception ex)
-        {
-            await HandleErrorAsync(ex);
-        }
+        MemberSkills = await OrganizationMemberAppService.GetSkillsAsync(MemberId);
+        StateHasChanged(); // To refresh the component with new data
     }
     
     private ValueTask SetSkillTableColumnsAsync()
@@ -182,8 +155,7 @@ public partial class MemberSkillsList
                 {
                     Title = L["Skill"],
                     Sortable = true,
-                    Data = nameof(OrganizationMemberSkillDto.SkillId),
-                    ValueConverter = (value) => AvailableSkills.FirstOrDefault(x => x.Id == ((OrganizationMemberSkillDto)value).SkillId)?.Name
+                    Data = nameof(OrganizationMemberSkillDto.SkillName)
                 },
                 new TableColumn
                 {
@@ -256,7 +228,7 @@ public partial class MemberSkillsList
                 {
                     OrganizationMemberId = MemberId, 
                     ProficiencyLevel = ProficiencyLevel.Beginner, 
-                    SkillId = FindUnassignedSkillId()
+                    SkillId = Guid.Empty
                 };
             }
             else
@@ -268,7 +240,7 @@ public partial class MemberSkillsList
             EditingSkillEntity = entityDto;
             
             // Find the SkillDto for the EditingSkillEntity.SkillId
-            SelectedSkill = AvailableSkills.FirstOrDefault(x => x.Id == EditingSkillEntity.SkillId);
+            SelectedSkill = await SkillAppService.GetAsync(EditingSkillEntity.SkillId);
             SelectedSkillName = SelectedSkill?.Name;  
             
             await InvokeAsync(async () =>
@@ -287,13 +259,6 @@ public partial class MemberSkillsList
     }
 
     public string SelectedSkillName { get; set; }
-
-    private Guid FindUnassignedSkillId()
-    {
-        var assignedSkillIds = MemberSkills.Select(x => x.SkillId).ToList();
-        var unassignedSkill = AvailableSkills.FirstOrDefault(x => !assignedSkillIds.Contains(x.Id));
-        return unassignedSkill?.Id ?? Guid.Empty;
-    }
     
     private Task CloseEditSkillsModal()
     {
@@ -348,13 +313,16 @@ public partial class MemberSkillsList
             await AddSkillsValidationsRef.ClearAll();
         }
 
+        SelectedSkill = new SkillDto();
+        SelectedSkillName = string.Empty;
+
         await CheckCreatePolicyAsync();
 
         AddingSkillEntity = new OrganizationMemberSkillDto
         {
             OrganizationMemberId = MemberId, 
             ProficiencyLevel = ProficiencyLevel.Beginner, 
-            SkillId = FindUnassignedSkillId()
+            SkillId = Guid.Empty
         };
 
         await InvokeAsync(async () =>
@@ -370,6 +338,7 @@ public partial class MemberSkillsList
     private Task CloseAddSkillsModal()
     {
         AddingSkillEntity = new OrganizationMemberSkillDto(); // Reset the DTO
+        SkillSelectorRef.ResetSelection(); // Reset the SkillSelector component
         return InvokeAsync(AddSkillsModal.Hide);
     }
 
