@@ -44,7 +44,7 @@ public class OrganizationProfileAppService : ApplicationService, IOrganizationPr
         return await GetAsync(organization.Id);
     }
 
-    public async Task<OrganizationProfileDto> GetAsync(Guid organizationId)
+    private async Task<OrganizationProfileDto> GetAsync(Guid organizationId)
     {
         var organizationProfile = await _organizationProfileRepository.GetByOrganizationIdAsync(organizationId);
             
