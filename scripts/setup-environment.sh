@@ -99,9 +99,12 @@ fi
 #------------------------------------------------------------------------------
 # 7) Persist env‐vars for future shells
 #------------------------------------------------------------------------------
-cat << 'EOF_BASHRC' >> ~/.bashrc
+if ! grep -q '^export DOTNET_ROOT=' ~/.bashrc || \
+   ! grep -q '\$HOME/.dotnet/tools' ~/.bashrc; then
+  cat <<'EOF_BASHRC' >> ~/.bashrc
 export DOTNET_ROOT="$HOME/.dotnet"
 export PATH="$PATH:$HOME/.dotnet:$HOME/.dotnet/tools:$HOME/.local/bin"
 EOF_BASHRC
+fi
 
 echo "All done!"
