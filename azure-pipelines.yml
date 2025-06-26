@@ -24,10 +24,10 @@ stages:
       displayName: 'Install NuGet'
 
     - task: UseDotNet@2
-      displayName: 'Install .NET 7 SDK'
+      displayName: 'Install .NET 9 SDK'
       inputs:
         packageType: 'sdk'
-        version: '7.x'
+        version: '9.0.x'
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: NuGetCommand@2

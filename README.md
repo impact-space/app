@@ -24,8 +24,8 @@ With Impact Space, you can:
 
 ## Requirements
 
-- .NET 7 SDK
-- Node.js 18.x
+ - .NET 9 SDK
+ - Node.js 18
 - Volo.Abp.Cli (ABP CLI)
 - PostgreSQL
 
@@ -44,9 +44,15 @@ A special thanks to [ProgCode](https://progcode.org) for their support in making
 ## Getting Started
 
 1. Clone the repository to your local machine.
-2. Install the required tools:
-   - Install .NET 7 SDK by following the instructions [here](https://dotnet.microsoft.com/download/dotnet/7.0).
-   - Install Node.js 18.x by following the instructions [here](https://nodejs.org/en/download/).
+2. Install the required tools. The repository provides a convenience script `setup-environment.sh` that installs the .NET 9 SDK, Node.js 18, and the ABP CLI (requires sudo/root privileges). Run it from the repository root with:
+
+   ```bash
+   ./setup-environment.sh
+   ```
+
+   If you prefer to install the tools manually, follow these steps:
+   - Install .NET 9 SDK by following the instructions [here](https://dotnet.microsoft.com/download/dotnet/9.0).
+   - Install Node.js 18 by following the instructions [here](https://nodejs.org/en/download/).
    - Install ABP CLI by running `dotnet tool install -g Volo.Abp.Cli`.
    - Install and configure PostgreSQL by following the instructions [here](https://www.postgresql.org/download/).
      - You can also run PostgreSQL in docker.  The docker-compose.yml is located in the /etc folder.
